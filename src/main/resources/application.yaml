@@ -1,5 +1,15 @@
 info:
-  name=demo
-info.name2=demo
-info.name3=demo
-info.name4=demo
+  name: demo
+
+spring:
+  jpa:
+    hibernate.ddl-auto: none
+
+  datasource:
+    url: jdbc:h2:tcp://localhost:9092/~/.h2/demo
+    username: sa
+    password: sa
+
+
+liquibase:
+  change-log: classpath:db/changelog/db.changelog-master.xml

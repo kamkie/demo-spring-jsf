@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+	<changeSet author="kamkie" id="1">
+		<createTable tableName="SPRING_SESSION">
+			<column name="SESSION_ID" type="CHAR(36)">
+				<constraints primaryKey="true" primaryKeyName="SPRING_SESSION_PK" />
+			</column>
+			<column name="CREATION_TIME" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="LAST_ACCESS_TIME" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="MAX_INACTIVE_INTERVAL" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="PRINCIPAL_NAME" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="kamkie" id="2">
+		<createIndex indexName="SPRING_SESSION_IX1"
+					 tableName="SPRING_SESSION">
+			<column name="LAST_ACCESS_TIME" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="kamkie" id="3">
+		<createTable tableName="SPRING_SESSION_ATTRIBUTES">
+			<column name="SESSION_ID" type="CHAR(36)">
+				<constraints primaryKey="true" primaryKeyName="SPRING_SESSION_ATTRIBUTES_PK"
+							 foreignKeyName="SPRING_SESSION_ATTRIBUTES_FK" referencedTableName="SPRING_SESSION"
+							 referencedColumnNames="SESSION_ID" />
+			</column>
+			<column name="ATTRIBUTE_NAME" type="VARCHAR(200)">
+				<constraints primaryKey="true" primaryKeyName="SPRING_SESSION_ATTRIBUTES_PK" />
+			</column>
+			<column name="LAST_ACCESS_TIME" type="BIGINT">
+			</column>
+			<column name="ATTRIBUTE_BYTES" type="LONGVARBINARY">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="kamkie" id="4">
+		<createIndex catalogName="cat"
+					 indexName="SPRING_SESSION_ATTRIBUTES_IX1"
+					 tableName="SPRING_SESSION_ATTRIBUTES">
+			<column name="SESSION_ID" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>
