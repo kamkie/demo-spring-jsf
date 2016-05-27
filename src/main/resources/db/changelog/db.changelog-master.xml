@@ -45,10 +45,28 @@
 		</createTable>
 	</changeSet>
 	<changeSet author="kamkie" id="4">
-		<createIndex catalogName="cat"
-					 indexName="SPRING_SESSION_ATTRIBUTES_IX1"
+		<createIndex indexName="SPRING_SESSION_ATTRIBUTES_IX1"
 					 tableName="SPRING_SESSION_ATTRIBUTES">
 			<column name="SESSION_ID" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="kamkie" id="5">
+		<createTable tableName="users">
+			<column name="id" type="CHAR(36)">
+				<constraints primaryKey="true" primaryKeyName="USERS_PK" />
+			</column>
+			<column name="login" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="password" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="kamkie" id="6">
+		<createIndex indexName="users_login_index"
+					 tableName="users">
+			<column name="login" />
 		</createIndex>
 	</changeSet>
 </databaseChangeLog>

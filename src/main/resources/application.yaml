@@ -7,7 +7,10 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    show-sql: true
+    show-sql: false
+    properties:
+      hibernate:
+        generate_statistics: true
 
   datasource:
     url: jdbc:h2:tcp://localhost:9092/~/.h2/demo
@@ -31,3 +34,16 @@ liquibase:
 info:
   name: ${spring.application.name}
   version: '@version@'
+
+security:
+  user:
+    name: user
+    password: password
+logging:
+  level:
+    org:
+      hibernate:
+        engine: info #info to show session times
+        type: trace #trace to show binding parameters
+        SQL: debug #debug to show generated sql
+        stat: debug #debug to show hql query times
