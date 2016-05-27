@@ -1,15 +1,33 @@
-info:
-  name: demo
-
 spring:
+  application:
+    name: demo
+
   jpa:
-    hibernate.ddl-auto: none
+    generate-ddl: false
+    hibernate:
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: true
 
   datasource:
     url: jdbc:h2:tcp://localhost:9092/~/.h2/demo
     username: sa
     password: sa
+  jmx:
+    enabled: true
 
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+
+management:
+  context-path: /management
 
 liquibase:
   change-log: classpath:db/changelog/db.changelog-master.xml
+
+info:
+  name: ${spring.application.name}
+  version: '@version@'

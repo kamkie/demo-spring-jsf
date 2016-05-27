@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/nkatsar/logback-XSD/master/src/main/xsd/logback.xsd">
+	<jmxConfigurator />
+
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+	<logger name="org.hibernate.stat" level="INFO" />
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</root>
+</configuration>
