@@ -3,10 +3,12 @@ package com.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @EnableCaching
 @EnableJdbcHttpSession
+@EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @SpringBootApplication
 public class DemoApplication {
 

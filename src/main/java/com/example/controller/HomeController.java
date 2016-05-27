@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,8 +25,23 @@ public class HomeController {
 		this.usersRepository = usersRepository;
 	}
 
+	@RequestMapping({ "/welcome" })
+	public ResponseEntity welcome(Principal principal) {
+		return getResponseEntity(principal);
+	}
+
 	@RequestMapping({ "/", "/home" })
 	public ResponseEntity home(Principal principal) {
+		return getResponseEntity(principal);
+	}
+
+	@Secured({ "ROLE_ADMIN" })
+	@RequestMapping({ "/admin" })
+	public ResponseEntity admin(Principal principal) {
+		return getResponseEntity(principal);
+	}
+
+	private ResponseEntity getResponseEntity(Principal principal) {
 		log.info("home controller called principal: {}", principal);
 
 		List<User> userList = usersRepository.findAll();
