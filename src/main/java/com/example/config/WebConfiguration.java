@@ -1,12 +1,16 @@
 package com.example.config;
 
-import javax.servlet.Filter;
+import java.util.Arrays;
 
+import javax.servlet.DispatcherType;
+
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
+import org.springframework.core.Ordered;
 
 import com.example.annotation.Timed;
+import com.example.component.TimeLoggingFilter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,12 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 public class WebConfiguration {
 
 	@Bean
-	public Filter logFilter() {
-		CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
-		filter.setIncludeQueryString(true);
-		filter.setIncludePayload(true);
-		filter.setMaxPayloadLength(5120);
-		return filter;
+	public FilterRegistrationBean timeLoggingFilterRegistration() {
+		FilterRegistrationBean registration = new FilterRegistrationBean(new TimeLoggingFilter());
+		registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+		registration.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC, DispatcherType.ERROR,
+				DispatcherType.FORWARD, DispatcherType.INCLUDE);
+		registration.setEnabled(true);
+		registration.setUrlPatterns(Arrays.asList("/*"));
+
+		return registration;
 	}
 
 }

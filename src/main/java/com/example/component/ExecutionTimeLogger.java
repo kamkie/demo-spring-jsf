@@ -12,6 +12,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import com.example.utils.MicrosOfMilliSecond;
+import com.example.utils.NanosOfMicroSecond;
+
 import lombok.extern.slf4j.Slf4j;
 
 import static java.time.temporal.ChronoField.HOUR_OF_DAY;
@@ -26,7 +29,7 @@ public class ExecutionTimeLogger {
 
 	private static final int MAX_CHARS = 60;
 	private static final String STR_SUFFIX = " ...>";
-	private static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder().appendValue(HOUR_OF_DAY, 2)
+	public static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder().appendValue(HOUR_OF_DAY, 2)
 			.appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2).optionalStart().appendLiteral(':')
 			.appendValue(SECOND_OF_MINUTE, 2).optionalStart().appendLiteral('.')
 			.appendFraction(MILLI_OF_SECOND, 0, 3, false).optionalStart().appendLiteral("ms ").optionalStart()
@@ -72,11 +75,11 @@ public class ExecutionTimeLogger {
 		return result;
 	}
 
-	private String formatDuration(long nanos) {
+	public static String formatDuration(long nanos) {
 		return TIME_FORMATTER.format(LocalTime.ofNanoOfDay(nanos));
 	}
 
-	private String formatLongString(Object input) {
+	public static String formatLongString(Object input) {
 		if (input == null) {
 			return "{null}";
 		}

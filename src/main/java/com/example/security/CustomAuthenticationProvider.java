@@ -1,5 +1,6 @@
 package com.example.security;
 
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,7 +29,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Override
 	@Timed
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		UserDetails user = userDetailsService.loadUserByUsername(authentication.getName());
+		String username = authentication.getName();
+		MDC.put("userName", username);
+		UserDetails user = userDetailsService.loadUserByUsername(username);
 		if (user == null) {
 			throw new BadCredentialsException("Username not found.");
 		}
