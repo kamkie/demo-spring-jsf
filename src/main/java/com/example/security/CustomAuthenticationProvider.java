@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.example.annotation.Timed;
+
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
@@ -24,6 +26,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	@Override
+	@Timed
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		UserDetails user = userDetailsService.loadUserByUsername(authentication.getName());
 		if (user == null) {

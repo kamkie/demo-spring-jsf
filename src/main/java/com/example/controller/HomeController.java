@@ -9,12 +9,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.annotation.Timed;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Timed
 @Controller
 public class HomeController {
 
