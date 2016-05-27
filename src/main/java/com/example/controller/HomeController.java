@@ -17,8 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController {
 
+	private final UsersRepository usersRepository;
+
 	@Autowired
-	private UsersRepository usersRepository;
+	public HomeController(UsersRepository usersRepository) {
+		this.usersRepository = usersRepository;
+	}
 
 	@RequestMapping({ "/", "/home" })
 	public ResponseEntity home(Principal principal) {

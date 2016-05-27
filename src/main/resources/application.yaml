@@ -7,6 +7,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
@@ -18,6 +19,10 @@ spring:
     password: sa
   jmx:
     enabled: true
+  cache:
+    cache-names: passwordEncoder
+    guava:
+      spec: maximumSize=1000,expireAfterAccess=1d
 
 server:
   port: 8080
@@ -36,14 +41,14 @@ info:
   version: '@version@'
 
 security:
-  user:
-    name: user
-    password: password
+  basic:
+    path: [ '/**' ]
+
 logging:
   level:
     org:
       hibernate:
-        engine: info #info to show session times
-        type: trace #trace to show binding parameters
-        SQL: debug #debug to show generated sql
+        engine: warn #info to show session times
+        type: info #trace to show binding parameters
+        SQL: info #debug to show generated sql
         stat: debug #debug to show hql query times
