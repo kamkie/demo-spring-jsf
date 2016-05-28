@@ -9,7 +9,10 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.16"
+        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.16")
+        classpath("org.liquibase:liquibase-gradle-plugin:1.2.1")
+        classpath("com.h2database:h2:1.4.191")
+        classpath("org.liquibase:liquibase-core:3.5.1")
 //        classpath 'org.springframework:springloaded:1.2.6.RELEASE'
     }
 }
@@ -17,6 +20,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 apply plugin: 'com.gorylenko.gradle-git-properties'
+apply plugin: 'org.liquibase.gradle'
 
 def getVersionName = { ->
     def stdout = new ByteArrayOutputStream()
@@ -70,5 +74,16 @@ processResources {
     from('src/main/resources') {
         include 'application.yaml'
         filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: project.version.toString()])
+    }
+}
+
+liquibase {
+    activities {
+        main {
+            changeLogFile 'src/main/resources/db/changelog/db.changelog-master.xml'
+            url 'jdbc:h2:tcp://localhost:9092/~/.h2/demo'
+            username 'sa'
+            password 'sa'
+        }
     }
 }
