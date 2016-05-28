@@ -9,4 +9,8 @@
     <lifecycle>
         <phase-listener>org.springframework.web.jsf.DelegatingPhaseListenerMulticaster</phase-listener>
     </lifecycle>
+    
+    <protected-views>
+        <url-pattern>results.xhtml</url-pattern>
+    </protected-views>
 </faces-config>

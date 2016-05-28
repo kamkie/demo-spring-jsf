@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view locale="#{localeModel.getLocale()}">
+    <h:head>
+        <title>demo</title>
+
+        <ui:insert name="css"/>
+
+        <ui:insert name="js"/>
+    </h:head>
+    <h:body>
+        <p:growl id="messages" globalOnly="true"/>
+        <p:layout fullPage="true">
+            <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
+                      showHeader="false">
+                <p:graphicImage name="/images/loading-v2.gif" style="width:100px"/>
+            </p:dialog>
+
+            <p:layoutUnit position="north">
+                <ui:include src="elements/toolbar.xhtml"/>
+                <ui:include src="elements/menu.xhtml"/>
+
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south">
+                <ui:include src="elements/footer.xhtml"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <h:panelGroup id="pageContent" layout="block" style="padding: 8px;">
+                    <ui:insert name="content">
+                        <h1>Content</h1>
+                    </ui:insert>
+                </h:panelGroup>
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>
+</f:view>
+</html>
