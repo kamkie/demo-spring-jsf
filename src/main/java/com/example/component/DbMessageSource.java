@@ -1,5 +1,6 @@
 package com.example.component;
 
+import com.example.annotation.Timed;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 import java.util.Optional;
 
+@Timed
 @Primary
 @Component("messageSource")
 public class DbMessageSource implements MessageSource {

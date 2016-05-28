@@ -20,7 +20,7 @@ spring:
   jmx:
     enabled: true
   cache:
-    cache-names: passwordEncoder,users
+    cache-names: passwordEncoder,users,i18n
     guava:
       spec: maximumSize=1000,expireAfterAccess=1d
 
