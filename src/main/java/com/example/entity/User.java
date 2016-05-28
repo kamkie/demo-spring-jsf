@@ -1,14 +1,15 @@
 package com.example.entity;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +24,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @ToString
-@Cacheable
 @Table(name = "users")
 public class User implements Principal, UserDetails {
 
@@ -37,9 +37,10 @@ public class User implements Principal, UserDetails {
 	@Column
 	private String password;
 
-	//	@Enumerated(EnumType.STRING)
-	//	@Column(name = "role")
-	//	private Role role;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Collection<Role> roles;
+
+	transient private Collection<? extends GrantedAuthority> authorities;
 
 	@Override
 	public String getName() {
@@ -48,14 +49,10 @@ public class User implements Principal, UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-		//		if (id != null || Role.user != role) {
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		//		}
-		//		if (role != null) {
-		//			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()));
-		//		}
+		if (authorities == null) {
+			authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+					.collect(Collectors.toList());
+		}
 		return authorities;
 	}
 
