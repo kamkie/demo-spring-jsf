@@ -49,7 +49,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-cache')
 //    compile('org.springframework.boot:spring-boot-starter-mail')
 //	compile('org.springframework.retry:spring-retry')
-	compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile('org.springframework.boot:spring-boot-starter-validation')
