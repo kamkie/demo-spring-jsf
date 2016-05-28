@@ -124,4 +124,42 @@
             <column name="roles_id" type="varchar(255)" value="2"/>
         </insert>
     </changeSet>
+    <changeSet author="kamkie" id="12">
+        <createTable tableName="messages">
+            <column name="id" type="IDENTITY">
+                <constraints primaryKey="true" primaryKeyName="MESSAGES_PK"/>
+            </column>
+            <column name="lang" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="key" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="text" type="VARCHAR(255)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamkie" id="13">
+        <addUniqueConstraint columnNames="lang, key"
+                             constraintName="messages_unique"
+                             tableName="messages"/>
+        <createIndex indexName="messages_index"
+                     tableName="messages">
+            <column name="key"/>
+            <column name="lang"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="kamkie" id="14">
+        <insert tableName="messages">
+            <column name="lang" type="varchar(255)" value="eng"/>
+            <column name="key" type="varchar(255)" value="hello.text"/>
+            <column name="text" type="varchar(255)" value="hello word"/>
+        </insert>
+        <insert tableName="messages">
+            <column name="lang" type="varchar(255)" value="pol"/>
+            <column name="key" type="varchar(255)" value="hello.text"/>
+            <column name="text" type="varchar(255)" value="witaj świecie"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
