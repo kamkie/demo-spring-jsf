@@ -24,6 +24,9 @@ spring:
     guava:
       spec: maximumSize=1000,expireAfterAccess=1d
 
+  session:
+    store-type: jdbc
+
 server:
   port: 8080
   compression:

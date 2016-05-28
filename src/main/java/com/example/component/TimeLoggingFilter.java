@@ -1,94 +1,116 @@
 package com.example.component;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
+import org.springframework.data.util.Pair;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.WebUtils;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.MDC;
-import org.springframework.data.util.Pair;
-import org.springframework.web.filter.AbstractRequestLoggingFilter;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.example.component.ExecutionTimeLogger.formatDuration;
 
 @Slf4j
-public class TimeLoggingFilter extends AbstractRequestLoggingFilter implements Filter {
+public class TimeLoggingFilter extends OncePerRequestFilter {
 
-	public TimeLoggingFilter() {
-		setIncludeClientInfo(true);
-		setIncludeQueryString(true);
-	}
+    private int maxPayloadLength;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		try {
-			addRequestIdToContext();
-			addSessionIdToContext(request);
+    public TimeLoggingFilter(int maxPayloadLength) {
+        if (maxPayloadLength < 10) {
+            maxPayloadLength = 10;
+        }
 
-			long start = System.nanoTime();
-			super.doFilterInternal(request, response, filterChain);
+        this.maxPayloadLength = maxPayloadLength;
+    }
 
-			if (log.isInfoEnabled()) {
-				long nanos = System.nanoTime() - start;
-				String duration = formatDuration(nanos);
-				String headers = getHeadersAsString(request);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        try {
+            long start = System.nanoTime();
+            filterChain.doFilter(request, response);
 
-				if (log.isDebugEnabled()) {
-					log.debug("request: url: {}, time {}, params: {}, headers: {}", request.getRequestURL(), duration,
-							createMessage(request, "", ""), headers);
-				} else {
-					log.info("request: url: {}, time {}, params: {}", request.getRequestURL(), duration,
-							createMessage(request, "", ""));
-				}
-			}
-		} finally {
-			MDC.remove("sid");
-			MDC.remove("rid");
-			MDC.remove("userName");
-		}
-	}
+            if (log.isInfoEnabled()) {
+                long nanos = System.nanoTime() - start;
+                String duration = formatDuration(nanos);
+                String headers = getHeadersAsString(request);
 
-	private String getHeadersAsString(HttpServletRequest request) {
-		Function<String, Pair<String, Enumeration<String>>> mapHeaderNameToHeaders = s -> Pair
-				.of(s, request.getHeaders(s));
-		Function<Pair<String, Enumeration<String>>, Stream<? extends String>> mapPairToStrings = header -> Collections
-				.list(header.getSecond()).stream().map(s -> header.getFirst() + "= " + s);
-		return Collections.list(request.getHeaderNames()).stream().map(mapHeaderNameToHeaders).flatMap(mapPairToStrings)
-				.collect(Collectors.joining("\n"));
-	}
+                if (log.isDebugEnabled()) {
+                    log.debug("request: url: {}, time {}, params: {}, headers: {}", request.getRequestURL(), duration,
+                            createMessage(request, "", ""), headers);
+                } else {
+                    log.info("request: url: {}, time {}, params: {}", request.getRequestURL(), duration,
+                            createMessage(request, "", ""));
+                }
+            }
+        } finally {
+            MDC.remove("userName");
+        }
+    }
 
-	@Override
-	protected void beforeRequest(HttpServletRequest request, String message) {
+    private String getHeadersAsString(HttpServletRequest request) {
+        Function<String, Pair<String, Enumeration<String>>> mapHeaderNameToHeaders = s -> Pair
+                .of(s, request.getHeaders(s));
+        Function<Pair<String, Enumeration<String>>, Stream<? extends String>> mapPairToStrings = header -> Collections
+                .list(header.getSecond()).stream().map(s -> header.getFirst() + "= " + s);
+        return Collections.list(request.getHeaderNames()).stream().map(mapHeaderNameToHeaders).flatMap(mapPairToStrings)
+                .collect(Collectors.joining("\n"));
+    }
 
-	}
 
-	@Override
-	protected void afterRequest(HttpServletRequest request, String message) {
+    protected String createMessage(HttpServletRequest request, String prefix, String suffix) {
+        StringBuilder msg = new StringBuilder();
+        msg.append(prefix);
+        msg.append("uri=").append(request.getRequestURI());
 
-	}
+        String queryString = request.getQueryString();
+        if (queryString != null) {
+            msg.append('?').append(queryString);
+        }
 
-	private void addSessionIdToContext(HttpServletRequest request) {
-		String sid = request.getSession().getId();
-		MDC.put("sid", sid);
-	}
+        String client = request.getRemoteAddr();
+        if (StringUtils.hasLength(client)) {
+            msg.append(";client=").append(client);
+        }
 
-	private void addRequestIdToContext() {
-		UUID uid = UUID.randomUUID();
-		long shortenedId = uid.getMostSignificantBits();
-		String id = Long.toString(shortenedId).substring(1, 7);
-		MDC.put("rid", id);
-	}
+        if (log.isDebugEnabled()) {
+            ContentCachingRequestWrapper wrapper =
+                    WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
+            if (wrapper != null) {
+                byte[] buf = wrapper.getContentAsByteArray();
+                if (buf.length > 0) {
+                    int length = Math.min(buf.length, getMaxPayloadLength());
+                    String payload;
+                    try {
+                        payload = new String(buf, 0, length, wrapper.getCharacterEncoding());
+                    } catch (UnsupportedEncodingException ex) {
+                        payload = "[unknown]";
+                    }
+                    msg.append(";payload=").append(payload);
+                }
+            }
+        }
+        msg.append(suffix);
+        return msg.toString();
+    }
 
+    public int getMaxPayloadLength() {
+        return maxPayloadLength;
+    }
+
+    public void setMaxPayloadLength(int maxPayloadLength) {
+        this.maxPayloadLength = maxPayloadLength;
+    }
 }

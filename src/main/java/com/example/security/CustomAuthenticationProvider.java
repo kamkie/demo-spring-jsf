@@ -1,6 +1,6 @@
 package com.example.security;
 
-import org.slf4j.MDC;
+import com.example.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,40 +12,36 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.example.annotation.Timed;
-
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-	private final UserDetailsService userDetailsService;
-	private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	public CustomAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
-		this.passwordEncoder = passwordEncoder;
-		this.userDetailsService = userDetailsService;
-	}
+    @Autowired
+    public CustomAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+    }
 
-	@Override
-	@Timed
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String username = authentication.getName();
-		MDC.put("userName", username);
-		UserDetails user = userDetailsService.loadUserByUsername(username);
-		if (user == null) {
-			throw new BadCredentialsException("Username not found.");
-		}
-		CharSequence password = (CharSequence) authentication.getCredentials();
+    @Override
+    @Timed
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        UserDetails user = userDetailsService.loadUserByUsername(authentication.getName());
+        if (user == null) {
+            throw new BadCredentialsException("Username not found.");
+        }
+        CharSequence password = (CharSequence) authentication.getCredentials();
 
-		if (!passwordEncoder.matches(password, user.getPassword())) {
-			throw new BadCredentialsException("Wrong password.");
-		}
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException("Wrong password.");
+        }
 
-		return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
-	}
+        return new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
+    }
 
-	@Override
-	public boolean supports(Class<?> arg0) {
-		return true;
-	}
+    @Override
+    public boolean supports(Class<?> arg0) {
+        return true;
+    }
 }
