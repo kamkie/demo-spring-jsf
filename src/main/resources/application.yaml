@@ -61,3 +61,8 @@ user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39
         type: info #trace to show binding parameters
         SQL: info #debug to show generated sql
         stat: debug #debug to show hql query times
+    com:
+      sun:
+        faces: trace
+    javax:
+      faces: trace

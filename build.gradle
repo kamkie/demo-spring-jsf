@@ -41,13 +41,14 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/milestone" }
+    maven { url "http://repository.primefaces.org" }
 }
 
 dependencies {
     compile('org.projectlombok:lombok')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile('org.springframework.boot:spring-boot-configuration-processor')
 //    compile('org.springframework.boot:spring-boot-actuator-docs')
     compile('org.springframework.boot:spring-boot-starter-aop')
     compile('org.springframework.boot:spring-boot-starter-cache')
@@ -55,10 +56,15 @@ dependencies {
 //	compile('org.springframework.retry:spring-retry')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-validation')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.session:spring-session')
+
+    compile('org.glassfish:javax.faces:2.2.13')
+    compile('org.apache.tomcat.embed:tomcat-embed-jasper:8.0.33')
+    compile('org.primefaces:primefaces:5.3')
+    compile('org.primefaces.themes:bootstrap:1.0.10')
 
     compile('org.liquibase:liquibase-core')
 

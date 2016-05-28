@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
+@ToString(exclude = {"password", "authorities"})
 @Table(name = "users")
 public class User implements Principal, UserDetails {
     private static final long serialVersionUID = 6720661546911326516L;
