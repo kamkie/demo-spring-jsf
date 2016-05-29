@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.AbstractMap;
+import java.util.Collections;
+import java.util.Set;
 
 @Component(value = "msg")
-public class ResourceBundleBean extends HashMap<String, String> {
+public class ResourceBundleBean extends AbstractMap<String, String> {
 
     private final MessageSource messageSource;
     private final LocaleModel localeModel;
@@ -22,5 +24,10 @@ public class ResourceBundleBean extends HashMap<String, String> {
     @Override
     public String get(Object key) {
         return messageSource.getMessage(key.toString(), null, localeModel.getLocale());
+    }
+
+    @Override
+    public Set<Entry<String, String>> entrySet() {
+        return Collections.emptySet();
     }
 }

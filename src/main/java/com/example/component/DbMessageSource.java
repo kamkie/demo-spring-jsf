@@ -44,12 +44,12 @@ public class DbMessageSource implements MessageSource {
         final Object[] args = resolvable.getArguments();
         final String defaultMessage = resolvable.getDefaultMessage();
         for (String code : resolvable.getCodes()) {
-            final String message = getMessage(code, args, defaultMessage, locale);
-            if (message != null) {
-                return message;
+            final Optional<Message> message = messagesRepository.findByKeyAndLang(code, locale.getISO3Language());
+            if (message.isPresent()) {
+                return String.format(message.get().getText(), args);
             }
         }
-        return defaultMessage;
+        return String.format(defaultMessage, args);
     }
 
 }

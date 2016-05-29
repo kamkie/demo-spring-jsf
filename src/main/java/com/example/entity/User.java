@@ -33,7 +33,8 @@ public class User implements Principal, UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles;
 
-    transient private Collection<? extends GrantedAuthority> authorities;
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public String getName() {
