@@ -30,8 +30,11 @@
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
                         <h:outputText value="Użytkownik: #{request.userPrincipal.name}"/>
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
-                        <p:commandButton id="logoutButton" styleClass="logoutButton" value="Wyloguj się"
-                                         action="#{request.logout()}" ajax="false"/>
+                        <form action="/logout" method="post" style="display: inline-block">
+                            <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
+                            <p:commandButton id="logoutButton" styleClass="logoutButton" value="Wyloguj się"
+                                             action="/logout" ajax="false"/>
+                        </form>
                     </p:outputPanel>
                 </f:facet>
             </p:toolbar>
