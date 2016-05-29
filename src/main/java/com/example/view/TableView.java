@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -40,7 +41,10 @@ public class TableView implements Serializable {
                     PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
                     MessagesRepository repository = getMessagesRepository();
 
-                    Page<Message> page = repository.findAll(filters, pageRequest);
+                    String key = Optional.ofNullable(filters.get("key")).map(Object::toString).orElse("");
+                    String lang = Optional.ofNullable(filters.get("lang")).map(Object::toString).orElse("");
+                    String text = Optional.ofNullable(filters.get("text")).map(Object::toString).orElse("");
+                    Page<Message> page = repository.findByKeyContainingAndLangIsContainingAndTextIsContaining(key, lang, text, pageRequest);
 
                     setRowCount(Long.valueOf(page.getTotalElements()).intValue());
                     return page.getContent();

@@ -20,6 +20,8 @@ public interface MessagesRepository extends JpaRepository<Message, Long> {
     @Cacheable(cacheNames = "i18n")
     Optional<Message> findByKeyAndLang(String key, String lang);
 
+    Page<Message> findByKeyContainingAndLangIsContainingAndTextIsContaining(String key, String lang, String text, Pageable pageable);
+
     @Query("select m from Message m where (:lang is null OR (LOWER(m.lang) like LOWER(CONCAT('%', :lang, '%')))) " +
             "and (:key is null OR (LOWER(m.key) like LOWER(CONCAT('%', :key, '%'))))")
     List<Message> findAll(@Param("key") Object key, @Param("lang") Object lang);
