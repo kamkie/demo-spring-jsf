@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: demo
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        generate_statistics: true
+
+  datasource:
+    url: jdbc:h2:mem:demo
+    username: sa
+    password: sa
+  jmx:
+    enabled: true
+  cache:
+    cache-names: passwordEncoder,users,i18n
+    guava:
+      spec: maximumSize=1000,expireAfterAccess=1d
+
+  session:
+    store-type: jdbc
+  devtools:
+    restart:
+      exclude: static/**,public/**,META-INF/resources/**
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+
+management:
+  context-path: /management
+
+liquibase:
+  change-log: classpath:db/changelog/db.changelog-master.xml
+#  enabled: false
+#  drop-first: true
+
+info:
+  name: ${spring.application.name}
+  version: '@version@'
+
+security:
+  basic:
+    path: [ '/**' ]
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} [rid=%X{rid} sid=%X{sid} \
+user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+  level:
+    org:
+      springframework.web.filter: debug
+      hibernate:
+        engine: warn #info to show session times
+        type: info #trace to show binding parameters
+        SQL: info #debug to show generated sql
+        stat: debug #debug to show hql query times
+    com:
+      sun:
+        faces: trace
+    javax:
+      faces: trace

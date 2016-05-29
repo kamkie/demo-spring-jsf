@@ -33,11 +33,8 @@ def getVersionName = { ->
     }
     return stdout.toString().trim()
 }
-version = "${getVersionName()}-SNAPSHOT"
-
-jar {
-    baseName = 'demo'
-}
+version = getVersionName()
+group = 'demo'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -96,3 +93,36 @@ liquibase {
         }
     }
 }
+
+bootRun {
+    addResources = true
+}
+
+task buildInfoProperties << {
+    def file = new File(project.buildDir, 'resources/main/META-INF/build-info.properties')
+    if (!file.parentFile.exists()) {
+        file.parentFile.mkdirs()
+    }
+    if (file.exists()) {
+        assert file.delete()
+    }
+    assert file.createNewFile()
+    logger.info "writing to [${file}]"
+    def map = [
+            "build.version": version,
+            "build.spring.boot.version": springBootVersion,
+            "build.artifact": project.name,
+            "build.group": project.group,
+            "build.name": rootProject.name,
+            "build.time": new Date().time,
+    ]
+
+    file.withWriter('UTF-8') { w ->
+        map.each { key, value ->
+            w.writeLine "$key=$value"
+        }
+    }
+}
+
+
+processResources.dependsOn << buildInfoProperties

@@ -14,6 +14,8 @@
         <p>Hello #{request.userPrincipal.name}</p>
         <p>session #{session.id}</p>
         <p>user #{usersRepository.findAll()}</p>
+        <p>msg #{msg['hello.text']}</p>
+        <p>msg #{msg['hello.foo']}</p>
         <p>locale #{localeModel.getLocale()}</p>
         <p>property #{environment.getProperty('spring.application.name')}</p>
 

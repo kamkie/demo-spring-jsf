@@ -1,12 +1,14 @@
 package com.example.controller;
 
 import com.example.annotation.Timed;
+import com.example.component.ResourceBundleBean;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -30,11 +32,15 @@ public class HomeController {
 
     private final UsersRepository usersRepository;
     private final ObjectMapper objectMapper;
+    private final ResourceBundleBean msg;
+    private final BuildProperties buildProperties;
 
     @Autowired
-    public HomeController(UsersRepository usersRepository, ObjectMapper objectMapper) {
+    public HomeController(UsersRepository usersRepository, ObjectMapper objectMapper, ResourceBundleBean bundleBean, BuildProperties buildProperties) {
         this.usersRepository = usersRepository;
         this.objectMapper = objectMapper;
+        this.msg = bundleBean;
+        this.buildProperties = buildProperties;
     }
 
     @RequestMapping({"/hello"})
@@ -74,10 +80,12 @@ public class HomeController {
         }));
 
         Map<String, Object> map = new LinkedHashMap<>();
+        map.put("message", msg.get("hello.text"));
         map.put("sessionId", session.getId());
         map.put("principal", principal);
         map.put("user", user);
         map.put("userList", userList);
+        map.put("buildProperties", buildProperties);
 
         return ResponseEntity.ok(map);
     }
