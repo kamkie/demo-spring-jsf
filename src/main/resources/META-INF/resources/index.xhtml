@@ -15,6 +15,7 @@
         <p>session #{session.id}</p>
         <p>user #{usersRepository.findAll()}</p>
         <p>locale #{localeModel.getLocale()}</p>
+        <p>property #{environment.getProperty('spring.application.name')}</p>
 
         <p:tooltip/>
 

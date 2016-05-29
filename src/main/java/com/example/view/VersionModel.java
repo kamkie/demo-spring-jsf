@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class VersionModel {
 
-    @Value(" ${spring.application.name}")
+    @Value("${spring.application.name}")
     private String name;
-    @Value(" ${info.version}")
+    @Value("${info.version}")
     private String version;
 }

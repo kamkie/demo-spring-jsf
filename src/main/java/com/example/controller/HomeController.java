@@ -3,6 +3,8 @@ package com.example.controller;
 import com.example.annotation.Timed;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +21,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.example.utils.LambdaExceptionUtil.rethrowConsumer;
+
 @Slf4j
 @Timed
 @Controller
 public class HomeController {
 
     private final UsersRepository usersRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public HomeController(UsersRepository usersRepository) {
+    public HomeController(UsersRepository usersRepository, ObjectMapper objectMapper) {
         this.usersRepository = usersRepository;
+        this.objectMapper = objectMapper;
     }
 
     @RequestMapping({"/hello"})
@@ -42,30 +48,30 @@ public class HomeController {
     }
 
     @RequestMapping({"/welcome"})
-    public ResponseEntity welcome(Principal principal, HttpSession session) {
+    public ResponseEntity welcome(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
 
     @RequestMapping({"/", "/home"})
-    public ResponseEntity home(Principal principal, HttpSession session) {
+    public ResponseEntity home(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
 
     @Secured({"ROLE_ADMIN"})
     @RequestMapping({"/admin"})
-    public ResponseEntity admin(Principal principal, HttpSession session) {
+    public ResponseEntity admin(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
 
-    private ResponseEntity getResponseEntity(Principal principal, HttpSession session) {
+    private ResponseEntity getResponseEntity(Principal principal, HttpSession session) throws JsonProcessingException {
         log.info("home controller called principal: {}", principal);
 
         List<User> userList = usersRepository.findAll();
         User user = usersRepository.findOne(1L);
 
-        Optional.ofNullable(session).ifPresent(httpSession -> {
-            httpSession.setAttribute("principal", principal);
-        });
+        Optional.ofNullable(session).ifPresent(rethrowConsumer(httpSession -> {
+            httpSession.setAttribute("principal", objectMapper.writeValueAsString(principal));
+        }));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("sessionId", session.getId());
