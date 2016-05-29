@@ -27,7 +27,6 @@
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      rowsPerPageTemplate="20,50,100" resizableColumns="true" resizeMode="expand"
                                      editable="true" rowIndexVar="rowIndex" scrollable="false">
-                            <p:ajax event="filter" listener="#{tableView.filterListener}"/>
 
                             <p:column headerText="#{msg['table.rowIndex']}" width="50">
                                 <h:outputText value="#{rowIndex+1}"/>

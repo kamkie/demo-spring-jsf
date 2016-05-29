@@ -2,11 +2,11 @@ package com.example.view;
 
 import com.example.entity.Message;
 import lombok.Data;
+import org.primefaces.model.LazyDataModel;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -15,7 +15,7 @@ import java.util.Map;
 public class TableViewModel implements Serializable {
     private static final long serialVersionUID = -8703578331855685793L;
 
-    private List<Message> messages;
+    private LazyDataModel<Message> messages;
     private Map<String, Object> filters;
 
 }
