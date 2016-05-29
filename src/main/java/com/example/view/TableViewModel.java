@@ -7,6 +7,7 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Component
@@ -15,4 +16,6 @@ public class TableViewModel implements Serializable {
     private static final long serialVersionUID = -8703578331855685793L;
 
     private List<Message> messages;
+    private Map<String, Object> filters;
+
 }
