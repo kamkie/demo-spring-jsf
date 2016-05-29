@@ -21,7 +21,7 @@
                 <div class="ui-grid-col-4">
                     <h:form id="deviceListForm">
                         <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
-                        <p:dataTable id="messagesTable" var="element" value="#{tableView.messages}" lazy="true" binding="#{tableView.table}"
+                        <p:dataTable id="messagesTable" var="element" value="#{tableView.messages}" lazy="true"
                                      paginator="true" rows="20" paginatorPosition="bottom"
                                      rowKey="#{element.id}" emptyMessage="#{msg['empty.model.list']}"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
