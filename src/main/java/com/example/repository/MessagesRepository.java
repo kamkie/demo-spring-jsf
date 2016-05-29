@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(isolation = Isolation.READ_UNCOMMITTED, readOnly = true)
@@ -13,5 +14,8 @@ public interface MessagesRepository extends JpaRepository<Message, Long> {
 
     @Cacheable(cacheNames = "i18n")
     Optional<Message> findByKeyAndLang(String key, String lang);
+
+    List<Message> findAllByKey(String key);
+    List<Message> findAllByLang(String lang);
 
 }

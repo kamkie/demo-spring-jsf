@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition template="layout.xhtml">
+    <ui:define name="css">
+        <style type="text/css">
+
+        </style>
+    </ui:define>
+    <ui:param name="activeIndex" value="1"/>
+
+    <ui:define name="content">
+        <p>Hello #{request.userPrincipal.name}</p>
+        <p>session #{session.id}</p>
+        <p>user #{usersRepository.findAll()}</p>
+        <p>locale #{localeModel.getLocale()}</p>
+
+        <div class="row-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <h:form id="deviceListForm">
+                        <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
+                        <p:dataTable id="messagesTable" var="element" value="#{tableView.messages}" lazy="true" binding="#{tableView.table}"
+                                     paginator="true" rows="20" paginatorPosition="bottom"
+                                     rowKey="#{element.id}" emptyMessage="#{msg['empty.model.list']}"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     rowsPerPageTemplate="20,50,100" resizableColumns="true" resizeMode="expand"
+                                     editable="true" rowIndexVar="rowIndex" scrollable="false">
+                            <p:ajax event="filter" listener="#{tableView.filterListener}"/>
+
+                            <p:column headerText="#{msg['table.rowIndex']}" width="50">
+                                <h:outputText value="#{rowIndex+1}"/>
+                            </p:column>
+
+                            <p:column id="key" headerText="#{msg['table.messages.key']}" sortBy="#{element.key}"
+                                      filterBy="#{element.key}">
+                                <h:outputText value="#{element.key}"/>
+                            </p:column>
+                            <p:column id="lang" headerText="#{msg['table.messages.lang']}" sortBy="#{element.lang}"
+                                      filterBy="#{element.lang}">
+                                <h:outputText value="#{element.lang}"/>
+                            </p:column>
+                            <p:column id="text" headerText="#{msg['table.messages.text']}" sortBy="#{element.text}"
+                                      filterBy="#{element.text}">
+                                <h:outputText value="#{element.text}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

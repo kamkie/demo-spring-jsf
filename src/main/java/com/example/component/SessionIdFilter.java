@@ -19,7 +19,7 @@ public class SessionIdFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String sessionId = Optional.ofNullable(request.getSession()).map(HttpSession::getId).orElse("{no session}");
         MDC.put("sid", sessionId);
-        log.info("add sessionId: {}, to logging context {}", sessionId);
+        log.info("add sessionId: {}, to logging context", sessionId);
 
         filterChain.doFilter(request, response);
     }

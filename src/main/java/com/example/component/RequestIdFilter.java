@@ -21,7 +21,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
             long shortenedId = uid.getMostSignificantBits();
             String id = Long.toString(shortenedId).substring(1, 7);
             MDC.put("rid", id);
-            log.info("add request id to logging context {}", id);
+            log.info("add request id to logging context", id);
 
             filterChain.doFilter(request, response);
         } finally {

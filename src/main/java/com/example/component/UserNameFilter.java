@@ -19,7 +19,7 @@ public class UserNameFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String userName = Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).orElse("{no user}");
         MDC.put("userName", userName);
-        log.info("add userName: {} to logging context {}", userName);
+        log.info("add userName: {} to logging context", userName);
 
         filterChain.doFilter(request, response);
     }
