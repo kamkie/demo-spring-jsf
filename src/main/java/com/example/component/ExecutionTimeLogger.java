@@ -24,12 +24,24 @@ public class ExecutionTimeLogger {
 
     private static final int MAX_CHARS = 60;
     private static final String STR_SUFFIX = " ...>";
-    public static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder().appendValue(HOUR_OF_DAY, 2)
-            .appendLiteral(':').appendValue(MINUTE_OF_HOUR, 2).optionalStart().appendLiteral(':')
-            .appendValue(SECOND_OF_MINUTE, 2).optionalStart().appendLiteral('.')
-            .appendFraction(MILLI_OF_SECOND, 0, 3, false).optionalStart().appendLiteral("ms ").optionalStart()
-            .appendFraction(MicrosOfMilliSecond.INSTANCE, 0, 3, false).appendLiteral("us ")
-            .appendFraction(NanosOfMicroSecond.INSTANCE, 0, 3, false).appendLiteral("ns").toFormatter(Locale.ROOT);
+    public static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
+            .appendValue(HOUR_OF_DAY, 2)
+            .appendLiteral(':')
+            .appendValue(MINUTE_OF_HOUR, 2)
+            .optionalStart()
+            .appendLiteral(':')
+            .appendValue(SECOND_OF_MINUTE, 2)
+            .optionalStart()
+            .appendLiteral('.')
+            .appendFraction(MILLI_OF_SECOND, 0, 3, false)
+            .optionalStart()
+            .appendLiteral("ms ")
+            .optionalStart()
+            .appendFraction(MicrosOfMilliSecond.INSTANCE, 0, 3, false)
+            .appendLiteral("us ")
+            .appendFraction(NanosOfMicroSecond.INSTANCE, 0, 3, false)
+            .appendLiteral("ns")
+            .toFormatter(Locale.ROOT);
 
     @Pointcut("within(@com.example.annotation.Timed *)")
     public void beanAnnotatedWithTimed() {
