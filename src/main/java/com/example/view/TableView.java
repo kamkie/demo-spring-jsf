@@ -41,10 +41,7 @@ public class TableView implements Serializable {
                     PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
                     MessagesRepository repository = getMessagesRepository();
 
-                    String key = Optional.ofNullable(filters.get("key")).map(Object::toString).orElse("");
-                    String lang = Optional.ofNullable(filters.get("lang")).map(Object::toString).orElse("");
-                    String text = Optional.ofNullable(filters.get("text")).map(Object::toString).orElse("");
-                    Page<Message> page = repository.findPageByKeyContainingAndLangContainingAndTextContaining(key, lang, text, pageRequest);
+                    Page<Message> page = repository.findPageWithFilters(filters, pageRequest);
 
                     setRowCount(Long.valueOf(page.getTotalElements()).intValue());
                     return page.getContent();
