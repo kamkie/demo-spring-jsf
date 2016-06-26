@@ -14,15 +14,16 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.faces.bean.ManagedBean;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Component
+@ManagedBean
 @SessionScope
 public class TableView implements Serializable {
     private static final long serialVersionUID = -8703578331855685793L;

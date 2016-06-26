@@ -6,20 +6,19 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
+import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @Component
+@ManagedBean
 public class LocaleModel {
 
-    private final LocaleChangeInterceptor localeChangeInterceptor;
     private final LocaleResolver localeResolver;
 
     @Autowired
-    public LocaleModel(LocaleChangeInterceptor localeChangeInterceptor, LocaleResolver localeResolver) {
-        this.localeChangeInterceptor = localeChangeInterceptor;
+    public LocaleModel(LocaleResolver localeResolver) {
         this.localeResolver = localeResolver;
     }
 
