@@ -3,18 +3,17 @@ spring:
     name: demo
 
   jpa:
-    generate-ddl: false
     hibernate:
+      ddl-auto: validate
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
         generate_statistics: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost:9092/~/.h2/demo
+    url: jdbc:h2:file:~/.demo/demo-jsf;AUTO_SERVER=TRUE
     username: sa
     password: sa
   jmx:

@@ -90,7 +90,7 @@ liquibase {
     activities {
         main {
             changeLogFile 'src/main/resources/db/changelog/db.changelog-master.xml'
-            url 'jdbc:h2:tcp://localhost:9092/~/.h2/demo'
+            url 'jdbc:h2:file:~/.demo/demo-jsf;AUTO_SERVER=TRUE'
             username 'sa'
             password 'sa'
         }
