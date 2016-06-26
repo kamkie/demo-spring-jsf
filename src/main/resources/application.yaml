@@ -28,7 +28,7 @@ spring:
     store-type: jdbc
   devtools:
     restart:
-      exclude: static/**,public/**,META-INF/resources/**
+      exclude: static/**,public/**,META-INF/resources/**,templates/**
 server:
   port: 8080
   compression:

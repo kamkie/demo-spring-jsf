@@ -45,7 +45,7 @@ public class HomeController {
 
     @RequestMapping({"/hello"})
     public ModelAndView hello(Principal principal, HttpSession session) {
-        return new ModelAndView("hello");
+        return new ModelAndView("hello").addObject("buildProperties", buildProperties);
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
