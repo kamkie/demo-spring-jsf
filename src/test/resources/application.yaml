@@ -3,11 +3,10 @@ spring:
     name: demo
 
   jpa:
-    generate-ddl: false
     hibernate:
+      ddl-auto: validate
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
@@ -28,7 +27,7 @@ spring:
     store-type: jdbc
   devtools:
     restart:
-      exclude: static/**,public/**,META-INF/resources/**
+      exclude: static/**,public/**,META-INF/resources/**,templates/**
 server:
   port: 8080
   compression:
