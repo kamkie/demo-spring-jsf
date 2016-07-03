@@ -12,9 +12,9 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 @EnableAspectJAutoProxy
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @SpringBootApplication
-public class DemoApplication {
+public interface DemoApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+    static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args); // NOSONAR
     }
 }
