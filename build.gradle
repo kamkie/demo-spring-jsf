@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.0.M3'
+        springBootVersion = '1.4.0.RC1'
     }
     repositories {
         mavenCentral()
@@ -77,8 +77,8 @@ dependencies {
     compile('io.springfox:springfox-swagger-ui:2.5.0')
 
     compile('org.glassfish:javax.faces:2.2.13')
-    compile('org.apache.tomcat.embed:tomcat-embed-jasper:8.0.33')
-    compile('org.primefaces:primefaces:5.3')
+    compile('org.apache.tomcat.embed:tomcat-embed-jasper')
+    compile('org.primefaces:primefaces:6.0')
     compile('org.primefaces.themes:bootstrap:1.0.10')
 
     compile('org.liquibase:liquibase-core')

@@ -3,12 +3,16 @@ var webpack = require('webpack');
 var ROOT = path.resolve(__dirname, 'src/main/resources/static');
 var SRC = path.resolve(ROOT, 'javascript');
 var DEST = path.resolve(__dirname, 'build/resources/main/static/javascript');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devtool: 'source-map',
-    entry: {
-        app: SRC + '/index.jsx'
-    },
+    entry: [
+        'webpack-hot-middleware/client',
+        SRC + '/index.jsx',
+        // webpack: 'webpack-dev-server/client?http://0.0.0.0:3000',
+        // hot: 'webpack/hot/only-dev-server',
+    ],
     resolve: {
         root: [
             path.resolve(ROOT, 'javascript'),
@@ -20,6 +24,24 @@ module.exports = {
         path: DEST,
         filename: 'bundle.js',
         publicPath: '/javascript/'
+    },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin(),
+        new webpack.DefinePlugin({
+            "process.env": {
+                NODE_ENV: JSON.stringify('development')
+            }
+        }),
+        // new HtmlWebpackPlugin({
+        //     title: 'Boot React',
+        //     template: path.join(ROOT, '/react.html')
+        // })
+    ],
+    devServer: {
+        hot: true,
+        inline: true,
+        port: 3000
     },
     module: {
         loaders: [
