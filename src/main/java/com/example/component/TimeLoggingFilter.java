@@ -2,7 +2,12 @@ package com.example.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -10,6 +15,7 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,13 +27,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.example.component.ExecutionTimeLogger.formatDuration;
+import static javax.servlet.DispatcherType.*;
 
 @Slf4j
+@ConditionalOnProperty(name = "logging.custom.time.enable")
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+@Component
+@WebFilter(urlPatterns = {"/", "/*"}, asyncSupported = true, dispatcherTypes = {REQUEST, ASYNC, ERROR, FORWARD, INCLUDE})
 public class TimeLoggingFilter extends OncePerRequestFilter {
 
     private int maxPayloadLength;
 
-    public TimeLoggingFilter(int maxPayloadLength) {
+    public TimeLoggingFilter(@Value("${logging.custom.time.max-payload-size:50}") int maxPayloadLength) {
         if (maxPayloadLength < 10) {
             maxPayloadLength = 10;
         }
