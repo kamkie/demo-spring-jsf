@@ -28,6 +28,12 @@ spring:
   devtools:
     restart:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
+
+jsf:
+  PROJECT_STAGE: Development
+  primefaces:
+    theme: bootstrap
+
 server:
   port: 8080
   compression:

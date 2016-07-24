@@ -78,10 +78,7 @@ dependencies {
 
     compile('org.jboss.marshalling:jboss-marshalling-river:1.4.11.Final')
 
-    compile('org.glassfish:javax.faces:2.2.13')
-    compile('org.apache.tomcat.embed:tomcat-embed-jasper')
-    compile('org.primefaces:primefaces:6.0')
-    compile('org.primefaces.themes:bootstrap:1.0.10')
+    compile('org.joinfaces:jsf-spring-boot-starter:2.0.0')
 
     compile('org.liquibase:liquibase-core')
 
