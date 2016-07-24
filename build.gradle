@@ -76,7 +76,7 @@ dependencies {
     compile('io.springfox:springfox-swagger2:2.5.0')
     compile('io.springfox:springfox-swagger-ui:2.5.0')
 
-    compile('org.jboss.marshalling:jboss-marshalling-river:1.4.11.Final')
+    compile('de.ruedigermoeller:fst:2.47')
 
     compile('org.joinfaces:jsf-spring-boot-starter:2.0.0')
 
