@@ -1,12 +1,12 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.0.RC1'
+        springBootVersion = '1.4.0.RELEASE'
     }
     repositories {
         mavenCentral()
         jcenter()
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
+//        maven { url "https://repo.spring.io/milestone" }
+//        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -49,7 +49,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.spring.io/milestone" }
+//    maven { url "https://repo.spring.io/milestone" }
     maven { url "http://repository.primefaces.org" }
 }
 
