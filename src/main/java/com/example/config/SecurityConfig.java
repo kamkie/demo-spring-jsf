@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-class AnonymousSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -23,6 +23,23 @@ class AnonymousSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll();
+    }
+
+    @Configuration
+    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER - 15)
+    public static class ManagementSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .authorizeRequests()
+                    .antMatchers("/management/**")
+                    .fullyAuthenticated()
+                    .and()
+                    .httpBasic()
+            ;
+        }
+
     }
 
 }
