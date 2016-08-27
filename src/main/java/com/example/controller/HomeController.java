@@ -43,6 +43,7 @@ public class HomeController {
         this.buildProperties = buildProperties;
     }
 
+    @com.codahale.metrics.annotation.Timed
     @RequestMapping({"/hello"})
     public ModelAndView hello(Principal principal, HttpSession session) {
         return new ModelAndView("hello").addObject("buildProperties", buildProperties);
