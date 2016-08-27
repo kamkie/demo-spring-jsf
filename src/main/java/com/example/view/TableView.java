@@ -32,45 +32,46 @@ public class TableView implements Serializable {
 
     public LazyDataModel<Message> getMessages() {
         if (messages == null) {
-            messages = new LazyDataModel<Message>() {
-                private static final long serialVersionUID = -8803578331856683793L;
-
-                @Override
-                public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-                    log.info("----------- load messages ------------------");
-                    Sort.Direction direction = getDirection(sortOrder);
-                    PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
-                    MessagesRepository repository = getMessagesRepository();
-
-                    Page<Message> page = repository.findPageWithFilters(filters, pageRequest);
-
-                    setRowCount(Long.valueOf(page.getTotalElements()).intValue());
-                    return page.getContent();
-                }
-
-                private MessagesRepository getMessagesRepository() {
-                    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-                    ServletContext servletContext = request.getServletContext();
-                    return WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(MessagesRepository.class);
-                }
-
-                private PageRequest getPageRequest(int first, int pageSize, String sortField, Sort.Direction direction) {
-                    if (sortField != null) {
-                        return new PageRequest(first / pageSize, pageSize, direction, sortField);
-                    }
-                    return new PageRequest(first / pageSize, pageSize);
-                }
-
-                private Sort.Direction getDirection(SortOrder sortOrder) {
-                    if (sortOrder == SortOrder.DESCENDING) {
-                        return Sort.Direction.DESC;
-                    }
-                    return Sort.Direction.ASC;
-                }
-            };
+            messages = new MessageLazyDataModel();
         }
 
         return messages;
     }
 
+    private static class MessageLazyDataModel extends LazyDataModel<Message> {
+        private static final long serialVersionUID = -8803578331856683793L;
+
+        @Override
+        public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+            log.info("----------- load messages ------------------");
+            Sort.Direction direction = getDirection(sortOrder);
+            PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
+            MessagesRepository repository = getMessagesRepository();
+
+            Page<Message> page = repository.findPageWithFilters(filters, pageRequest);
+
+            setRowCount((int) page.getTotalElements());
+            return page.getContent();
+        }
+
+        private MessagesRepository getMessagesRepository() {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            ServletContext servletContext = request.getServletContext();
+            return WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(MessagesRepository.class);
+        }
+
+        private PageRequest getPageRequest(int first, int pageSize, String sortField, Sort.Direction direction) {
+            if (sortField != null) {
+                return new PageRequest(first / pageSize, pageSize, direction, sortField);
+            }
+            return new PageRequest(first / pageSize, pageSize);
+        }
+
+        private Sort.Direction getDirection(SortOrder sortOrder) {
+            if (sortOrder == SortOrder.DESCENDING) {
+                return Sort.Direction.DESC;
+            }
+            return Sort.Direction.ASC;
+        }
+    }
 }

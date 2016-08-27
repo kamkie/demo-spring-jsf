@@ -6,7 +6,6 @@ import com.example.repository.MessagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +34,12 @@ public class DbMessageSource implements MessageSource {
     }
 
     @Override
-    public String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException {
+    public String getMessage(String code, Object[] args, Locale locale) {
         return getMessage(code, args, null, locale);
     }
 
     @Override
-    public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
+    public String getMessage(MessageSourceResolvable resolvable, Locale locale) {
         final Object[] args = resolvable.getArguments();
         final String defaultMessage = resolvable.getDefaultMessage();
         for (String code : resolvable.getCodes()) {

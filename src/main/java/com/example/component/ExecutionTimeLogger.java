@@ -1,7 +1,6 @@
 package com.example.component;
 
-import com.example.utils.MicrosOfMilliSecond;
-import com.example.utils.NanosOfMicroSecond;
+import com.example.utils.SubMillis;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -24,7 +23,7 @@ public class ExecutionTimeLogger {
 
     private static final int MAX_CHARS = 60;
     private static final String STR_SUFFIX = " ...>";
-    public static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
             .appendValue(HOUR_OF_DAY, 2)
             .appendLiteral(':')
             .appendValue(MINUTE_OF_HOUR, 2)
@@ -37,26 +36,30 @@ public class ExecutionTimeLogger {
             .optionalStart()
             .appendLiteral("ms ")
             .optionalStart()
-            .appendFraction(MicrosOfMilliSecond.INSTANCE, 0, 3, false)
+            .appendFraction(SubMillis.MICROS_OF_MILLI_SECOND, 0, 3, false)
             .appendLiteral("us ")
-            .appendFraction(NanosOfMicroSecond.INSTANCE, 0, 3, false)
+            .appendFraction(SubMillis.NANOS_OF_MICRO_SECOND, 0, 3, false)
             .appendLiteral("ns")
             .toFormatter(Locale.ROOT);
 
     @Pointcut("within(@com.example.annotation.Timed *)")
     public void beanAnnotatedWithTimed() {
+        //Pointcut
     }
 
     @Pointcut("execution(public * *(..))")
     public void publicMethod() {
+        //Pointcut
     }
 
     @Pointcut("publicMethod() && beanAnnotatedWithTimed()")
     public void publicMethodInsideAClassMarkedWithAtTimed() {
+        //Pointcut
     }
 
     @Pointcut("execution(* *(..)) && @annotation(com.example.annotation.Timed)")
     public void methodMarkedWithAtTimed() {
+        //Pointcut
     }
 
     @Around("publicMethodInsideAClassMarkedWithAtTimed() || methodMarkedWithAtTimed()")
@@ -86,7 +89,7 @@ public class ExecutionTimeLogger {
         return TIME_FORMATTER.format(LocalTime.ofNanoOfDay(nanos));
     }
 
-    public static String formatLongString(Object input) {
+    private static String formatLongString(Object input) {
         if (input == null) {
             return "{null}";
         }

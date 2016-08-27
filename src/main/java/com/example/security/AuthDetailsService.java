@@ -24,7 +24,7 @@ public class AuthDetailsService implements UserDetailsService {
     @Override
     @Timed
     @Cacheable(cacheNames = "users")
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) {
         Optional<User> user = userRepository.findByLogin(username);
         return user.orElseThrow(() -> new UsernameNotFoundException(String.format("user %s not found", username)));
     }

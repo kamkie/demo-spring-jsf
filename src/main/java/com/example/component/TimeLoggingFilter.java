@@ -36,14 +36,10 @@ import static javax.servlet.DispatcherType.*;
 @WebFilter(urlPatterns = {"/", "/*"}, asyncSupported = true, dispatcherTypes = {REQUEST, ASYNC, ERROR, FORWARD, INCLUDE})
 public class TimeLoggingFilter extends OncePerRequestFilter {
 
-    private int maxPayloadLength;
+    private final int maxPayloadLength;
 
     public TimeLoggingFilter(@Value("${logging.custom.time.max-payload-size:50}") int maxPayloadLength) {
-        if (maxPayloadLength < 10) {
-            maxPayloadLength = 10;
-        }
-
-        this.maxPayloadLength = maxPayloadLength;
+        this.maxPayloadLength = Math.max(10, maxPayloadLength);
     }
 
     @Override
@@ -54,20 +50,24 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
             if (log.isInfoEnabled()) {
-                long nanos = System.nanoTime() - start;
-                String duration = formatDuration(nanos);
-                String headers = getHeadersAsString(request);
-
-                if (log.isDebugEnabled()) {
-                    log.debug("request: url: {}, time {}, params: {}, headers: {}", request.getRequestURL(), duration,
-                            createMessage(request, "", ""), headers);
-                } else {
-                    log.info("request: url: {}, time {}, params: {}", request.getRequestURL(), duration,
-                            createMessage(request, "", ""));
-                }
+                logTime(request, start);
             }
         } finally {
             MDC.remove("userName");
+        }
+    }
+
+    private void logTime(HttpServletRequest request, long start) {
+        long nanos = System.nanoTime() - start;
+        String duration = formatDuration(nanos);
+        String headers = getHeadersAsString(request);
+
+        if (log.isDebugEnabled()) {
+            log.debug("request: url: {}, time {}, params: {}, headers: {}", request.getRequestURL(), duration,
+                    createMessage(request, "", ""), headers);
+        } else {
+            log.info("request: url: {}, time {}, params: {}", request.getRequestURL(), duration,
+                    createMessage(request, "", ""));
         }
     }
 
@@ -81,7 +81,7 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
     }
 
 
-    protected String createMessage(HttpServletRequest request, String prefix, String suffix) {
+    private String createMessage(HttpServletRequest request, String prefix, String suffix) {
         StringBuilder msg = new StringBuilder();
         msg.append(prefix);
         msg.append("uri=").append(request.getRequestURI());
@@ -100,28 +100,26 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
             ContentCachingRequestWrapper wrapper =
                     WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
             if (wrapper != null) {
-                byte[] buf = wrapper.getContentAsByteArray();
-                if (buf.length > 0) {
-                    int length = Math.min(buf.length, getMaxPayloadLength());
-                    String payload;
-                    try {
-                        payload = new String(buf, 0, length, wrapper.getCharacterEncoding());
-                    } catch (UnsupportedEncodingException ex) {
-                        payload = "[unknown]";
-                    }
-                    msg.append(";payload=").append(payload);
-                }
+                appendResponseBody(msg, wrapper);
             }
         }
         msg.append(suffix);
         return msg.toString();
     }
 
-    public int getMaxPayloadLength() {
-        return maxPayloadLength;
+    private void appendResponseBody(StringBuilder msg, ContentCachingRequestWrapper wrapper) {
+        byte[] buf = wrapper.getContentAsByteArray();
+        if (buf.length > 0) {
+            int length = Math.min(buf.length, maxPayloadLength);
+            String payload;
+            try {
+                payload = new String(buf, 0, length, wrapper.getCharacterEncoding());
+            } catch (UnsupportedEncodingException ex) {
+                payload = "[unknown]";
+                log.warn("request had unsupported encoding", ex);
+            }
+            msg.append(";payload=").append(payload);
+        }
     }
 
-    public void setMaxPayloadLength(int maxPayloadLength) {
-        this.maxPayloadLength = maxPayloadLength;
-    }
 }

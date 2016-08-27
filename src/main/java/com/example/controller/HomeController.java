@@ -21,9 +21,6 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import static com.example.utils.LambdaExceptionUtil.rethrowConsumer;
 
 @Slf4j
 @Timed
@@ -45,12 +42,12 @@ public class HomeController {
 
     @com.codahale.metrics.annotation.Timed
     @RequestMapping({"/hello"})
-    public ModelAndView hello(Principal principal, HttpSession session) {
+    public ModelAndView hello() {
         return new ModelAndView("hello").addObject("buildProperties", buildProperties);
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
-    public ModelAndView login(Principal principal, HttpSession session) {
+    public ModelAndView login() {
         return new ModelAndView("login");
     }
 
@@ -76,13 +73,13 @@ public class HomeController {
         List<User> userList = usersRepository.findAll();
         User user = usersRepository.findOne(1L);
 
-        Optional.ofNullable(session).ifPresent(rethrowConsumer(httpSession -> {
-            httpSession.setAttribute("principal", objectMapper.writeValueAsString(principal));
-        }));
-
         Map<String, Object> map = new LinkedHashMap<>();
+        if (session != null) {
+            session.setAttribute("principal", objectMapper.writeValueAsString(principal));
+            map.put("sessionId", session.getId());
+        }
+
         map.put("message", msg.get("hello.text"));
-        map.put("sessionId", session.getId());
         map.put("principal", principal);
         map.put("user", user);
         map.put("userList", userList);

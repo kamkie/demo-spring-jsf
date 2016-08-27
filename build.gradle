@@ -5,8 +5,6 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-//        maven { url "https://repo.spring.io/milestone" }
-//        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -14,14 +12,12 @@ buildscript {
         classpath("org.liquibase:liquibase-gradle-plugin:1.2.1")
         classpath("com.h2database:h2:1.4.192")
         classpath("org.liquibase:liquibase-core:3.5.1")
-//        classpath 'org.springframework:springloaded:1.2.6.RELEASE'
-
         classpath 'com.moowork.gradle:gradle-node-plugin:0.13'
     }
 }
 
 plugins {
-    id "org.sonarqube" version "2.0.1"
+    id "org.sonarqube" version "2.1-rc1"
 }
 
 apply plugin: 'java'
@@ -49,7 +45,6 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-//    maven { url "https://repo.spring.io/milestone" }
     maven { url "http://repository.primefaces.org" }
 }
 
@@ -58,7 +53,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-configuration-processor')
-//    compile('org.springframework.boot:spring-boot-actuator-docs')
+    compile('org.springframework.boot:spring-boot-actuator-docs')
     compile('org.springframework.boot:spring-boot-starter-aop')
     compile('org.springframework.boot:spring-boot-starter-cache')
 //    compile('org.springframework.boot:spring-boot-starter-mail')
