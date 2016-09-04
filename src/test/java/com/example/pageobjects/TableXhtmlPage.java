@@ -1,6 +1,6 @@
 package com.example.pageobjects;
 
-import com.example.util.PrimeFacesUtil;
+import com.example.util.JsfUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -39,7 +39,7 @@ public class TableXhtmlPage {
     public void waitForAjaxTableLoaded() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(webDriver, 30);
         TimeUnit.MILLISECONDS.sleep(200);
-        wait.until(PrimeFacesUtil.waitForJQueryAndPrimeFaces());
+        wait.until(JsfUtil.waitForJQueryAndPrimeFaces());
         wait.until(not(visibilityOfElementLocated(By.cssSelector(".ui-dialog"))));
     }
 

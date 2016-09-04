@@ -27,9 +27,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @TimedMethod
     public Authentication authenticate(Authentication authentication) {
         UserDetails user = userDetailsService.loadUserByUsername(authentication.getName());
-        if (user == null) {
-            throw new BadCredentialsException("Username not found.");
-        }
         CharSequence password = (CharSequence) authentication.getCredentials();
 
         if (!passwordEncoder.matches(password, user.getPassword())) {

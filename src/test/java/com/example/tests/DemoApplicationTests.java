@@ -1,6 +1,7 @@
 package com.example.tests;
 
 import com.example.pageobjects.LoginPage;
+import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
 import com.example.rule.SeleniumClassRule;
@@ -145,6 +146,44 @@ public class DemoApplicationTests {
     }
 
     @Test
+    public void adminLoginFailPassword() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/admin");
+        new LoginPage(webDriver).login("admin", "wrong");
+
+        String content = webDriver.findElement(By.id("login-error")).getText();
+        assertThat(content).contains("Invalid username and password.");
+    }
+
+    @Test
+    public void adminLoginFailUserName() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/admin");
+        new LoginPage(webDriver).login("wrong", "password");
+
+        String content = webDriver.findElement(By.id("login-error")).getText();
+        assertThat(content).contains("Invalid username and password.");
+    }
+
+    @Test
+    public void hello() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/hello");
+        new LoginPage(webDriver).login("user", "password");
+
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
+
+        webDriver.get("http://localhost:" + port + "/hello?lang=en");
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
+
+        webDriver.get("http://localhost:" + port + "/hello");
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
+
+        webDriver.get("http://localhost:" + port + "/hello?lang=pl");
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
+    }
+
+    @Test
     public void adminLogin() throws Exception {
         WebDriver webDriver = webDriverLazyInitializer.get();
         webDriver.get("http://localhost:" + port + "/admin");
@@ -199,6 +238,18 @@ public class DemoApplicationTests {
 
         new ToolbarPanel(webDriver).changeLanguage(Locale.ENGLISH);
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale en");
+    }
+
+    @Test
+    public void jsfSessionMessages() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/index.xhtml");
+        new LoginPage(webDriver).login("user", "password");
+
+        SessionMessagesPanel sessionMessagesPanel = new SessionMessagesPanel(webDriver);
+        sessionMessagesPanel.showInfo();
+        sessionMessagesPanel.waitForAjax();
+        assertThat(sessionMessagesPanel.findSessionMessage().getText()).contains("PrimeFaces Rocks.");
     }
 
 }

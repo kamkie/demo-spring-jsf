@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<p th:inline="text">[[#{hello.text}]]</p>
+<p id="text" th:inline="text">[[#{hello.text}]]</p>
 <!--/*@thymesVar id="buildProperties" type="org.springframework.boot.info.BuildProperties"*/-->
 <p th:text="${buildProperties.version}">version</p>
 <p th:text="${#locale}">locale</p>

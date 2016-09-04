@@ -8,7 +8,7 @@
 
         </style>
     </ui:define>
-    <ui:param name="activeIndex" value="0" />
+    <ui:param name="activeIndex" value="0"/>
 
     <ui:define name="content">
         <p>Hello #{request.userPrincipal.name}</p>
@@ -21,15 +21,15 @@
 
         <p:tooltip/>
 
-        <h:form>
+        <h:form id="messages-form">
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
 
 
-            <p:commandButton value="Info" actionListener="#{messagesView.info}"/>
-            <p:commandButton value="Warn" actionListener="#{messagesView.warn}"/>
-            <p:commandButton value="Error" actionListener="#{messagesView.error}"/>
-            <p:commandButton value="Fatal" actionListener="#{messagesView.fatal}"/>
+            <p:commandButton id="show-info" value="Info" actionListener="#{messagesView.info}"/>
+            <p:commandButton id="show-warn" value="Warn" actionListener="#{messagesView.warn}"/>
+            <p:commandButton id="show-error" value="Error" actionListener="#{messagesView.error}"/>
+            <p:commandButton id="show-fatal" value="Fatal" actionListener="#{messagesView.fatal}"/>
         </h:form>
 
         <p:separator/>

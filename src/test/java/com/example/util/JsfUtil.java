@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
-public class PrimeFacesUtil {
+public class JsfUtil {
     private static final String JS_JQUERY_DEFINED = "return typeof jQuery != 'undefined';";
     private static final String JS_PRIMEFACES_DEFINED = "return typeof PrimeFaces != 'undefined';";
     private static final String JS_JQUERY_ACTIVE = "return jQuery.active != 0;";

@@ -70,11 +70,8 @@ public class HomeController {
         User user = usersRepository.findOne(1L);
 
         Map<String, Object> map = new LinkedHashMap<>();
-        if (session != null) {
-            session.setAttribute("principal", objectMapper.writeValueAsString(principal));
-            map.put("sessionId", session.getId());
-        }
-
+        session.setAttribute("principal", objectMapper.writeValueAsString(principal));
+        map.put("sessionId", session.getId());
         map.put("message", msg.get("hello.text"));
         map.put("principal", principal);
         map.put("user", user);
