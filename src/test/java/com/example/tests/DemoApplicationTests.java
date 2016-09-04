@@ -250,6 +250,18 @@ public class DemoApplicationTests {
         sessionMessagesPanel.showInfo();
         sessionMessagesPanel.waitForAjax();
         assertThat(sessionMessagesPanel.findSessionMessage().getText()).contains("PrimeFaces Rocks.");
+
+        sessionMessagesPanel.showWarn();
+        sessionMessagesPanel.waitForAjax();
+        assertThat(sessionMessagesPanel.findSessionMessage().getText()).contains("Watch out for PrimeFaces.");
+
+        sessionMessagesPanel.showError();
+        sessionMessagesPanel.waitForAjax();
+        assertThat(sessionMessagesPanel.findSessionMessage().getText()).contains("Contact admin.");
+
+        sessionMessagesPanel.showFatal();
+        sessionMessagesPanel.waitForAjax();
+        assertThat(sessionMessagesPanel.findSessionMessage().getText()).contains("System Error");
     }
 
 }

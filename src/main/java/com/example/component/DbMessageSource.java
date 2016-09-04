@@ -26,11 +26,12 @@ public class DbMessageSource implements MessageSource {
 
     @Override
     public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
-        final Optional<Message> message = messagesRepository.findByKeyAndLang(code, locale.getISO3Language());
-        final String localizedMessage = message.map(Message::getText)
-                .orElse(Optional.ofNullable(defaultMessage).orElse(code));
+        final String resolvedDefaultMessage = Optional.ofNullable(defaultMessage).orElse(code);
+        final String message = messagesRepository.findByKeyAndLang(code, locale.getISO3Language())
+                .map(Message::getText)
+                .orElse(String.format(resolvedDefaultMessage, args));
 
-        return String.format(localizedMessage, args);
+        return String.format(message, args);
     }
 
     @Override
@@ -41,14 +42,18 @@ public class DbMessageSource implements MessageSource {
     @Override
     public String getMessage(MessageSourceResolvable resolvable, Locale locale) {
         final Object[] args = resolvable.getArguments();
-        final String defaultMessage = resolvable.getDefaultMessage();
+        String defaultMessage = resolvable.getDefaultMessage();
         for (String code : resolvable.getCodes()) {
-            final Optional<Message> message = messagesRepository.findByKeyAndLang(code, locale.getISO3Language());
-            if (message.isPresent()) {
-                return String.format(message.get().getText(), args);
+            if (defaultMessage == null) {
+                defaultMessage = code;
+            }
+            final String message = getMessage(code, args, defaultMessage, locale);
+            if (!code.equals(message)) {
+                return message;
             }
         }
-        return String.format(defaultMessage, args);
+
+        return defaultMessage;
     }
 
 }
