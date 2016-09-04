@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
 
+import static com.example.utils.LongStringUtils.formatLongString;
 import static java.time.temporal.ChronoField.*;
 
 @Slf4j
@@ -21,8 +22,6 @@ import static java.time.temporal.ChronoField.*;
 @Component
 public class ExecutionTimeLogger {
 
-    private static final int MAX_CHARS = 60;
-    private static final String STR_SUFFIX = " ...>";
     private static final DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
             .appendValue(HOUR_OF_DAY, 2)
             .appendLiteral(':')
@@ -87,25 +86,6 @@ public class ExecutionTimeLogger {
 
     public static String formatDuration(long nanos) {
         return TIME_FORMATTER.format(LocalTime.ofNanoOfDay(nanos));
-    }
-
-    private static String formatLongString(Object input) {
-        if (input == null) {
-            return "{null}";
-        }
-        String string = input.toString();
-        if ("".equals(string)) {
-            return "{empty}";
-        }
-
-        int length = string.length();
-        if (length <= MAX_CHARS) {
-            return string;
-        } else {
-            String substring = string.substring(0, MAX_CHARS);
-            substring = substring.substring(0, substring.lastIndexOf(' '));
-            return substring.concat(STR_SUFFIX);
-        }
     }
 
 }

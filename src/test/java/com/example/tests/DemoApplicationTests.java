@@ -1,5 +1,7 @@
 package com.example.tests;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.example.pageobjects.LoginPage;
 import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
@@ -18,6 +20,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -91,6 +94,21 @@ public class DemoApplicationTests {
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
         assertThat(responseEntity.getBody()).contains("principal");
+    }
+
+    @Test
+    public void homeLogging() throws Exception {
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.setLevel(Level.OFF);
+
+        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/", String.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        root.setLevel(Level.DEBUG);
+        responseEntity = this.restTemplate.getForEntity("/", String.class);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        root.setLevel(Level.INFO);
     }
 
     @Test
