@@ -2,7 +2,7 @@
   <configuration default="false" name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="com.example.*" />
+        <option name="PATTERN" value="com.example.utils.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -62,7 +62,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.session:spring-session')
 
-    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf') {
+        exclude group: 'nz.net.ultraq.thymeleaf', module: 'thymeleaf-layout-dialect'
+    }
     compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE")
     compile("org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE")
 
@@ -86,7 +88,7 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
-    testCompile("org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0")
+    testCompile("org.seleniumhq.selenium:selenium-firefox-driver:2.52.0")
 }
 
 processResources {

@@ -1,15 +1,19 @@
-package com.example;
+package com.example.tests;
 
+import com.example.rule.SeleniumClassRule;
+import com.example.rule.SeleniumTestRule;
+import com.example.utils.LazyInitializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
-import com.gargoylesoftware.htmlunit.WebClient;
-import org.junit.Before;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,26 +32,34 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DemoApplicationTests {
 
+    private static LazyInitializer<WebDriver> webDriverLazyInitializer = new LazyInitializer<>(() -> createWebDriver());
+
+    @ClassRule
+    public static final SeleniumClassRule seleniumClassRule = new SeleniumClassRule(webDriverLazyInitializer);
+    @Rule
+    public final SeleniumTestRule seleniumTestRule = new SeleniumTestRule(webDriverLazyInitializer);
+
     @LocalServerPort
     private int port;
-
     private ObjectMapper objectMapper;
     private TestRestTemplate restTemplate;
-    private TestRestTemplate restAuthTemplate;
-    private WebDriver webDriver;
-    private WebDriver webDriverAuth;
+    private TestRestTemplate restUserAuthTemplate;
+    private TestRestTemplate restAdminAuthTemplate;
 
     @Autowired
     public void initRestTemplate(RestTemplateBuilder restTemplateBuilder, Environment environment) {
-        this.restTemplate = new TestRestTemplate(restTemplateBuilder.build());
         LocalHostUriTemplateHandler handler = new LocalHostUriTemplateHandler(environment);
+        this.restTemplate = new TestRestTemplate(restTemplateBuilder.build());
         this.restTemplate.setUriTemplateHandler(handler);
-        this.restAuthTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthorization("kamkie", "password").build());
-        this.restAuthTemplate.setUriTemplateHandler(handler);
+        this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthorization("user", "password").build());
+        this.restUserAuthTemplate.setUriTemplateHandler(handler);
+        this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthorization("admin", "password").build());
+        this.restAdminAuthTemplate.setUriTemplateHandler(handler);
     }
 
     @Autowired
@@ -56,18 +68,9 @@ public class DemoApplicationTests {
         JacksonTester.initFields(this, objectMapper);
     }
 
-    @Before
-    public void setup() {
-        webDriver = new HtmlUnitDriver(BrowserVersion.CHROME, true);
-        webDriverAuth = new HtmlUnitDriver() {
-            @Override
-            protected WebClient modifyWebClient(WebClient client) {
-                DefaultCredentialsProvider creds = new DefaultCredentialsProvider();
-                creds.addCredentials("kamkie", "password");
-                client.setCredentialsProvider(creds);
-                return client;
-            }
-        };
+    private static WebDriver createWebDriver() {
+        log.info("creating webDriver");
+        return new FirefoxDriver();
     }
 
     @Test
@@ -79,7 +82,6 @@ public class DemoApplicationTests {
     public void home() throws Exception {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/", String.class);
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
@@ -90,7 +92,6 @@ public class DemoApplicationTests {
     public void adminRedirectToLogin() throws Exception {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/admin", String.class);
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(302);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         assertThat(responseEntity.hasBody()).isFalse();
         assertThat(responseEntity.getHeaders().getLocation()).hasPath("/login");
@@ -100,7 +101,6 @@ public class DemoApplicationTests {
     public void managementUnauthorized() throws Exception {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/management/info", String.class);
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(401);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
@@ -109,10 +109,26 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void managementAuthorized() throws Exception {
-        ResponseEntity<byte[]> responseEntity = this.restAuthTemplate.getForEntity("/management/info", byte[].class);
+    public void managementForbidden() throws Exception {
+        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/management/info", byte[].class);
 
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(responseEntity.hasBody()).isTrue();
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+
+        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<Map<String, Object>>() {
+        });
+        assertThat(payload)
+                .containsKey("message")
+                .containsKey("status")
+                .containsKey("timestamp")
+                .containsKey("path");
+    }
+
+    @Test
+    public void managementAuthorized() throws Exception {
+        ResponseEntity<byte[]> responseEntity = this.restAdminAuthTemplate.getForEntity("/management/info", byte[].class);
+
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
@@ -122,6 +138,19 @@ public class DemoApplicationTests {
         assertThat(payload)
                 .containsKey("git")
                 .containsKey("build");
+    }
+
+    @Test
+    public void adminLogin() throws Exception {
+        webDriverLazyInitializer.get().get("http://localhost:" + port + "/admin");
+        loginAsAdmin();
+    }
+
+    private void loginAsAdmin() {
+        WebElement loginForm = webDriverLazyInitializer.get().findElement(By.tagName("form"));
+        loginForm.findElement(By.name("username")).sendKeys("admin");
+        loginForm.findElement(By.name("password")).sendKeys("password");
+        loginForm.submit();
     }
 
 }
