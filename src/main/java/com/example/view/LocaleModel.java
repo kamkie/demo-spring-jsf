@@ -23,15 +23,11 @@ public class LocaleModel {
     }
 
     public Locale getLocale() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest servletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
-        return localeResolver.resolveLocale(servletRequest);
+        return localeResolver.resolveLocale(getHttpServletRequest());
     }
 
     public void setLocale(Locale locale) {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest servletRequest = ((ServletRequestAttributes) requestAttributes).getRequest();
-        localeResolver.setLocale(servletRequest, null, locale);
+        localeResolver.setLocale(getHttpServletRequest(), null, locale);
     }
 
     public String getLocaleCode() {
@@ -40,6 +36,11 @@ public class LocaleModel {
 
     public void setLocaleCode(String locale) {
         setLocale(Locale.forLanguageTag(locale));
+    }
+
+    private HttpServletRequest getHttpServletRequest() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        return ((ServletRequestAttributes) requestAttributes).getRequest();
     }
 
 }

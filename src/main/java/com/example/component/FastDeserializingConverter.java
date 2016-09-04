@@ -1,15 +1,17 @@
-package com.example.serialization;
+package com.example.component;
 
 import org.nustaq.serialization.FSTConfiguration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.serializer.support.SerializationFailedException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FastDeserializingConverter implements Converter<byte[], Object> {
     private final FSTConfiguration conf;
 
-    public FastDeserializingConverter(ClassLoader classLoader) {
-        conf = FSTConfiguration.createDefaultConfiguration();
-        conf.setClassLoader(classLoader);
+    public FastDeserializingConverter() {
+        this.conf = FSTConfiguration.createDefaultConfiguration();
+        this.conf.setClassLoader(Thread.currentThread().getContextClassLoader());
     }
 
     @Override

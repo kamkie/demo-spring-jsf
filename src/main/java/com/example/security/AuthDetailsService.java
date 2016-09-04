@@ -1,6 +1,6 @@
 package com.example.security;
 
-import com.example.annotation.Timed;
+import com.example.annotation.TimedMethod;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AuthDetailsService implements UserDetailsService {
     }
 
     @Override
-    @Timed
+    @TimedMethod
     @Cacheable(cacheNames = "users")
     public User loadUserByUsername(String username) {
         Optional<User> user = userRepository.findByLogin(username);

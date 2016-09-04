@@ -42,7 +42,7 @@ public class ExecutionTimeLogger {
             .appendLiteral("ns")
             .toFormatter(Locale.ROOT);
 
-    @Pointcut("within(@com.example.annotation.Timed *)")
+    @Pointcut("within(@com.example.annotation.TimedMethod *)")
     public void beanAnnotatedWithTimed() {
         //Pointcut
     }
@@ -57,7 +57,7 @@ public class ExecutionTimeLogger {
         //Pointcut
     }
 
-    @Pointcut("execution(* *(..)) && @annotation(com.example.annotation.Timed)")
+    @Pointcut("execution(* *(..)) && @annotation(com.example.annotation.TimedMethod)")
     public void methodMarkedWithAtTimed() {
         //Pointcut
     }

@@ -28,6 +28,13 @@ spring:
   devtools:
     restart:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
+
+jsf:
+  PROJECT_STAGE: Development
+  faceletsSkipComments: true
+  primefaces:
+    theme: bootstrap
+
 server:
   port: 8080
   compression:
@@ -36,6 +43,9 @@ server:
 
 management:
   context-path: /management
+  info:
+    git:
+      mode: full
 
 liquibase:
   change-log: classpath:db/changelog/db.changelog-master.xml

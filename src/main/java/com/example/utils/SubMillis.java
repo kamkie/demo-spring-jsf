@@ -1,9 +1,10 @@
 package com.example.utils;
 
-import com.google.common.base.MoreObjects;
+import lombok.ToString;
 
 import java.time.temporal.*;
 
+@ToString
 public enum SubMillis implements TemporalField {
 
     MICROS_OF_MILLI_SECOND("MicrosOfMilliSecond", ChronoUnit.MICROS, ChronoUnit.MILLIS, ValueRange.of(0, 999)) {
@@ -70,16 +71,6 @@ public enum SubMillis implements TemporalField {
     @SuppressWarnings("unchecked")
     public <R extends Temporal> R adjustInto(R temporal, long newValue) {
         return (R) temporal.with(this, newValue);
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("name", name)
-                .add("baseUnit", baseUnit)
-                .add("rangeUnit", rangeUnit)
-                .add("range", range)
-                .toString();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.example.security;
 
-import com.example.annotation.Timed;
+import com.example.annotation.TimedMethod;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +17,7 @@ public class CachedPasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    @Timed
+    @TimedMethod
     @Cacheable(value = "passwordEncoder", unless = "#result != true")
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);

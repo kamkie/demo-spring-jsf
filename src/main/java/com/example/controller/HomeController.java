@@ -1,6 +1,7 @@
 package com.example.controller;
 
-import com.example.annotation.Timed;
+import com.codahale.metrics.annotation.Timed;
+import com.example.annotation.TimedMethod;
 import com.example.component.ResourceBundleBean;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Timed
+@TimedMethod
 @Controller
 public class HomeController {
 
@@ -40,7 +41,7 @@ public class HomeController {
         this.buildProperties = buildProperties;
     }
 
-    @com.codahale.metrics.annotation.Timed
+    @Timed
     @RequestMapping({"/hello"})
     public ModelAndView hello() {
         return new ModelAndView("hello").addObject("buildProperties", buildProperties);

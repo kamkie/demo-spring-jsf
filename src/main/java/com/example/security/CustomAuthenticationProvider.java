@@ -1,6 +1,6 @@
 package com.example.security;
 
-import com.example.annotation.Timed;
+import com.example.annotation.TimedMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,7 +24,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    @Timed
+    @TimedMethod
     public Authentication authenticate(Authentication authentication) {
         UserDetails user = userDetailsService.loadUserByUsername(authentication.getName());
         if (user == null) {

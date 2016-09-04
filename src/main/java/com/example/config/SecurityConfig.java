@@ -7,9 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER - 20)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -28,18 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER - 15)
     public static class ManagementSecurityConfig extends WebSecurityConfigurerAdapter {
-
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
                     .antMatchers("/management/**")
-                    .fullyAuthenticated()
+                    .hasRole("ADMIN")
+                    .anyRequest().fullyAuthenticated()
                     .and()
-                    .httpBasic()
-            ;
+                    .httpBasic();
         }
-
     }
 
 }
