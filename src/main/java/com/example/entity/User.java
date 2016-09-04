@@ -1,6 +1,5 @@
 package com.example.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +12,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @ToString(exclude = {"password", "authorities"})
 @Table(name = "users")
@@ -24,10 +22,10 @@ public class User implements Principal, UserDetails {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String login;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -35,6 +33,12 @@ public class User implements Principal, UserDetails {
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
+
+    public User(String login, String password, Collection<Role> roles) {
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
+    }
 
     @Override
     public String getName() {

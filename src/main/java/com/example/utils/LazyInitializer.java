@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 public class LazyInitializer<T> {
 
     private final Supplier<T> supplier;
-    private volatile T reference;
+    private T reference;
 
     public LazyInitializer(Supplier<T> supplier) {
         this.supplier = supplier;
@@ -17,11 +17,7 @@ public class LazyInitializer<T> {
 
     public T get() {
         if (reference == null) {
-            synchronized (this) {
-                if (reference == null) {
-                    reference = supplier.get();
-                }
-            }
+            reference = supplier.get();
         }
         return reference;
     }

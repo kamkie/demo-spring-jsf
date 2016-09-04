@@ -1,9 +1,12 @@
 package com.example.tests;
 
+import com.example.entity.Role;
+import com.example.entity.User;
 import com.example.utils.LongStringUtils;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,6 +33,17 @@ public class LongStringUtilsTest {
     @Test
     public void formatNull() throws Exception {
         assertThat(LongStringUtils.formatLongString(null)).isEqualTo("{null}");
+    }
+
+    @Test
+    public void formatRole() throws Exception {
+        assertThat(LongStringUtils.formatLongString(new Role(1L, ""))).isEqualTo("Role(id=1, name=)");
+    }
+
+    @Test
+    public void formatUser() throws Exception {
+        assertThat(LongStringUtils.formatLongString(new User("login", "password", Collections.singleton(new Role(1L, "")))))
+                .isEqualTo("User(id=null, login=login, roles=[Role(id=1, name=)])");
     }
 
     @Test

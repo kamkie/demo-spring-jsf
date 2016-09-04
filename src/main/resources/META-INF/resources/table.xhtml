@@ -29,7 +29,7 @@
                                      editable="true" rowIndexVar="rowIndex" scrollable="false">
 
                             <p:column headerText="#{msg['table.rowIndex']}" width="50">
-                                <h:outputText value="#{rowIndex+1}"/>
+                                <h:outputText value="#{element.id}"/>
                             </p:column>
 
                             <p:column id="key" headerText="#{msg['table.messages.key']}" sortBy="#{element.key}"
