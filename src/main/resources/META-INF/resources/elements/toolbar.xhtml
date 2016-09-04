@@ -22,7 +22,7 @@
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
                         <h:form id="localeForm">
                             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
-                            <h:selectOneMenu value="#{localeModel.localeCode}" onchange="submit()">
+                            <h:selectOneMenu id="language-select-box" value="#{localeModel.localeCode}" onchange="submit()">
                                 <f:selectItem itemValue="en" itemLabel="English"/>
                                 <f:selectItem itemValue="pl" itemLabel="Polski"/>
                             </h:selectOneMenu>

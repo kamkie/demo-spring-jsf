@@ -36,7 +36,10 @@ public class SeleniumTestRule extends TestWatcher {
                     .toAbsolutePath();
             log.info("taking screenshot on test fail {}", target);
             try {
-                target.getParent().toFile().mkdirs();
+                Path targetParent = target.getParent();
+                if (targetParent != null) {
+                    Files.createDirectories(targetParent);
+                }
                 Files.copy(file.toPath(), target);
             } catch (IOException e1) {
                 log.warn("exception saving screenshot", e1);

@@ -1,5 +1,8 @@
 package com.example.tests;
 
+import com.example.pageobjects.LoginPage;
+import com.example.pageobjects.TableXhtmlPage;
+import com.example.pageobjects.ToolbarPanel;
 import com.example.rule.SeleniumClassRule;
 import com.example.rule.SeleniumTestRule;
 import com.example.utils.LazyInitializer;
@@ -11,8 +14,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -28,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -142,15 +146,59 @@ public class DemoApplicationTests {
 
     @Test
     public void adminLogin() throws Exception {
-        webDriverLazyInitializer.get().get("http://localhost:" + port + "/admin");
-        loginAsAdmin();
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/admin");
+        new LoginPage(webDriver).login("admin", "password");
+
+        String content = webDriver.findElement(By.tagName("pre")).getText();
+        Map<String, Object> payload = objectMapper.readValue(content, new TypeReference<Map<String, Object>>() {
+        });
+        assertThat(payload)
+                .containsKey("principal")
+                .containsKey("userList")
+                .containsKey("user")
+                .containsKey("message")
+                .containsKey("buildProperties");
     }
 
-    private void loginAsAdmin() {
-        WebElement loginForm = webDriverLazyInitializer.get().findElement(By.tagName("form"));
-        loginForm.findElement(By.name("username")).sendKeys("admin");
-        loginForm.findElement(By.name("password")).sendKeys("password");
-        loginForm.submit();
+    @Test
+    public void tableXhtml() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/table.xhtml");
+        new LoginPage(webDriver).login("user", "password");
+
+        TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
+        tableXhtmlPage.waitForTableLoaded();
+        assertThat(tableXhtmlPage.countRowsInTable()).isEqualTo(2);
+        assertThat(tableXhtmlPage.findFirstRow().getText()).contains("hello word");
+
+        //try to filter
+        tableXhtmlPage.findFilterByLanguage().sendKeys("pol");
+        tableXhtmlPage.waitForAjaxTableLoaded();
+        assertThat(tableXhtmlPage.countRowsInTable()).isEqualTo(1);
+
+        //try to sort
+        tableXhtmlPage.findFilterByLanguage().sendKeys(Keys.chord(Keys.CONTROL, "c"), Keys.DELETE);
+        tableXhtmlPage.findFilterByLanguage().clear();
+        tableXhtmlPage.waitForAjaxTableLoaded();
+        tableXhtmlPage.findSortByLanguage().click();
+        assertThat(tableXhtmlPage.findFirstRow().getText()).contains("hello word");
+        tableXhtmlPage.waitForAjaxTableLoaded();
+        tableXhtmlPage.findSortByLanguage().click();
+        tableXhtmlPage.waitForAjaxTableLoaded();
+        assertThat(tableXhtmlPage.countRowsInTable()).isEqualTo(2);
+        assertThat(tableXhtmlPage.findFirstRow().getText()).contains("witaj świecie");
+    }
+
+    @Test
+    public void changeLanguageInJsf() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/table.xhtml");
+        new LoginPage(webDriver).login("user", "password");
+        assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
+
+        new ToolbarPanel(webDriver).changeLanguage(Locale.ENGLISH);
+        assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale en");
     }
 
 }
