@@ -162,4 +162,39 @@
             <column name="text" type="varchar(255)" value="witaj świecie"/>
         </insert>
     </changeSet>
+    <changeSet author="kamkie" id="15">
+        <insert tableName="users">
+            <column name="id" type="varchar(255)" value="2"/>
+            <column name="login" type="varchar(255)" value="user"/>
+            <column name="password" type="varchar(255)"
+                    value="$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
+        </insert>
+    </changeSet>
+    <changeSet author="kamkie" id="16">
+        <insert tableName="users_roles">
+            <column name="id" type="varchar(255)" value="3"/>
+            <column name="user_id" type="varchar(255)" value="2"/>
+            <column name="roles_id" type="varchar(255)" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="kamkie" id="17">
+        <insert tableName="users">
+            <column name="id" type="varchar(255)" value="3"/>
+            <column name="login" type="varchar(255)" value="admin"/>
+            <column name="password" type="varchar(255)"
+                    value="$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
+        </insert>
+    </changeSet>
+    <changeSet author="kamkie" id="18">
+        <insert tableName="users_roles">
+            <column name="id" type="varchar(255)" value="4"/>
+            <column name="user_id" type="varchar(255)" value="3"/>
+            <column name="roles_id" type="varchar(255)" value="1"/>
+        </insert>
+        <insert tableName="users_roles">
+            <column name="id" type="varchar(255)" value="5"/>
+            <column name="user_id" type="varchar(255)" value="3"/>
+            <column name="roles_id" type="varchar(255)" value="2"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

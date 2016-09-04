@@ -52,11 +52,6 @@ public class HomeController {
         return new ModelAndView("login");
     }
 
-    @RequestMapping({"/welcome"})
-    public ResponseEntity welcome(Principal principal, HttpSession session) throws JsonProcessingException {
-        return getResponseEntity(principal, session);
-    }
-
     @RequestMapping({"/", "/home"})
     public ResponseEntity home(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);

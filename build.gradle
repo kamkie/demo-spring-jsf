@@ -121,6 +121,12 @@ sonarqube {
     }
 }
 
+task h2Tcp(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.h2.tools.Console"
+    args["-tcp"]
+}
+
 task buildInfoProperties << {
     def file = new File(project.buildDir, 'resources/main/META-INF/build-info.properties')
     if (!file.parentFile.exists()) {

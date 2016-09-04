@@ -77,3 +77,12 @@ user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39
         faces: trace
     javax:
       faces: trace
+  custom:
+    time:
+      enable: true
+    user:
+      enable: true
+    session:
+      enable: true
+    request:
+      enable: true
