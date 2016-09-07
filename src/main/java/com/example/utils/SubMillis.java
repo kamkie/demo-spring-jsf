@@ -2,6 +2,7 @@ package com.example.utils;
 
 import lombok.ToString;
 
+import java.time.LocalTime;
 import java.time.temporal.*;
 
 @ToString
@@ -59,18 +60,21 @@ public enum SubMillis implements TemporalField {
 
     @Override
     public boolean isSupportedBy(TemporalAccessor temporal) {
-        return temporal.isSupported(this);
+        return temporal instanceof LocalTime;
     }
 
     @Override
     public ValueRange rangeRefinedBy(TemporalAccessor temporal) {
-        return temporal.range(this);
+        return range;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <R extends Temporal> R adjustInto(R temporal, long newValue) {
-        return (R) temporal.with(this, newValue);
+        if (isSupportedBy(temporal)) {
+            return (R) LocalTime.ofNanoOfDay(getBaseUnit().getDuration().getNano() * newValue);
+        }
+        throw new UnsupportedTemporalTypeException("only LocalTime is supported");
     }
 
 }
