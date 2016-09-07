@@ -259,6 +259,31 @@ public class DemoApplicationTests {
     }
 
     @Test
+    public void changeLanguageInJsfAndMvc() throws Exception {
+        WebDriver webDriver = webDriverLazyInitializer.get();
+        webDriver.get("http://localhost:" + port + "/hello");
+        new LoginPage(webDriver).login("user", "password");
+        TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
+
+        //locale is pl
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
+        webDriver.get("http://localhost:" + port + "/table.xhtml");
+        assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
+
+        //change locale to en in jsf
+        new ToolbarPanel(webDriver).changeLanguage(Locale.ENGLISH);
+        assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale en");
+        webDriver.get("http://localhost:" + port + "/hello");
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
+
+        //change locale to pl in mvc
+        webDriver.get("http://localhost:" + port + "/hello?lang=pl");
+        assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
+        webDriver.get("http://localhost:" + port + "/table.xhtml");
+        assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
+    }
+
+    @Test
     public void jsfSessionMessages() throws Exception {
         WebDriver webDriver = webDriverLazyInitializer.get();
         webDriver.get("http://localhost:" + port + "/index.xhtml");
