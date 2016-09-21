@@ -199,6 +199,11 @@ spotless {
         //    funcThatTakesLambdas(x -> {} , y -> {} )	// what Eclipse does
         //    funcThatTakesLambdas(x -> {}, y -> {})	// what I wish Eclipse did
         custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+
+        // Eclipse formatter screws up long literals with underscores inside of annotations (see issue #14)
+        //    @Max(value = 9_999_999 L) // what Eclipse does
+        //    @Max(value = 9_999_999L)  // what I wish Eclipse did
+        custom 'Long literal fix', { it.replaceAll('([0-9_]+) [Ll]', '$1L') }
     }
     format 'misc', {
         target '**/.gitignore', '**/*.gradle', '**/*.md', '**/*.sh'
