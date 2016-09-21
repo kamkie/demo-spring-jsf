@@ -1,6 +1,5 @@
 package com.example.rule;
 
-
 import com.example.utils.LazyInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.rules.TestWatcher;

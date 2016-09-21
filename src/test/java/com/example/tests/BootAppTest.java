@@ -12,7 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SpringApplication.class)
 public class BootAppTest {

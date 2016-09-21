@@ -69,7 +69,6 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
                 .collect(Collectors.joining("\n"));
     }
 
-
     private String createMessage(HttpServletRequest request, String prefix, String suffix) {
         StringBuilder msg = new StringBuilder();
         msg.append(prefix);

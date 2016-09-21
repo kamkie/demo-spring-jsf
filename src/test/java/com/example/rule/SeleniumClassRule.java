@@ -1,13 +1,11 @@
 package com.example.rule;
 
-
 import com.example.utils.LazyInitializer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.openqa.selenium.WebDriver;
-
 
 @Slf4j
 public class SeleniumClassRule implements TestRule {
