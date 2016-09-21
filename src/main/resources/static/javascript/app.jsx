@@ -1,8 +1,7 @@
-import ReactDOM from "react-dom";
 import React, {Component} from "react";
 import Table from "./table";
-// import { connect } from 'react-redux';
 import "../css/general.css";
+// import { connect } from 'react-redux';
 
 export default class App extends Component {
 

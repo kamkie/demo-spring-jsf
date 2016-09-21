@@ -14,7 +14,7 @@ public class LongStringUtils {
             return "{null}";
         }
         String string = input.toString();
-        if ("" .equals(string)) {
+        if ("".equals(string)) {
             return "{empty}";
         }
 

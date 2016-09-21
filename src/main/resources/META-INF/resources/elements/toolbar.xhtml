@@ -22,7 +22,8 @@
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
                         <h:form id="localeForm">
                             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
-                            <h:selectOneMenu id="language-select-box" value="#{localeModel.localeCode}" onchange="submit()">
+                            <h:selectOneMenu id="language-select-box" value="#{localeModel.localeCode}"
+                                             onchange="submit()">
                                 <f:selectItem itemValue="en" itemLabel="English"/>
                                 <f:selectItem itemValue="pl" itemLabel="Polski"/>
                             </h:selectOneMenu>
@@ -32,7 +33,8 @@
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
                         <h:outputText value="Użytkownik: #{request.userPrincipal.name}"/>
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
-                        <form action="${pageContext.request.contextPath}/logout" method="post" style="display: inline-block">
+                        <form action="${pageContext.request.contextPath}/logout" method="post"
+                              style="display: inline-block">
                             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
                             <p:commandButton id="logoutButton" styleClass="logoutButton" value="Wyloguj się"
                                              action="/logout" ajax="false"/>
