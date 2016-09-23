@@ -3,11 +3,9 @@ package com.example.view;
 import org.springframework.stereotype.Component;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 
 @Component
-@ManagedBean
 public class MessagesView {
 
     public void info() {

@@ -8,12 +8,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import javax.faces.bean.ManagedBean;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Set;
 
-@ManagedBean(name = "msg")
 @Component(value = "msg")
 public class ResourceBundleBean extends AbstractMap<String, String> {
 

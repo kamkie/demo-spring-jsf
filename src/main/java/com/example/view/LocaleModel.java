@@ -7,12 +7,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
-import javax.faces.bean.ManagedBean;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @Component
-@ManagedBean
 public class LocaleModel {
 
     private final LocaleResolver localeResolver;
