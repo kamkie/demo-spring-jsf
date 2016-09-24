@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.16")
+        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17")
         classpath("org.liquibase:liquibase-gradle-plugin:1.2.1")
         classpath("com.h2database:h2:1.4.192")
         classpath("org.liquibase:liquibase-core:3.5.1")
@@ -214,5 +214,5 @@ spotless {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
+    gradleVersion = '3.1'
 }
