@@ -229,12 +229,12 @@ public class DemoApplicationTests {
         assertThat(tableXhtmlPage.countRowsInTable()).isEqualTo(2);
         assertThat(tableXhtmlPage.findFirstRow().getText()).contains("hello word");
 
-        //try to filter
+        // try to filter
         tableXhtmlPage.findFilterByLanguage().sendKeys("pol");
         tableXhtmlPage.waitForAjaxTableLoaded();
         assertThat(tableXhtmlPage.countRowsInTable()).isEqualTo(1);
 
-        //try to sort
+        // try to sort
         tableXhtmlPage.findFilterByLanguage().sendKeys(Keys.chord(Keys.CONTROL, "c"), Keys.DELETE);
         tableXhtmlPage.findFilterByLanguage().clear();
         tableXhtmlPage.waitForAjaxTableLoaded();
@@ -265,18 +265,18 @@ public class DemoApplicationTests {
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
 
-        //locale is pl
+        // locale is pl
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
         webDriver.get("http://localhost:" + port + "/table.xhtml");
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
 
-        //change locale to en in jsf
+        // change locale to en in jsf
         new ToolbarPanel(webDriver).changeLanguage(Locale.ENGLISH);
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale en");
         webDriver.get("http://localhost:" + port + "/hello");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
-        //change locale to pl in mvc
+        // change locale to pl in mvc
         webDriver.get("http://localhost:" + port + "/hello?lang=pl");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
         webDriver.get("http://localhost:" + port + "/table.xhtml");

@@ -13,7 +13,7 @@ buildscript {
         classpath("com.h2database:h2:1.4.192")
         classpath("org.liquibase:liquibase-core:3.5.1")
         classpath 'com.moowork.gradle:gradle-node-plugin:0.13'
-        classpath 'com.diffplug.gradle.spotless:spotless:1.3.2'
+        classpath 'com.diffplug.gradle.spotless:spotless:2.0.0'
     }
 }
 

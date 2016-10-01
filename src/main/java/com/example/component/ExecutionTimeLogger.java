@@ -43,22 +43,22 @@ public class ExecutionTimeLogger {
 
     @Pointcut("within(@com.example.annotation.TimedMethod *)")
     public void beanAnnotatedWithTimed() {
-        //Pointcut
+        // Pointcut
     }
 
     @Pointcut("execution(public * *(..))")
     public void publicMethod() {
-        //Pointcut
+        // Pointcut
     }
 
     @Pointcut("publicMethod() && beanAnnotatedWithTimed()")
     public void publicMethodInsideAClassMarkedWithAtTimed() {
-        //Pointcut
+        // Pointcut
     }
 
     @Pointcut("execution(* *(..)) && @annotation(com.example.annotation.TimedMethod)")
     public void methodMarkedWithAtTimed() {
-        //Pointcut
+        // Pointcut
     }
 
     @Around("publicMethodInsideAClassMarkedWithAtTimed() || methodMarkedWithAtTimed()")
