@@ -1,28 +1,30 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.1.RELEASE'
+        springBootVersion = '1.4.3.RELEASE'
     }
     repositories {
         mavenCentral()
         jcenter()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17")
         classpath("org.liquibase:liquibase-gradle-plugin:1.2.1")
-        classpath("com.h2database:h2:1.4.192")
-        classpath("org.liquibase:liquibase-core:3.5.1")
-        classpath 'com.moowork.gradle:gradle-node-plugin:0.13'
-        classpath 'com.diffplug.gradle.spotless:spotless:2.0.0'
+        classpath("com.h2database:h2:1.4.193")
+        classpath("org.liquibase:liquibase-core:3.5.3")
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.0.0'
+        classpath 'com.diffplug.gradle.spotless:spotless:2.4.1'
     }
 }
 
 plugins {
-    id "org.sonarqube" version "2.1"
+    id 'com.palantir.git-version' version '0.5.3'
+    id "org.springframework.boot" version '1.4.3.RELEASE'
+    id "org.sonarqube" version "2.2.1"
+    id "com.gorylenko.gradle-git-properties" version "1.4.17"
+    id 'com.github.ben-manes.versions' version '0.13.0'
 }
 
+apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'java'
-apply plugin: 'spring-boot'
 apply plugin: "com.moowork.node"
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'org.liquibase.gradle'
@@ -32,15 +34,7 @@ apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.diffplug.gradle.spotless'
 
-def getVersionName = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-version = getVersionName()
+version = gitVersion()
 group = 'demo'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -49,6 +43,8 @@ repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
 }
+
+ext['thymeleaf.version'] = '3.0.1.RELEASE'
 
 dependencies {
     compile('org.projectlombok:lombok')
@@ -67,17 +63,19 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf') {
         exclude group: 'nz.net.ultraq.thymeleaf', module: 'thymeleaf-layout-dialect'
     }
-    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE")
-    compile("org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE")
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE")
+    compile("org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE")
 
-    compile('io.springfox:springfox-swagger2:2.5.0')
-    compile('io.springfox:springfox-swagger-ui:2.5.0')
+    compile('io.springfox:springfox-swagger2:2.6.1')
+    compile('io.springfox:springfox-swagger-ui:2.6.1')
 
     compile("com.ryantenney.metrics:metrics-spring:3.1.3")
 
-    compile('de.ruedigermoeller:fst:2.47')
+    compile('de.ruedigermoeller:fst:2.48')
 
-    compile('org.joinfaces:jsf-spring-boot-starter:2.0.0')
+    compile('org.joinfaces:jsf-spring-boot-starter:2.3.4')
+    compile group: 'org.primefaces.themes', name: 'bootstrap', version: '1.0.10'
+
 
     compile('org.liquibase:liquibase-core')
 
@@ -86,14 +84,14 @@ dependencies {
 //    compile("org.apache.commons:commons-pool2:2.4.2")
 //    compile('org.springframework.retry:spring-retry')
 
-    runtime('com.h2database:h2:1.4.192')
+    runtime('com.h2database:h2:1.4.193')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
-    testCompile("org.seleniumhq.selenium:selenium-firefox-driver:2.53.0")
-    testCompile("org.seleniumhq.selenium:selenium-support:2.53.0")
-    testCompile("org.powermock:powermock-api-mockito:1.6.5")
-    testCompile("org.powermock:powermock-module-junit4:1.6.5")
+    testCompile("org.seleniumhq.selenium:selenium-firefox-driver:2.53.1")
+    testCompile("org.seleniumhq.selenium:selenium-support:2.53.1")
+    testCompile("org.powermock:powermock-api-mockito:1.6.6")
+    testCompile("org.powermock:powermock-module-junit4:1.6.6")
 }
 
 processResources {
@@ -116,11 +114,12 @@ liquibase {
 
 bootRun {
     addResources = true
+    systemProperties["spring.output.ansi.enabled"] = "always"
 }
 
 sonarqube {
     properties {
-        property "sonar.host.url", "http://192.168.99.100:32768"
+        property "sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:32768"
         property "sonar.projectName", "spring jsf project"
         property "sonar.projectKey", "${project.group}:${project.name}"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
@@ -134,33 +133,33 @@ task h2Tcp(type: JavaExec) {
     args["-tcp"]
 }
 
-task buildInfoProperties << {
-    def file = new File(project.buildDir, 'resources/main/META-INF/build-info.properties')
-    if (!file.parentFile.exists()) {
-        file.parentFile.mkdirs()
-    }
-    if (file.exists()) {
-        assert file.delete()
-    }
-    assert file.createNewFile()
-    logger.info "writing to [${file}]"
-    def map = [
-            "build.version"            : version,
-            "build.spring.boot.version": springBootVersion,
-            "build.artifact"           : project.name,
-            "build.group"              : project.group,
-            "build.name"               : rootProject.name,
-            "build.time"               : new Date().time,
-    ]
+task buildInfoProperties {
+    doLast {
+        def file = new File(project.buildDir, 'resources/main/META-INF/build-info.properties')
+        if (!file.parentFile.exists()) {
+            file.parentFile.mkdirs()
+        }
+        if (file.exists()) {
+            assert file.delete()
+        }
+        assert file.createNewFile()
+        logger.info "writing to [${file}]"
+        def map = [
+                "build.version"            : version,
+                "build.spring.boot.version": springBootVersion,
+                "build.artifact"           : project.name,
+                "build.group"              : project.group,
+                "build.name"               : rootProject.name,
+                "build.time"               : new Date().time,
+        ]
 
-    file.withWriter('UTF-8') { w ->
-        map.each { key, value ->
-            w.writeLine "$key=$value"
+        file.withWriter('UTF-8') { w ->
+            map.each { key, value ->
+                w.writeLine "$key=$value"
+            }
         }
     }
 }
-
-import com.moowork.gradle.node.task.NodeTask
 
 task webpack(type: NodeTask, dependsOn: 'npmInstall') {
     script = project.file('node_modules/webpack/bin/webpack.js')
@@ -171,6 +170,7 @@ task webpackWatch(type: NodeTask, dependsOn: 'npmInstall') {
     args = ['--watch', '--display-error-details']
 }
 
+dependencyUpdates.dependsOn 'dependencyManagement'
 processResources.dependsOn 'webpack'
 
 clean.delete << file('src/main/webapp/dist')
@@ -206,7 +206,7 @@ spotless {
         custom 'Long literal fix', { it.replaceAll('([0-9_]+) [Ll]', '$1L') }
     }
     format 'misc', {
-        target '**/.gitignore', '**/*.gradle', '**/*.md', '**/*.sh'
+        target '**/.gitignore', '**/*.gradle', '*.md', 'src/**/*.md', '**/*.sh'
         indentWithSpaces()
         trimTrailingWhitespace()
         endWithNewline()
@@ -214,5 +214,5 @@ spotless {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
+    gradleVersion = '3.3'
 }
