@@ -1,30 +1,32 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.3.RELEASE'
+        springBootVersion = '1.5.0.RC1'
     }
     repositories {
         mavenCentral()
         jcenter()
+        maven { url 'https://repo.spring.io/libs-milestone' }
     }
     dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.liquibase:liquibase-gradle-plugin:1.2.1")
         classpath("com.h2database:h2:1.4.193")
         classpath("org.liquibase:liquibase-core:3.5.3")
         classpath 'com.moowork.gradle:gradle-node-plugin:1.0.0'
-        classpath 'com.diffplug.gradle.spotless:spotless:2.4.1'
     }
 }
 
 plugins {
     id 'com.palantir.git-version' version '0.5.3'
-    id "org.springframework.boot" version '1.4.3.RELEASE'
     id "org.sonarqube" version "2.2.1"
     id "com.gorylenko.gradle-git-properties" version "1.4.17"
     id 'com.github.ben-manes.versions' version '0.13.0'
+    id "com.diffplug.gradle.spotless" version "2.4.1"
 }
 
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
 apply plugin: "com.moowork.node"
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'org.liquibase.gradle'
@@ -42,6 +44,13 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
+    maven { url 'https://repo.spring.io/libs-milestone' }
+}
+
+dependencyManagement {
+    imports {
+//        mavenBom 'org.springframework.cloud:spring-cloud-sleuth:1.1.0.RELEASE'
+    }
 }
 
 ext['thymeleaf.version'] = '3.0.1.RELEASE'
@@ -59,6 +68,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-validation')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.session:spring-session')
+//    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
 
     compile('org.springframework.boot:spring-boot-starter-thymeleaf') {
         exclude group: 'nz.net.ultraq.thymeleaf', module: 'thymeleaf-layout-dialect'
@@ -119,7 +129,7 @@ bootRun {
 
 sonarqube {
     properties {
-        property "sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:32768"
+        property "sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:9000"
         property "sonar.projectName", "spring jsf project"
         property "sonar.projectKey", "${project.group}:${project.name}"
         property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
@@ -210,6 +220,34 @@ spotless {
         indentWithSpaces()
         trimTrailingWhitespace()
         endWithNewline()
+    }
+}
+
+tasks.withType(Test) {
+    testLogging {
+        // set options for log level LIFECYCLE
+        events "passed", "skipped", "failed", "standardOut"
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
+
+        // set options for log level DEBUG and INFO
+        debug {
+            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+            exceptionFormat "full"
+        }
+        info.events = debug.events
+        info.exceptionFormat = debug.exceptionFormat
+
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
     }
 }
 
