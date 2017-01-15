@@ -6,9 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.concurrent.TimeUnit;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.not;
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public class TableXhtmlPage {
@@ -37,10 +35,10 @@ public class TableXhtmlPage {
     }
 
     public void waitForAjaxTableLoaded() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(webDriver, 30);
-        TimeUnit.MILLISECONDS.sleep(200);
+        WebDriverWait wait = new WebDriverWait(webDriver, 30, 1);
+        wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
         wait.until(JsfUtil.waitForJQueryAndPrimeFaces());
-        wait.until(not(visibilityOfElementLocated(By.cssSelector(".ui-dialog"))));
+        wait.until(invisibilityOfElementLocated(By.cssSelector(".ui-dialog")));
     }
 
     public int countRowsInTable() {

@@ -12,7 +12,8 @@ buildscript {
         classpath("org.liquibase:liquibase-gradle-plugin:1.2.1")
         classpath("com.h2database:h2:1.4.193")
         classpath("org.liquibase:liquibase-core:3.5.3")
-        classpath 'com.moowork.gradle:gradle-node-plugin:1.0.0'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.1.0'
+        classpath 'com.toomuchcoding:uptodate-gradle-plugin:1.0.0'
     }
 }
 
@@ -20,11 +21,11 @@ plugins {
     id 'com.palantir.git-version' version '0.5.3'
     id "org.sonarqube" version "2.2.1"
     id "com.gorylenko.gradle-git-properties" version "1.4.17"
-    id 'com.github.ben-manes.versions' version '0.13.0'
+//    id 'com.github.ben-manes.versions' version '0.13.0'
     id "com.diffplug.gradle.spotless" version "2.4.1"
 }
 
-apply plugin: 'com.github.ben-manes.versions'
+//apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: "com.moowork.node"
@@ -35,6 +36,7 @@ apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: 'com.toomuchcoding.uptodate'
 
 version = gitVersion()
 group = 'demo'
@@ -54,6 +56,7 @@ dependencyManagement {
 }
 
 ext['thymeleaf.version'] = '3.0.1.RELEASE'
+ext['selenium.version'] = '3.0.1'
 
 dependencies {
     compile('org.projectlombok:lombok')
@@ -98,8 +101,9 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
-    testCompile("org.seleniumhq.selenium:selenium-firefox-driver:2.53.1")
-    testCompile("org.seleniumhq.selenium:selenium-support:2.53.1")
+    testCompile("org.seleniumhq.selenium:selenium-chrome-driver:3.0.1")
+    testCompile("org.seleniumhq.selenium:selenium-support:3.0.1")
+    testCompile("io.github.bonigarcia:webdrivermanager:1.5.0")
     testCompile("org.powermock:powermock-api-mockito:1.6.6")
     testCompile("org.powermock:powermock-module-junit4:1.6.6")
 }
@@ -180,7 +184,7 @@ task webpackWatch(type: NodeTask, dependsOn: 'npmInstall') {
     args = ['--watch', '--display-error-details']
 }
 
-dependencyUpdates.dependsOn 'dependencyManagement'
+//dependencyUpdates.dependsOn 'dependencyManagement'
 processResources.dependsOn 'webpack'
 
 clean.delete << file('src/main/webapp/dist')

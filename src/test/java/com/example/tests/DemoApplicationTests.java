@@ -11,6 +11,7 @@ import com.example.rule.SeleniumTestRule;
 import com.example.utils.LazyInitializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -19,7 +20,8 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -45,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DemoApplicationTests {
 
-    private static LazyInitializer<WebDriver> webDriverLazyInitializer = new LazyInitializer<>(() -> createWebDriver());
+    private static LazyInitializer<WebDriver> webDriverLazyInitializer = new LazyInitializer<>(DemoApplicationTests::createWebDriver);
 
     @ClassRule
     public static final SeleniumClassRule seleniumClassRule = new SeleniumClassRule(webDriverLazyInitializer);
@@ -78,7 +80,10 @@ public class DemoApplicationTests {
 
     private static WebDriver createWebDriver() {
         log.info("creating webDriver");
-        return new FirefoxDriver();
+        ChromeDriverManager.getInstance().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--lang=pl");
+        return new ChromeDriver(options);
     }
 
     @Test
