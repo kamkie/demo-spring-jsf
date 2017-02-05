@@ -197,4 +197,15 @@
             <column name="roles_id" type="varchar(255)" value="2"/>
         </insert>
     </changeSet>
+    <changeSet author="kamkie" id="19">
+        <insert tableName="roles">
+            <column name="id" type="varchar(255)" value="3"/>
+            <column name="name" type="varchar(255)" value="ROLE_ACTUATOR"/>
+        </insert>
+        <insert tableName="users_roles">
+            <column name="id" type="varchar(255)" value="6"/>
+            <column name="user_id" type="varchar(255)" value="3"/>
+            <column name="roles_id" type="varchar(255)" value="3"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -1,11 +1,10 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.0.RC1'
+        springBootVersion = '1.5.1.RELEASE'
     }
     repositories {
         mavenCentral()
         jcenter()
-        maven { url 'https://repo.spring.io/libs-milestone' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -22,6 +21,7 @@ plugins {
     id "org.sonarqube" version "2.2.1"
     id "com.gorylenko.gradle-git-properties" version "1.4.17"
     id "com.diffplug.gradle.spotless" version "2.4.1"
+    id 'com.github.ben-manes.versions' version '0.13.0'
 }
 
 //apply plugin: 'com.github.ben-manes.versions'
@@ -45,7 +45,6 @@ targetCompatibility = 1.8
 repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
-    maven { url 'https://repo.spring.io/libs-milestone' }
 }
 
 dependencyManagement {
@@ -54,7 +53,7 @@ dependencyManagement {
     }
 }
 
-ext['thymeleaf.version'] = '3.0.1.RELEASE'
+ext['thymeleaf.version'] = '3.0.3.RELEASE'
 ext['selenium.version'] = '3.0.1'
 
 dependencies {
@@ -85,7 +84,7 @@ dependencies {
 
     compile('de.ruedigermoeller:fst:2.48')
 
-    compile('org.joinfaces:jsf-spring-boot-starter:2.3.4')
+    compile('org.joinfaces:jsf-spring-boot-starter:2.3.5')
     compile group: 'org.primefaces.themes', name: 'bootstrap', version: '1.0.10'
 
 
@@ -101,7 +100,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 
-    testCompile("io.github.bonigarcia:webdrivermanager:1.5.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:1.5.1")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
 

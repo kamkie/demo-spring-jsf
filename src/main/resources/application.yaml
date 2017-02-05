@@ -13,7 +13,8 @@ spring:
         generate_statistics: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost:9092/~/.demo/demo-jsf
+    url: jdbc:h2:mem:demo-jsf
+#    url: jdbc:h2:tcp://localhost:9092/~/.demo/demo-jsf
     username: sa
     password: sa
   jmx:
