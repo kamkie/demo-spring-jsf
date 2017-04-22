@@ -4,6 +4,7 @@ import com.example.annotation.TimedMethod;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.annotation.Primary;
@@ -25,11 +26,12 @@ public class DbMessageSource implements MessageSource {
     }
 
     @Override
+    @Cacheable(cacheNames = "messageSource", key = "#code + '|' + #defaultMessage + '|' + #locale")
     public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
         final String resolvedDefaultMessage = Optional.ofNullable(defaultMessage).orElse(code);
         final String message = messagesRepository.findByKeyAndLang(code, locale.getISO3Language())
                 .map(Message::getText)
-                .orElse(String.format(resolvedDefaultMessage, args));
+                .orElse(resolvedDefaultMessage);
 
         return String.format(message, args);
     }

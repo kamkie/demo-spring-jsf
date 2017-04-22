@@ -19,7 +19,7 @@ spring:
   jmx:
     enabled: true
   cache:
-    cache-names: passwordEncoder,users,i18n
+    cache-names: passwordEncoder,users,i18n,messageSource
     caffeine:
       spec: maximumSize=1000,expireAfterAccess=1d
 
