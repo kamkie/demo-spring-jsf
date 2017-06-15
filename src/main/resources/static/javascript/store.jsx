@@ -1,6 +1,6 @@
 import React from "react";
 import reducer from "reducers";
-import {createStore, applyMiddleware, compose} from "redux";
+import {applyMiddleware, compose, createStore} from "redux";
 import DevTools from "config/devtools";
 import promiseMiddleware from "config/promiseMiddleware";
 
