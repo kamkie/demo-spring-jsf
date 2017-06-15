@@ -45,6 +45,11 @@ server:
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/plain
+#  tomcat:
+#    basedir: .
+#    accesslog:
+#      enabled: true
+#      pattern: '%t %a "%r" %s (%D ms)'
 
 management:
   context-path: /management
@@ -84,3 +89,21 @@ user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39
         faces: info
     javax:
       faces: info
+
+#logbook:
+#    exclude:
+#        - /health
+#        - /admin/**
+#    filter.enabled: true
+#    format.style: http
+#    obfuscate:
+#        headers:
+#            - Authorization
+#            - X-Secret
+#        parameters:
+#            - access_token
+#            - password
+#    write:
+#        category: http.wire-log
+#        level: INFO
+#        chunk-size: 1000
