@@ -150,6 +150,8 @@ task h2Tcp(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "org.h2.tools.Console"
     args["-tcp"]
+    classpath = buildscript.configurations.classpath
+    setDependsOn([])
 }
 
 task buildInfoProperties {
