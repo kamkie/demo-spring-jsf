@@ -190,9 +190,7 @@ task webpackWatch(type: NodeTask, dependsOn: 'npmInstall') {
     script = project.file('node_modules/webpack/bin/webpack.js')
     args = ['--watch', '--display-error-details']
 }
-
-//dependencyUpdates.dependsOn 'dependencyManagement'
-//processResources.dependsOn 'webpack'
+processResources.dependsOn 'webpack'
 
 clean.delete << file('src/main/webapp/dist')
 
