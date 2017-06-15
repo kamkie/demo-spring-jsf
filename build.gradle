@@ -57,6 +57,9 @@ ext['thymeleaf.version'] = '3.0.3.RELEASE'
 ext['selenium.version'] = '3.0.1'
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+
     compile('org.projectlombok:lombok')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -92,7 +95,7 @@ dependencies {
 
     compile('org.liquibase:liquibase-core')
 
-    compile 'com.github.ben-manes.caffeine:caffeine'
+    compile 'com.github.ben-manes.caffeine:caffeine:2.5.2' //newer version than in spring boot
 
 //    compile("org.apache.commons:commons-pool2:2.4.2")
 //    compile('org.springframework.retry:spring-retry')
@@ -100,11 +103,11 @@ dependencies {
     runtime('com.h2database:h2:1.4.196')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.2.1.RELEASE')
 
     testCompile("io.github.bonigarcia:webdrivermanager:1.6.2")
-    testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
-    testCompile("org.seleniumhq.selenium:selenium-support")
+    testCompile("org.seleniumhq.selenium:selenium-chrome-driver:3.4.0")//newer version than in spring boot
+    testCompile("org.seleniumhq.selenium:selenium-support:3.4.0")//newer version than in spring boot
 
     testCompile("org.powermock:powermock-api-mockito:1.7.0RC4")
     testCompile("org.powermock:powermock-module-junit4:1.7.0RC4")

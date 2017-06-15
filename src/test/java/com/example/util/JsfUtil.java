@@ -1,8 +1,9 @@
 package com.example.util;
 
-import com.google.common.base.Predicate;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+
+import java.util.function.Function;
 
 public class JsfUtil {
     private static final String JS_JQUERY_DEFINED = "return typeof jQuery != 'undefined';";
@@ -10,7 +11,7 @@ public class JsfUtil {
     private static final String JS_JQUERY_ACTIVE = "return jQuery.active != 0;";
     private static final String JS_PRIMEFACES_QUEUE_NOT_EMPTY = "return !PrimeFaces.ajax.Queue.isEmpty();";
 
-    public static Predicate<WebDriver> waitForJQueryAndPrimeFaces() {
+    public static Function<WebDriver, Boolean> waitForJQueryAndPrimeFaces() {
         return input -> {
             boolean ajax = false;
             boolean jQueryDefined = executeBooleanJavascript(input, JS_JQUERY_DEFINED);
