@@ -105,12 +105,12 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.2.1.RELEASE')
 
-    testCompile("io.github.bonigarcia:webdrivermanager:1.6.2")
+    testCompile("io.github.bonigarcia:webdrivermanager:1.7.0")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver:3.4.0")//newer version than in spring boot
     testCompile("org.seleniumhq.selenium:selenium-support:3.4.0")//newer version than in spring boot
 
-    testCompile("org.powermock:powermock-api-mockito:1.7.0RC4")
-    testCompile("org.powermock:powermock-module-junit4:1.7.0RC4")
+    testCompile("org.powermock:powermock-api-mockito:1.7.0")
+    testCompile("org.powermock:powermock-module-junit4:1.7.0")
 }
 
 processResources {
