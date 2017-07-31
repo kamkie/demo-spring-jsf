@@ -94,7 +94,7 @@ dependencies {
 
     compile("com.ryantenney.metrics:metrics-spring:3.1.3")
 
-    compile('de.ruedigermoeller:fst:2.51')
+    compile('de.ruedigermoeller:fst:2.52')
 
     compile('org.joinfaces:jsf-spring-boot-starter:2.4.0')
     compile group: 'org.primefaces.themes', name: 'bootstrap', version: '1.0.10'
@@ -104,7 +104,7 @@ dependencies {
 
     compile('org.liquibase:liquibase-core')
 
-    compile 'com.github.ben-manes.caffeine:caffeine:2.5.2' //newer version than in spring boot
+    compile 'com.github.ben-manes.caffeine:caffeine:2.5.3' //newer version than in spring boot
 
 //    compile("org.apache.commons:commons-pool2:2.4.2")
 //    compile('org.springframework.retry:spring-retry')
@@ -117,7 +117,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.2.1.RELEASE')
 
-    testCompile("io.github.bonigarcia:webdrivermanager:1.7.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:1.7.1")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver:3.4.0")//newer version than in spring boot
     testCompile("org.seleniumhq.selenium:selenium-support:3.4.0")//newer version than in spring boot
 
