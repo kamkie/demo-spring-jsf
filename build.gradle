@@ -1,6 +1,7 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.4.RELEASE'
+        springBootVersion = '1.5.6.RELEASE'
+        hibernateVersion = '5.2.10.Final'
     }
     repositories {
         mavenCentral()
@@ -13,6 +14,7 @@ buildscript {
         classpath("org.liquibase:liquibase-core:3.5.3")
         classpath 'com.moowork.gradle:gradle-node-plugin:1.1.0'
         classpath 'com.toomuchcoding:uptodate-gradle-plugin:1.0.1'
+        classpath "org.hibernate:hibernate-gradle-plugin:${hibernateVersion}"
     }
 }
 
@@ -31,20 +33,23 @@ apply plugin: "com.moowork.node"
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'org.liquibase.gradle'
 apply plugin: 'pmd'
-apply plugin: 'findbugs'
+//apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.diffplug.gradle.spotless'
 apply plugin: 'com.toomuchcoding.uptodate'
+apply plugin: 'org.hibernate.orm'
 
 version = gitVersion()
 group = 'demo'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
 
 repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
+    maven { url "https://artifacts.alfresco.com/nexus/content/repositories/public/" }
 }
 
 dependencyManagement {
@@ -55,12 +60,13 @@ dependencyManagement {
 
 ext['thymeleaf.version'] = '3.0.3.RELEASE'
 ext['selenium.version'] = '3.0.1'
+ext['hibernate.version'] = '5.2.10.Final'
 
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
-    compile('org.projectlombok:lombok')
+    compile('org.projectlombok:lombok:1.16.18')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-configuration-processor')
@@ -83,9 +89,12 @@ dependencies {
     compile('io.springfox:springfox-swagger2:2.7.0')
     compile('io.springfox:springfox-swagger-ui:2.7.0')
 
+    // https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.0.BETA-5'
+
     compile("com.ryantenney.metrics:metrics-spring:3.1.3")
 
-    compile('de.ruedigermoeller:fst:2.50')
+    compile('de.ruedigermoeller:fst:2.51')
 
     compile('org.joinfaces:jsf-spring-boot-starter:2.4.0')
     compile group: 'org.primefaces.themes', name: 'bootstrap', version: '1.0.10'
@@ -101,6 +110,9 @@ dependencies {
 //    compile('org.springframework.retry:spring-retry')
 
     runtime('com.h2database:h2:1.4.196')
+
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:1.2.1.RELEASE')
@@ -134,6 +146,14 @@ liquibase {
 bootRun {
     addResources = true
     systemProperties["spring.output.ansi.enabled"] = "always"
+}
+
+hibernate {
+    enhance {
+        enableLazyInitialization= true
+        enableDirtyTracking = true
+        enableAssociationManagement = true
+    }
 }
 
 sonarqube {
@@ -225,7 +245,10 @@ spotless {
         custom 'Long literal fix', { it.replaceAll('([0-9_]+) [Ll]', '$1L') }
     }
     format 'misc', {
-        target '**/.gitignore', '**/*.gradle', '*.md', 'src/**/*.md', '**/*.sh'
+        target fileTree('.') {
+            include '.gitignore', '**/.gitignore', 'build.gradle', '*.md', 'src/**/*.md', '*.sh', 'src/**/*.sh'
+            exclude 'node_modules/**', 'out/**'
+        }
         indentWithSpaces()
         trimTrailingWhitespace()
         endWithNewline()
@@ -261,5 +284,5 @@ tasks.withType(Test) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.0'
+    gradleVersion = '4.1-rc-1'
 }
