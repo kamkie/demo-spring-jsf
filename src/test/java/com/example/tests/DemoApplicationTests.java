@@ -88,7 +88,7 @@ public class DemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        assertThat(port).isNotZero();
+        assertThat(port).isPositive();
     }
 
     @Test
