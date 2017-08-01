@@ -37,6 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -83,6 +84,9 @@ public class DemoApplicationTests {
         ChromeDriverManager.getInstance().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--lang=pl");
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("intl.accept_languages", "pl");
+        options.setExperimentalOption("prefs", prefs);
         return new ChromeDriver(options);
     }
 
