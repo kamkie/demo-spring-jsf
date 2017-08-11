@@ -104,7 +104,7 @@ dependencies {
 
     compile('org.liquibase:liquibase-core')
 
-    compile 'com.github.ben-manes.caffeine:caffeine:2.5.3' //newer version than in spring boot
+    compile 'com.github.ben-manes.caffeine:caffeine:2.5.4' //newer version than in spring boot
 
 //    compile("org.apache.commons:commons-pool2:2.4.2")
 //    compile('org.springframework.retry:spring-retry')
