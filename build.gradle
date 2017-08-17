@@ -147,6 +147,7 @@ task springConfiguration(type: Copy) {
     into file("$buildDir/generated/META-INF/")
 }
 classes.dependsOn springConfiguration
+compileJava.dependsOn processResources
 springConfiguration.mustRunAfter compileJava
 
 liquibase {
