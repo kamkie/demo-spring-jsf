@@ -14,7 +14,7 @@ buildscript {
         classpath("org.liquibase:liquibase-core:3.5.3")
         classpath 'com.moowork.gradle:gradle-node-plugin:1.1.0'
         classpath 'com.toomuchcoding:uptodate-gradle-plugin:1.0.1'
-        classpath "org.hibernate:hibernate-gradle-plugin:${hibernateVersion}"
+//        classpath "org.hibernate:hibernate-gradle-plugin:${hibernateVersion}"
     }
 }
 
@@ -24,6 +24,7 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "1.4.17"
     id "com.diffplug.gradle.spotless" version "2.4.1"
     id 'com.github.ben-manes.versions' version '0.15.0'
+    id "com.github.spotbugs" version "1.2"
 }
 
 //apply plugin: 'com.github.ben-manes.versions'
@@ -33,18 +34,18 @@ apply plugin: "com.moowork.node"
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'org.liquibase.gradle'
 apply plugin: 'pmd'
-//apply plugin: 'findbugs'
+apply plugin: 'com.github.spotbugs'
 apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.diffplug.gradle.spotless'
 apply plugin: 'com.toomuchcoding.uptodate'
-apply plugin: 'org.hibernate.orm'
+//apply plugin: 'org.hibernate.orm'
 
 version = gitVersion()
 group = 'demo'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
+//sourceSets.main.output.classesDir = new File(buildDir, "classes/main")
 
 repositories {
     mavenCentral()
@@ -132,6 +133,22 @@ processResources {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["build/generated/", "src/main/resources"]
+        }
+    }
+}
+task springConfiguration(type: Copy) {
+    inputs.files("$buildDir/classes/main", "$buildDir/classes/java/main")
+    outputs.dir("$buildDir/generated")
+    from file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json")
+    into file("$buildDir/generated/META-INF/")
+}
+classes.dependsOn springConfiguration
+springConfiguration.mustRunAfter compileJava
+
 liquibase {
     activities {
         main {
@@ -148,13 +165,13 @@ bootRun {
     systemProperties["spring.output.ansi.enabled"] = "always"
 }
 
-hibernate {
-    enhance {
-        enableLazyInitialization= true
-        enableDirtyTracking = true
-        enableAssociationManagement = true
-    }
-}
+//hibernate {
+//    enhance {
+//        enableLazyInitialization= true
+//        enableDirtyTracking = true
+//        enableAssociationManagement = true
+//    }
+//}
 
 sonarqube {
     properties {

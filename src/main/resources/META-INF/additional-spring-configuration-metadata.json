@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "logging.custom.user.enable",
+      "type": "java.lang.Boolean",
+      "description": "Description for logging.custom.user.enable."
+    },
+    {
+      "name": "logging.custom.session.enable",
+      "type": "java.lang.Boolean",
+      "description": "Description for logging.custom.session.enable."
+    },
+    {
+      "name": "logging.custom.time.enable",
+      "type": "java.lang.Boolean",
+      "description": "Description for ble.custom.time.enable."
+    },
+    {
+      "name": "logging.custom.request.enable",
+      "type": "java.lang.Boolean",
+      "description": "Description for ble.custom.request.enable."
+    },
+    {
+      "name": "jsf.PROJECT_STAGE",
+      "type": "java.lang.String",
+      "description": "Description for jsf.PROJECT_STAGE."
+    }
+  ]
+}

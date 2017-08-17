@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Set;
@@ -30,7 +29,6 @@ public class ResourceBundleBean extends AbstractMap<String, String> {
     }
 
     @Override
-    @Nonnull
     public Set<Entry<String, String>> entrySet() {
         return Collections.emptySet();
     }
