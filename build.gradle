@@ -145,6 +145,9 @@ task springConfiguration(type: Copy) {
     outputs.dir("$buildDir/generated")
     from file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json")
     into file("$buildDir/generated/META-INF/")
+    doLast {
+        file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json").delete()
+    }
 }
 classes.dependsOn springConfiguration
 compileJava.dependsOn processResources

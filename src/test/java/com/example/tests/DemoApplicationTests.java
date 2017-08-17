@@ -83,11 +83,14 @@ public class DemoApplicationTests {
         log.info("creating webDriver");
         ChromeDriverManager.getInstance().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--lang=pl", "--start-maximized");
+        options.addArguments("--lang=pl");
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("intl.accept_languages", "pl");
         options.setExperimentalOption("prefs", prefs);
-        return new ChromeDriver(options);
+        ChromeDriver chromeDriver = new ChromeDriver(options);
+        chromeDriver.manage().window().maximize();
+
+        return chromeDriver;
     }
 
     @Test
