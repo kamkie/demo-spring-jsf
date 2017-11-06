@@ -72,6 +72,7 @@ public class DbMessageSourceTest {
         assertThat(resolvedMessage).isEqualTo(defaultMessage);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
     public void getMessage4() throws Exception {
         MessagesRepository repository = mock(MessagesRepository.class);

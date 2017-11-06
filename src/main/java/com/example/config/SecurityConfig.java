@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER - 20)
+@Order(SecurityProperties.DEFAULT_FILTER_ORDER - 20)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -26,11 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Configuration
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER - 25)
+    @Order(SecurityProperties.DEFAULT_FILTER_ORDER - 25)
     public static class ManagementSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/management/**");
+            http.antMatcher("/application/**");
             http.csrf().disable();
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
             http.authorizeRequests().anyRequest().hasRole("ADMIN").and().httpBasic();

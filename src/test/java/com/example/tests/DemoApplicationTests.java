@@ -24,12 +24,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -134,7 +134,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementUnauthorized() throws Exception {
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/management/info", String.class);
+        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/application/info", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.hasBody()).isTrue();
@@ -145,7 +145,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementForbidden() throws Exception {
-        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/management/info", byte[].class);
+        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/application/info", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(responseEntity.hasBody()).isTrue();
@@ -162,7 +162,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementAuthorized() throws Exception {
-        ResponseEntity<byte[]> responseEntity = this.restAdminAuthTemplate.getForEntity("/management/info", byte[].class);
+        ResponseEntity<byte[]> responseEntity = this.restAdminAuthTemplate.getForEntity("/application/info", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.hasBody()).isTrue();

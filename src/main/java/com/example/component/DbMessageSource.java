@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.annotation.Primary;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
@@ -27,7 +28,7 @@ public class DbMessageSource implements MessageSource {
 
     @Override
     @Cacheable(cacheNames = "messageSource", key = "#code + '|' + #defaultMessage + '|' + #locale")
-    public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
+    public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
         final String resolvedDefaultMessage = Optional.ofNullable(defaultMessage).orElse(code);
         final String message = messagesRepository.findByKeyAndLang(code, locale.getISO3Language())
                 .map(Message::getText)
@@ -37,7 +38,7 @@ public class DbMessageSource implements MessageSource {
     }
 
     @Override
-    public String getMessage(String code, Object[] args, Locale locale) {
+    public String getMessage(String code, @Nullable Object[] args, Locale locale) {
         return getMessage(code, args, null, locale);
     }
 
@@ -45,17 +46,21 @@ public class DbMessageSource implements MessageSource {
     public String getMessage(MessageSourceResolvable resolvable, Locale locale) {
         final Object[] args = resolvable.getArguments();
         String defaultMessage = resolvable.getDefaultMessage();
-        for (String code : resolvable.getCodes()) {
-            if (defaultMessage == null) {
-                defaultMessage = code;
-            }
-            final String message = getMessage(code, args, defaultMessage, locale);
-            if (!code.equals(message)) {
-                return message;
+        String[] codes = resolvable.getCodes();
+
+        if (codes != null) {
+            for (String code : codes) {
+                if (defaultMessage == null) {
+                    defaultMessage = code;
+                }
+                final String message = getMessage(code, args, defaultMessage, locale);
+                if (!code.equals(message)) {
+                    return message;
+                }
             }
         }
 
-        return defaultMessage;
+        return defaultMessage == null ? "" : defaultMessage;
     }
 
 }

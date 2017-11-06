@@ -1,12 +1,12 @@
 package com.example.controller;
 
-import com.codahale.metrics.annotation.Timed;
 import com.example.annotation.TimedMethod;
 import com.example.component.ResourceBundleBean;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Timed
 @TimedMethod
 @Controller
 public class HomeController {
@@ -41,7 +42,6 @@ public class HomeController {
         this.buildProperties = buildProperties;
     }
 
-    @Timed
     @RequestMapping({"/hello"})
     public ModelAndView hello() {
         return new ModelAndView("hello").addObject("buildProperties", buildProperties);
@@ -67,7 +67,7 @@ public class HomeController {
         log.info("home controller called principal: {}", principal);
 
         List<User> userList = usersRepository.findAll();
-        User user = usersRepository.findOne(1L);
+        User user = usersRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
 
         Map<String, Object> map = new LinkedHashMap<>();
         session.setAttribute("principal", objectMapper.writeValueAsString(principal));

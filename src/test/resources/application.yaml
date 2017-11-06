@@ -17,6 +17,10 @@ spring:
     url: jdbc:h2:mem:demo
     username: sa
     password: sa
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+#    enabled: false
+#    drop-first: true
   jmx:
     enabled: true
   cache:
@@ -35,8 +39,8 @@ spring:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
 
 jsf:
-  PROJECT_STAGE: Development
-  faceletsSkipComments: true
+  project-stage: development
+  facelets-skip-comments: true
   primefaces:
     theme: bootstrap
 
@@ -47,23 +51,17 @@ server:
     mime-types: application/json,application/xml,text/html,text/plain
 
 management:
-  context-path: /management
   info:
     git:
       mode: full
 
-liquibase:
-  change-log: classpath:db/changelog/db.changelog-master.xml
-#  enabled: false
-#  drop-first: true
-
 info:
   name: ${spring.application.name}
-  version: '@version@'
 
-security:
-  basic:
-    path: [ '/**' ]
+endpoints:
+  default:
+    web:
+      enabled: true
 
 logging:
   pattern:

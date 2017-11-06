@@ -1,7 +1,6 @@
 package com.example.component;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -34,15 +33,11 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        try {
-            long start = System.nanoTime();
-            filterChain.doFilter(request, response);
+        long start = System.nanoTime();
+        filterChain.doFilter(request, response);
 
-            if (log.isInfoEnabled()) {
-                logTime(request, start);
-            }
-        } finally {
-            MDC.remove("userName");
+        if (log.isInfoEnabled()) {
+            logTime(request, start);
         }
     }
 

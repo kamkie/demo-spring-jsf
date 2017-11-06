@@ -9,12 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
@@ -54,15 +54,18 @@ public class TableView implements Serializable {
 
         private MessagesRepository getMessagesRepository() {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            ServletContext servletContext = request.getServletContext();
-            return WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(MessagesRepository.class);
+            WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
+            if (applicationContext != null) {
+                return applicationContext.getBean(MessagesRepository.class);
+            }
+            throw new IllegalArgumentException();
         }
 
         private PageRequest getPageRequest(int first, int pageSize, String sortField, Sort.Direction direction) {
             if (sortField != null) {
-                return new PageRequest(first / pageSize, pageSize, direction, sortField);
+                return PageRequest.of(first / pageSize, pageSize, direction, sortField);
             }
-            return new PageRequest(first / pageSize, pageSize);
+            return PageRequest.of(first / pageSize, pageSize);
         }
 
         private Sort.Direction getDirection(SortOrder sortOrder) {
