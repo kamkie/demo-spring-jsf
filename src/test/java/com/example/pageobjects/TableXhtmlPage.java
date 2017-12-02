@@ -1,6 +1,7 @@
 package com.example.pageobjects;
 
 import com.example.util.JsfUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
+@Slf4j
 public class TableXhtmlPage {
     private final WebDriver webDriver;
 
@@ -36,7 +38,11 @@ public class TableXhtmlPage {
 
     public void waitForAjaxTableLoaded() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(webDriver, 30, 1);
-        wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
+        try {
+            wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
+        } catch (Exception e) {
+            log.warn("unable to find loading dialog, probably already gone, ignoring");
+        }
         wait.until(JsfUtil.waitForJQueryAndPrimeFaces());
         wait.until(invisibilityOfElementLocated(By.cssSelector(".ui-dialog")));
     }

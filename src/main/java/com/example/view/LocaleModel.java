@@ -2,29 +2,31 @@ package com.example.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 @Component
+@RequestScope
 public class LocaleModel {
 
     private final LocaleResolver localeResolver;
+    private final HttpServletRequest httpServletRequest;
 
     @Autowired
-    public LocaleModel(LocaleResolver localeResolver) {
+    public LocaleModel(LocaleResolver localeResolver, HttpServletRequest httpServletRequest) {
         this.localeResolver = localeResolver;
+        this.httpServletRequest = httpServletRequest;
     }
 
     public Locale getLocale() {
-        return localeResolver.resolveLocale(getHttpServletRequest());
+        return localeResolver.resolveLocale(httpServletRequest);
     }
 
     public void setLocale(Locale locale) {
-        localeResolver.setLocale(getHttpServletRequest(), null, locale);
+        localeResolver.setLocale(httpServletRequest, null, locale);
     }
 
     public String getLocaleCode() {
@@ -33,14 +35,6 @@ public class LocaleModel {
 
     public void setLocaleCode(String locale) {
         setLocale(Locale.forLanguageTag(locale));
-    }
-
-    private HttpServletRequest getHttpServletRequest() {
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (servletRequestAttributes != null) {
-            return servletRequestAttributes.getRequest();
-        }
-        throw new IllegalArgumentException();
     }
 
 }

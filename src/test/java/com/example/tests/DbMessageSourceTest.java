@@ -4,7 +4,9 @@ import com.example.component.DbMessageSource;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
 import org.junit.Test;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.FieldError;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -16,7 +18,7 @@ import static org.mockito.Mockito.mock;
 public class DbMessageSourceTest {
 
     @Test
-    public void getMessageEmpty() throws Exception {
+    public void getMessageEmpty() {
         MessagesRepository repository = mock(MessagesRepository.class);
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
@@ -28,7 +30,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage() throws Exception {
+    public void getMessage() {
         MessagesRepository repository = mock(MessagesRepository.class);
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
@@ -40,7 +42,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage2() throws Exception {
+    public void getMessage2() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         String lang = "eng";
@@ -57,7 +59,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage3() throws Exception {
+    public void getMessage3() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         String lang = "fra";
@@ -72,9 +74,9 @@ public class DbMessageSourceTest {
         assertThat(resolvedMessage).isEqualTo(defaultMessage);
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
-    public void getMessage4() throws Exception {
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    public void getMessage4() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         given(repository.findByKeyAndLang(key, "fra")).willReturn(Optional.empty());
@@ -82,9 +84,24 @@ public class DbMessageSourceTest {
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
         String[] codes = {key};
-        String resolvedMessage = dbMessageSource.getMessage(new DefaultMessageSourceResolvable(codes, (String) null), Locale.FRANCE);
+        MessageSourceResolvable resolvable = new DefaultMessageSourceResolvable(codes, (String) null);
+        String resolvedMessage = dbMessageSource.getMessage(resolvable, Locale.FRANCE);
 
-        assertThat(resolvedMessage).isEqualTo(key);
+        assertThat(resolvedMessage).isEqualTo("[key]");
+    }
+
+    @Test
+    public void getMessage5() {
+        MessagesRepository repository = mock(MessagesRepository.class);
+        String key = "key";
+        given(repository.findByKeyAndLang(key, "fra")).willReturn(Optional.empty());
+
+        DbMessageSource dbMessageSource = new DbMessageSource(repository);
+
+        FieldError resolvable = new FieldError("some object", "some field", "some message");
+        String resolvedMessage = dbMessageSource.getMessage(resolvable, Locale.FRANCE);
+
+        assertThat(resolvedMessage).isEqualTo("some message");
     }
 
 }

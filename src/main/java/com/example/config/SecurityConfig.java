@@ -18,11 +18,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                .loginPage("/login").permitAll()
                 .and()
-                .logout()
-                .permitAll();
+                .logout().permitAll();
     }
 
     @Configuration
@@ -30,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static class ManagementSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/application/**");
+            http.antMatcher("/actuator/**");
             http.csrf().disable();
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
             http.authorizeRequests().anyRequest().hasRole("ADMIN").and().httpBasic();

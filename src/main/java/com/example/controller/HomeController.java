@@ -10,6 +10,7 @@ import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -33,13 +34,15 @@ public class HomeController {
     private final ObjectMapper objectMapper;
     private final ResourceBundleBean msg;
     private final BuildProperties buildProperties;
+    private final GitProperties gitProperties;
 
     @Autowired
-    public HomeController(UsersRepository usersRepository, ObjectMapper objectMapper, ResourceBundleBean bundleBean, BuildProperties buildProperties) {
+    public HomeController(UsersRepository usersRepository, ObjectMapper objectMapper, ResourceBundleBean bundleBean, BuildProperties buildProperties, GitProperties gitProperties) {
         this.usersRepository = usersRepository;
         this.objectMapper = objectMapper;
         this.msg = bundleBean;
         this.buildProperties = buildProperties;
+        this.gitProperties = gitProperties;
     }
 
     @RequestMapping({"/hello"})
@@ -77,6 +80,7 @@ public class HomeController {
         map.put("user", user);
         map.put("userList", userList);
         map.put("buildProperties", buildProperties);
+        map.put("gitProperties", gitProperties);
 
         return ResponseEntity.ok(map);
     }

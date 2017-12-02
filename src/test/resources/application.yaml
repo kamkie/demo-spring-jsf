@@ -28,7 +28,6 @@ spring:
       - passwordEncoder
       - users
       - i18n
-      - messageSource
     caffeine:
       spec: maximumSize=1000,expireAfterAccess=1d
 
@@ -54,14 +53,13 @@ management:
   info:
     git:
       mode: full
+  endpoints:
+    web:
+      expose: '*'
 
 info:
   name: ${spring.application.name}
 
-endpoints:
-  default:
-    web:
-      enabled: true
 
 logging:
   pattern:

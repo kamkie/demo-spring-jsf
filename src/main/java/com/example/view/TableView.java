@@ -1,5 +1,6 @@
 package com.example.view;
 
+import com.example.DemoApplication;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -9,13 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.annotation.SessionScope;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +49,7 @@ public class TableView implements Serializable {
         }
 
         private MessagesRepository getMessagesRepository() {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
-            if (applicationContext != null) {
-                return applicationContext.getBean(MessagesRepository.class);
-            }
-            throw new IllegalArgumentException();
+            return DemoApplication.getApplicationContext().getBean(MessagesRepository.class);
         }
 
         private PageRequest getPageRequest(int first, int pageSize, String sortField, Sort.Direction direction) {

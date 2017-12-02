@@ -110,17 +110,17 @@ public class DemoApplicationTests {
 
     @Test
     public void homeLogging() throws Exception {
-        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.OFF);
+        Logger appLoggers = (Logger) LoggerFactory.getLogger("com.example");
+        appLoggers.setLevel(Level.OFF);
 
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        root.setLevel(Level.DEBUG);
+        appLoggers.setLevel(Level.DEBUG);
         responseEntity = this.restTemplate.getForEntity("/", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        root.setLevel(Level.INFO);
+        appLoggers.setLevel(Level.INFO);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementUnauthorized() throws Exception {
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/application/info", String.class);
+        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/actuator/info", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.hasBody()).isTrue();
@@ -145,7 +145,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementForbidden() throws Exception {
-        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/application/info", byte[].class);
+        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/actuator/info", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(responseEntity.hasBody()).isTrue();
@@ -162,7 +162,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementAuthorized() throws Exception {
-        ResponseEntity<byte[]> responseEntity = this.restAdminAuthTemplate.getForEntity("/application/info", byte[].class);
+        ResponseEntity<byte[]> responseEntity = this.restAdminAuthTemplate.getForEntity("/actuator/info", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.hasBody()).isTrue();
