@@ -1,5 +1,6 @@
 package com.example.config;
 
+import org.springframework.boot.actuate.autoconfigure.security.EndpointRequest;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -15,12 +16,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/home", "/welcome").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login").permitAll()
-                .and()
-                .logout().permitAll();
+                .anyRequest().hasRole("USER")
+                .and().formLogin().loginPage("/login").permitAll()
+                .and().logout().permitAll();
     }
 
     @Configuration
@@ -28,11 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static class ManagementSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/actuator/**");
-            http.csrf().disable();
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-            http.authorizeRequests().anyRequest().hasRole("ADMIN").and().httpBasic();
+            http.antMatcher("/actuator/**")
+                    .csrf().ignoringAntMatchers("/actuator", "/actuator/**")
+                    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and().httpBasic()
+                    .and().authorizeRequests()
+                    .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                    .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
+                    .anyRequest().hasRole("ADMIN");
         }
     }
-
 }

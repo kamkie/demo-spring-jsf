@@ -59,6 +59,9 @@ management:
   info:
     git:
       mode: full
+  endpoint:
+    health:
+      show-details: true
   endpoints:
     web:
       expose: '*'

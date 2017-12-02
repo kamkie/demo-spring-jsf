@@ -134,7 +134,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementUnauthorized() throws Exception {
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/actuator/info", String.class);
+        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/actuator/metrics", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.hasBody()).isTrue();
@@ -145,7 +145,7 @@ public class DemoApplicationTests {
 
     @Test
     public void managementForbidden() throws Exception {
-        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/actuator/info", byte[].class);
+        ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/actuator/metrics", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(responseEntity.hasBody()).isTrue();
