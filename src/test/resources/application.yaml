@@ -25,7 +25,6 @@ spring:
     enabled: true
   cache:
     cache-names:
-      - passwordEncoder
       - users
       - i18n
     caffeine:

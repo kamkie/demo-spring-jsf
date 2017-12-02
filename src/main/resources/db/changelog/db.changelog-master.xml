@@ -105,7 +105,7 @@
             <column name="id" type="varchar(255)" value="1"/>
             <column name="login" type="varchar(255)" value="kamkie"/>
             <column name="password" type="varchar(255)"
-                    value="$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
+                    value="{bcrypt}$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
         </insert>
     </changeSet>
     <changeSet author="kamkie" id="10">
@@ -173,7 +173,7 @@
             <column name="id" type="varchar(255)" value="2"/>
             <column name="login" type="varchar(255)" value="user"/>
             <column name="password" type="varchar(255)"
-                    value="$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
+                    value="{bcrypt}$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
         </insert>
     </changeSet>
     <changeSet author="kamkie" id="16">
@@ -188,7 +188,7 @@
             <column name="id" type="varchar(255)" value="3"/>
             <column name="login" type="varchar(255)" value="admin"/>
             <column name="password" type="varchar(255)"
-                    value="$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
+                    value="{bcrypt}$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
         </insert>
     </changeSet>
     <changeSet author="kamkie" id="18">

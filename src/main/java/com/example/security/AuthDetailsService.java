@@ -4,7 +4,6 @@ import com.example.annotation.TimedMethod;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,6 @@ public class AuthDetailsService implements UserDetailsService {
 
     @Override
     @TimedMethod
-    @Cacheable(cacheNames = "users")
     public User loadUserByUsername(String username) {
         Optional<User> user = userRepository.findByLogin(username);
         return user.orElseThrow(() -> new UsernameNotFoundException(String.format("user %s not found", username)));
