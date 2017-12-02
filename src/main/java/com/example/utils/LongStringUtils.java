@@ -23,7 +23,10 @@ public class LongStringUtils {
             return string;
         } else {
             String substring = string.substring(0, MAX_CHARS);
-            substring = substring.substring(0, substring.lastIndexOf(' '));
+            int indexOf = substring.lastIndexOf(' ');
+            if (indexOf > -1) {
+                substring = substring.substring(0, indexOf);
+            }
             return substring.concat(STR_SUFFIX);
         }
     }
