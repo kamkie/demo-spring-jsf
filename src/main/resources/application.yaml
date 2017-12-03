@@ -30,6 +30,10 @@ spring:
       - i18n
     caffeine:
       spec: maximumSize=1000,expireAfterAccess=1d
+  metrics:
+    web:
+      server:
+        record-request-percentiles: true
 
   session:
     store-type: jdbc
