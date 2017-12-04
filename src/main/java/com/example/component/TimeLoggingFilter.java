@@ -47,11 +47,11 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
         String headers = getHeadersAsString(request);
 
         if (log.isDebugEnabled()) {
-            log.debug("request: url: {}, time {}, params: {}, headers: {}", request.getRequestURL(), duration,
-                    createMessage(request, "", ""), headers);
+            log.debug("request: url: {}, time: {} ({}), params: {}, headers: {}", request.getRequestURL(), duration,
+                    nanos, createMessage(request, "", ""), headers);
         } else {
-            log.info("request: url: {}, time {}, params: {}", request.getRequestURL(), duration,
-                    createMessage(request, "", ""));
+            log.info("request: url: {}, time: {} ({}), params: {}", request.getRequestURL(), duration,
+                    nanos, createMessage(request, "", ""));
         }
     }
 

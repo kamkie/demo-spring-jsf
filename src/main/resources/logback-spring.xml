@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <springProfile name="graylog">
+        <appender name="gelf" class="de.appelgriepsch.logback.GelfAppender">
+            <server>localhost</server>
+            <port>12201</port>
+            <hostName>localhost</hostName>
+            <protocol>UDP</protocol>
+            <includeSource>true</includeSource>
+            <includeMDC>true</includeMDC>
+            <queueSize>512</queueSize>
+            <connectTimeout>1000</connectTimeout>
+            <reconnectDelay>500</reconnectDelay>
+            <additionalFields>app=demo-spring-jsf</additionalFields>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%.-25m</pattern>
+            </layout>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="gelf"/>
+        </root>
+    </springProfile>
+</configuration>

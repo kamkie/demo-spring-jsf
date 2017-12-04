@@ -73,11 +73,11 @@ public class ExecutionTimeLogger {
             Class declaringType = signature.getDeclaringType();
 
             if (log.isDebugEnabled()) {
-                log.debug("class: {}, method: {}, time {}, args {}, result {}", declaringType.getSimpleName(),
-                        signature.getName(), duration, formatLongString(point.getArgs()), formatLongString(result));
+                log.debug("class: {}, method: {}, time: {} ({}), args {}, result {}", declaringType.getSimpleName(),
+                        signature.getName(), duration, nanos, formatLongString(point.getArgs()), formatLongString(result));
             } else {
-                log.info("class: {}, method: {}, time {}", declaringType.getSimpleName(), signature.getName(),
-                        duration);
+                log.info("class: {}, method: {}, time: {} ({})", declaringType.getSimpleName(), signature.getName(),
+                        duration, nanos);
             }
         }
 
