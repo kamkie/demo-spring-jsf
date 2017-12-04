@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:demo
+    username: sa
+    password: sa
+
+logging:
+  level:
+    com:
+      sun:
+        faces: trace
+    javax:
+      faces: trace

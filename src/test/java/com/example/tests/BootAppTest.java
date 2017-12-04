@@ -8,7 +8,7 @@ public class BootAppTest {
     @Test
     public void main() throws Exception {
         DemoApplication.main(new String[]{
-                "--server.port=-1"
+                "--server.port=-1", "--spring.profiles.active=test"
         });
     }
 
