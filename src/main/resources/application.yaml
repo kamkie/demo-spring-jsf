@@ -34,6 +34,9 @@ spring:
     web:
       server:
         record-request-percentiles: true
+    export:
+      prometheus:
+        enabled: true
 
   session:
     store-type: jdbc

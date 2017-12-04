@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="buildAndRun grafana" type="BashConfigurationType" factoryName="Bash" singleton="true">
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="INTERPRETER_PATH" value="C:\Program Files\Git\bin\bash.exe" />
+    <option name="WORKING_DIRECTORY" value="D:\Projekty\demo-spring-jsf\infrastructure\grafana" />
+    <option name="PARENT_ENVS" value="true" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/infrastructure/grafana/buildAndRun.sh" />
+    <option name="PARAMETERS" value="" />
+    <module name="demo-spring-jsf" />
+    <envs />
+    <method />
+  </configuration>
+</component>
