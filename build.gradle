@@ -124,18 +124,16 @@ bootJar {
 task springConfiguration(type: Copy) {
     inputs.files("$buildDir/classes/main", "$buildDir/classes/java/main")
     outputs.dir("$buildDir/generated")
-    from(
-            file("$buildDir/classes/java/main/META-INF/"),
-            file("$buildDir/resources/main/META-INF/build-info.properties")
-    )
+    from file("$buildDir/classes/java/main/META-INF/")
     into file("$buildDir/generated/META-INF/")
     doLast {
-        file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json").delete()
+        file("$buildDir/classes/java/main/META-INF").deleteDir()
     }
 }
 classes.dependsOn springConfiguration
 compileJava.dependsOn processResources
 processResources.dependsOn generateGitProperties
+bootBuildInfo.mustRunAfter processResources
 springConfiguration.mustRunAfter compileJava
 build.dependsOn jacocoTestReport
 
