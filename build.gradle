@@ -97,7 +97,7 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
-    testCompile("io.github.bonigarcia:webdrivermanager:2.0.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:2.0.1")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
 }
@@ -247,6 +247,6 @@ tasks.withType(Test) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+    gradleVersion = '4.4'
     distributionType = org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 }

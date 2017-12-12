@@ -253,8 +253,8 @@ public class DemoApplicationTests {
         tableXhtmlPage.findFilterByLanguage().clear();
         tableXhtmlPage.waitForAjaxTableLoaded();
         tableXhtmlPage.findSortByLanguage().click();
-        assertThat(tableXhtmlPage.findFirstRow().getText()).contains("hello word");
         tableXhtmlPage.waitForAjaxTableLoaded();
+        assertThat(tableXhtmlPage.findFirstRow().getText()).contains("hello word");
         tableXhtmlPage.findSortByLanguage().click();
         tableXhtmlPage.waitForAjaxTableLoaded();
         assertThat(tableXhtmlPage.countRowsInTable()).isEqualTo(2);
