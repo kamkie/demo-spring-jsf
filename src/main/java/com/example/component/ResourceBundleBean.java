@@ -1,14 +1,13 @@
 package com.example.component;
 
 import com.example.view.LocaleModel;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 @Component(value = "msg")
@@ -38,26 +37,16 @@ public class ResourceBundleBean extends AbstractMap<String, String> {
         if (this == o) {
             return true;
         }
-
-        if (!(o instanceof ResourceBundleBean)) {
+        if (o == null || getClass() != o.getClass() || !super.equals(o)) {
             return false;
         }
-
         ResourceBundleBean that = (ResourceBundleBean) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(messageSource, that.messageSource)
-                .append(localeModel, that.localeModel)
-                .isEquals();
+        return Objects.equals(messageSource, that.messageSource) &&
+                Objects.equals(localeModel, that.localeModel);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
-                .append(messageSource)
-                .append(localeModel)
-                .toHashCode();
+        return Objects.hash(super.hashCode(), messageSource, localeModel);
     }
 }
