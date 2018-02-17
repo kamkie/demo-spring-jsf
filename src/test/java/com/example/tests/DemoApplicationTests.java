@@ -54,7 +54,7 @@ class DemoApplicationTests {
     @LocalServerPort
     private int port;
     private ObjectMapper objectMapper;
-    private TestRestTemplate restTemplate;
+    private TestRestTemplate restAnonymousTemplate;
     private TestRestTemplate restUserAuthTemplate;
     private TestRestTemplate restAdminAuthTemplate;
 
@@ -81,18 +81,12 @@ class DemoApplicationTests {
     }
 
     private void initRestTemplate(RestTemplateBuilder restTemplateBuilder, Environment environment) {
-        LocalHostUriTemplateHandler handler = new LocalHostUriTemplateHandler(environment);
-
-        this.restTemplate = new TestRestTemplate(restTemplateBuilder.build());
-        this.restTemplate.setUriTemplateHandler(handler);
-
+        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder
+                .uriTemplateHandler(new LocalHostUriTemplateHandler(environment)).build());
         this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder
-                .basicAuthorization("user", "password").build());
-        this.restUserAuthTemplate.setUriTemplateHandler(handler);
-
+                .uriTemplateHandler(new LocalHostUriTemplateHandler(environment)).build(), "user", "password");
         this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder
-                .basicAuthorization("admin", "password").build());
-        this.restAdminAuthTemplate.setUriTemplateHandler(handler);
+                .uriTemplateHandler(new LocalHostUriTemplateHandler(environment)).build(), "admin", "password");
     }
 
     @Test
@@ -102,7 +96,7 @@ class DemoApplicationTests {
 
     @Test
     void home() {
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/", String.class);
+        ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.hasBody()).isTrue();
@@ -115,11 +109,11 @@ class DemoApplicationTests {
         Logger appLoggers = (Logger) LoggerFactory.getLogger("com.example");
         appLoggers.setLevel(Level.OFF);
 
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/", String.class);
+        ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         appLoggers.setLevel(Level.DEBUG);
-        responseEntity = this.restTemplate.getForEntity("/", String.class);
+        responseEntity = this.restAnonymousTemplate.getForEntity("/", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         appLoggers.setLevel(Level.INFO);
@@ -127,7 +121,7 @@ class DemoApplicationTests {
 
     @Test
     void adminRedirectToLogin() {
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/admin", String.class);
+        ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/admin", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         assertThat(responseEntity.hasBody()).isFalse();
@@ -136,7 +130,7 @@ class DemoApplicationTests {
 
     @Test
     void managementUnauthorized() {
-        ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/actuator/metrics", String.class);
+        ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/actuator/metrics", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.hasBody()).isTrue();
