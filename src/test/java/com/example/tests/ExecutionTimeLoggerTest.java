@@ -5,40 +5,40 @@ import ch.qos.logback.classic.Logger;
 import com.example.component.ExecutionTimeLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-public class ExecutionTimeLoggerTest {
+class ExecutionTimeLoggerTest {
     @Test
-    public void beanAnnotatedWithTimed() throws Exception {
+    void beanAnnotatedWithTimed() throws Exception {
         ExecutionTimeLogger executionTimeLogger = new ExecutionTimeLogger();
         executionTimeLogger.beanAnnotatedWithTimed();
     }
 
     @Test
-    public void publicMethod() throws Exception {
+    void publicMethod() throws Exception {
         ExecutionTimeLogger executionTimeLogger = new ExecutionTimeLogger();
         executionTimeLogger.publicMethod();
     }
 
     @Test
-    public void publicMethodInsideAClassMarkedWithAtTimed() throws Exception {
+    void publicMethodInsideAClassMarkedWithAtTimed() throws Exception {
         ExecutionTimeLogger executionTimeLogger = new ExecutionTimeLogger();
         executionTimeLogger.publicMethodInsideAClassMarkedWithAtTimed();
     }
 
     @Test
-    public void methodMarkedWithAtTimed() throws Exception {
+    void methodMarkedWithAtTimed() throws Exception {
         ExecutionTimeLogger executionTimeLogger = new ExecutionTimeLogger();
         executionTimeLogger.methodMarkedWithAtTimed();
     }
 
     @Test
-    public void noLogging() throws Throwable {
+    void noLogging() throws Throwable {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.setLevel(Level.OFF);
 

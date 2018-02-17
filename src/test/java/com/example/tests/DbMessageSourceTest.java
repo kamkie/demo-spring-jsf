@@ -3,7 +3,7 @@ package com.example.tests;
 import com.example.component.DbMessageSource;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.FieldError;
@@ -15,10 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-public class DbMessageSourceTest {
+class DbMessageSourceTest {
 
     @Test
-    public void getMessageEmpty() {
+    void getMessageEmpty() {
         MessagesRepository repository = mock(MessagesRepository.class);
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
@@ -30,7 +30,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage() {
+    void getMessage() {
         MessagesRepository repository = mock(MessagesRepository.class);
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
@@ -42,7 +42,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage2() {
+    void getMessage2() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         String lang = "eng";
@@ -59,7 +59,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage3() {
+    void getMessage3() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         String lang = "fra";
@@ -76,7 +76,7 @@ public class DbMessageSourceTest {
 
     @Test
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
-    public void getMessage4() {
+    void getMessage4() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         given(repository.findByKeyAndLang(key, "fra")).willReturn(Optional.empty());
@@ -91,7 +91,7 @@ public class DbMessageSourceTest {
     }
 
     @Test
-    public void getMessage5() {
+    void getMessage5() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         given(repository.findByKeyAndLang(key, "fra")).willReturn(Optional.empty());

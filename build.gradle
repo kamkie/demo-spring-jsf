@@ -54,6 +54,12 @@ ext['selenium.version'] = '3.9.1'
 ext['caffeine.version'] = '2.6.1'
 ext['micrometer.version'] = '1.0.0-rc.9'
 ext['liquibase.version'] = '3.5.5'
+ext['junit.jupiter.version'] = '5.1.0-RC1'
+
+configurations {
+    testCompile.exclude group: "junit", module: "junit"
+    testRuntimee.exclude group: "junit", module: "junit"
+}
 
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
@@ -97,9 +103,12 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0' //required on java 9
 
+    testCompile("org.junit.jupiter:junit-jupiter-api")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile("io.github.bonigarcia:webdrivermanager:2.1.0")
+    testCompile("io.github.bonigarcia:selenium-jupiter:2.0.0")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
 }
@@ -144,7 +153,7 @@ build.dependsOn jacocoTestReport
 
 task fixGitProperties {
     doLast {
-        ant.replaceregexp(match:'git.commit.id=', replace:'git.commit.id.id=', flags:'g', byline:true) {
+        ant.replaceregexp(match: 'git.commit.id=', replace: 'git.commit.id.id=', flags: 'g', byline: true) {
             fileset(dir: 'build/resources/main/', includes: 'git.properties')
         }
     }
@@ -238,6 +247,7 @@ spotless {
 }
 
 tasks.withType(Test) {
+    useJUnitPlatform()
     testLogging {
         // set options for log level LIFECYCLE
         events "passed", "skipped", "failed", "standardOut"
@@ -245,14 +255,6 @@ tasks.withType(Test) {
         exceptionFormat "full"
         showCauses true
         showStackTraces true
-
-        // set options for log level DEBUG and INFO
-        debug {
-            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
-            exceptionFormat "full"
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
 
         afterSuite { desc, result ->
             if (!desc.parent) { // will match the outermost suite

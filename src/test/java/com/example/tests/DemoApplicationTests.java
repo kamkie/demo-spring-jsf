@@ -6,20 +6,16 @@ import com.example.pageobjects.LoginPage;
 import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
-import com.example.rule.SeleniumClassRule;
-import com.example.rule.SeleniumTestRule;
-import com.example.utils.LazyInitializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.Options;
+import io.github.bonigarcia.SeleniumExtension;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.LoggerFactory;
@@ -36,27 +32,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @Slf4j
-@RunWith(SpringRunner.class)
+@TestInstance(PER_CLASS)
+@ExtendWith(SpringExtension.class)
+@ExtendWith(SeleniumExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DemoApplicationTests {
+class DemoApplicationTests {
 
-    private static LazyInitializer<WebDriver> webDriverLazyInitializer = new LazyInitializer<>(DemoApplicationTests::createWebDriver);
-
-    @ClassRule
-    public static final SeleniumClassRule seleniumClassRule = new SeleniumClassRule(webDriverLazyInitializer);
-    @Rule
-    public final SeleniumTestRule seleniumTestRule = new SeleniumTestRule(webDriverLazyInitializer);
-
+    @Options
+    private ChromeOptions chromeOptions;
     @LocalServerPort
     private int port;
     private ObjectMapper objectMapper;
@@ -65,43 +59,49 @@ public class DemoApplicationTests {
     private TestRestTemplate restAdminAuthTemplate;
 
     @Autowired
-    public void initRestTemplate(RestTemplateBuilder restTemplateBuilder, Environment environment) {
+    DemoApplicationTests(
+            Environment environment,
+            RestTemplateBuilder restTemplateBuilder,
+            ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        JacksonTester.initFields(this, objectMapper);
+
+        this.chromeOptions = initChromeOptions();
+        initRestTemplate(restTemplateBuilder, environment);
+    }
+
+    private ChromeOptions initChromeOptions() {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--lang=pl", "--headless", "--window-size=1600,900");
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("intl.accept_languages", "pl");
+        chromeOptions.setExperimentalOption("prefs", prefs);
+
+        return chromeOptions;
+    }
+
+    private void initRestTemplate(RestTemplateBuilder restTemplateBuilder, Environment environment) {
         LocalHostUriTemplateHandler handler = new LocalHostUriTemplateHandler(environment);
+
         this.restTemplate = new TestRestTemplate(restTemplateBuilder.build());
         this.restTemplate.setUriTemplateHandler(handler);
-        this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthorization("user", "password").build());
+
+        this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder
+                .basicAuthorization("user", "password").build());
         this.restUserAuthTemplate.setUriTemplateHandler(handler);
-        this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthorization("admin", "password").build());
+
+        this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder
+                .basicAuthorization("admin", "password").build());
         this.restAdminAuthTemplate.setUriTemplateHandler(handler);
     }
 
-    @Autowired
-    public void initJacksonTester(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-        JacksonTester.initFields(this, objectMapper);
-    }
-
-    private static WebDriver createWebDriver() {
-        log.info("creating webDriver");
-        ChromeDriverManager.getInstance().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--lang=pl");
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("intl.accept_languages", "pl");
-        options.setExperimentalOption("prefs", prefs);
-        ChromeDriver chromeDriver = new ChromeDriver(options);
-        chromeDriver.manage().window().maximize();
-
-        return chromeDriver;
-    }
-
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         assertThat(port).isPositive();
     }
 
     @Test
-    public void home() throws Exception {
+    void home() {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -111,7 +111,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void homeLogging() throws Exception {
+    void homeLogging() {
         Logger appLoggers = (Logger) LoggerFactory.getLogger("com.example");
         appLoggers.setLevel(Level.OFF);
 
@@ -126,7 +126,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void adminRedirectToLogin() throws Exception {
+    void adminRedirectToLogin() {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/admin", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
@@ -135,7 +135,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void managementUnauthorized() throws Exception {
+    void managementUnauthorized() {
         ResponseEntity<String> responseEntity = this.restTemplate.getForEntity("/actuator/metrics", String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -146,7 +146,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void managementForbidden() throws Exception {
+    void managementForbidden() throws Exception {
         ResponseEntity<byte[]> responseEntity = this.restUserAuthTemplate.getForEntity("/actuator/metrics", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -163,7 +163,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void managementAuthorized() throws Exception {
+    void managementAuthorized() throws Exception {
         ResponseEntity<byte[]> responseEntity = this.restAdminAuthTemplate.getForEntity("/actuator/info", byte[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -178,8 +178,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void adminLoginFailPassword() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void adminLoginFailPassword(ChromeDriver webDriver) {
         webDriver.get("http://localhost:" + port + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
 
@@ -188,8 +187,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void adminLoginFailUserName() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void adminLoginFailUserName(ChromeDriver webDriver) {
         webDriver.get("http://localhost:" + port + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
 
@@ -198,8 +196,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void hello() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void hello(ChromeDriver webDriver) {
         webDriver.get("http://localhost:" + port + "/hello");
         new LoginPage(webDriver).login("user", "password");
 
@@ -216,8 +213,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void adminLogin() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void adminLogin(ChromeDriver webDriver) throws Exception {
         webDriver.get("http://localhost:" + port + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
@@ -233,8 +229,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void tableXhtml() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void tableXhtml(ChromeDriver webDriver) throws Exception {
         webDriver.get("http://localhost:" + port + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
@@ -262,8 +257,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void changeLanguageInJsf() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void changeLanguageInJsf(ChromeDriver webDriver) {
         webDriver.get("http://localhost:" + port + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
@@ -273,8 +267,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void changeLanguageInJsfAndMvc() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void changeLanguageInJsfAndMvc(ChromeDriver webDriver) {
         webDriver.get("http://localhost:" + port + "/hello");
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
@@ -298,8 +291,7 @@ public class DemoApplicationTests {
     }
 
     @Test
-    public void jsfSessionMessages() throws Exception {
-        WebDriver webDriver = webDriverLazyInitializer.get();
+    void jsfSessionMessages(ChromeDriver webDriver) {
         webDriver.get("http://localhost:" + port + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
