@@ -5,27 +5,28 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.lang.NonNull;
 
 @SpringBootApplication
 public class DemoApplication implements ApplicationContextAware {
 
-    private static ApplicationContext applicationContext;
+    private static ConfigurableApplicationContext applicationContext;
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
 
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
+    public static ConfigurableApplicationContext getApplicationContext() {
+        return DemoApplication.applicationContext;
     }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        setStaticApplicationContext(applicationContext);
+        setStaticApplicationContext((ConfigurableApplicationContext) applicationContext);
     }
 
-    private static void setStaticApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    private static void setStaticApplicationContext(ConfigurableApplicationContext applicationContext) throws BeansException {
         DemoApplication.applicationContext = applicationContext;
     }
 }
