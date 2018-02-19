@@ -54,7 +54,8 @@ ext['selenium.version'] = '3.9.1'
 ext['caffeine.version'] = '2.6.1'
 ext['micrometer.version'] = '1.0.0-rc.9'
 ext['liquibase.version'] = '3.5.5'
-ext['junit.jupiter.version'] = '5.1.0-RC1'
+ext['junit-jupiter.version'] = '5.1.0'
+ext['junit-platform.version'] = '1.1.0'
 
 configurations {
     testCompile.exclude group: "junit", module: "junit"
