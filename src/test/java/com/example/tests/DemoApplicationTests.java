@@ -67,7 +67,7 @@ class DemoApplicationTests {
         JacksonTester.initFields(this, objectMapper);
 
         this.chromeOptions = initChromeOptions();
-        initRestTemplate(restTemplateBuilder, environment);
+        initRestTemplate(restTemplateBuilder.uriTemplateHandler(new LocalHostUriTemplateHandler(environment)));
     }
 
     private ChromeOptions initChromeOptions() {
@@ -80,13 +80,10 @@ class DemoApplicationTests {
         return chromeOptions;
     }
 
-    private void initRestTemplate(RestTemplateBuilder restTemplateBuilder, Environment environment) {
-        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder
-                .uriTemplateHandler(new LocalHostUriTemplateHandler(environment)).build());
-        this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder
-                .uriTemplateHandler(new LocalHostUriTemplateHandler(environment)).build(), "user", "password");
-        this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder
-                .uriTemplateHandler(new LocalHostUriTemplateHandler(environment)).build(), "admin", "password");
+    private void initRestTemplate(RestTemplateBuilder restTemplateBuilder) {
+        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder);
+        this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder, "user", "password");
+        this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder, "admin", "password");
     }
 
     @Test

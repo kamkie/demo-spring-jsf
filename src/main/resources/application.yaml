@@ -24,22 +24,17 @@ spring:
 #    drop-first: true
   jmx:
     enabled: true
+
   cache:
     cache-names:
       - users
       - i18n
     caffeine:
       spec: maximumSize=1000,expireAfterAccess=1d
-  metrics:
-    web:
-      server:
-        record-request-percentiles: true
-    export:
-      prometheus:
-        enabled: true
 
   session:
     store-type: jdbc
+
   devtools:
     restart:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
@@ -67,10 +62,18 @@ management:
       mode: full
   endpoint:
     health:
-      show-details: true
+      show-details: when_authorized
   endpoints:
     web:
-      expose: '*'
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    web:
+      server:
+        auto-time-requests: true
 
 info:
   name: ${spring.application.name}

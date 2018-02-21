@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.RC1'
+        springBootVersion = '2.0.0.RC2'
     }
     repositories {
         mavenCentral()
@@ -52,7 +52,6 @@ repositories {
 
 ext['selenium.version'] = '3.9.1'
 ext['caffeine.version'] = '2.6.1'
-ext['micrometer.version'] = '1.0.0-rc.9'
 ext['liquibase.version'] = '3.5.5'
 ext['junit-jupiter.version'] = '5.1.0'
 ext['junit-platform.version'] = '1.1.0'
@@ -151,16 +150,6 @@ processResources.dependsOn generateGitProperties
 bootBuildInfo.mustRunAfter processResources
 springConfiguration.mustRunAfter compileJava
 build.dependsOn jacocoTestReport
-
-task fixGitProperties {
-    doLast {
-        ant.replaceregexp(match: 'git.commit.id=', replace: 'git.commit.id.id=', flags: 'g', byline: true) {
-            fileset(dir: 'build/resources/main/', includes: 'git.properties')
-        }
-    }
-}
-processResources.dependsOn fixGitProperties
-fixGitProperties.mustRunAfter generateGitProperties
 
 
 liquibase {
