@@ -35,7 +35,7 @@ public class ExecutionTimeLogger {
             .appendValue(SECOND_OF_MINUTE, 2)
             .optionalStart()
             .appendLiteral('.')
-            .appendFraction(MILLI_OF_SECOND, 0, 3, false)
+            .appendFraction(MILLI_OF_SECOND, 3, 3, false)
             .optionalStart()
             .appendLiteral("ms ")
             .optionalStart()
@@ -74,7 +74,8 @@ public class ExecutionTimeLogger {
 
     @Around("publicMethodInsideAClassMarkedWithAtTimed() || methodMarkedWithAtTimed()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        Timer timer = buildTimer(point);
+        Signature signature = point.getSignature();
+        Timer timer = buildTimer(signature);
         Timer.Sample sample = Timer.start(registry);
 
         Object result = null;
@@ -83,15 +84,15 @@ public class ExecutionTimeLogger {
         } finally {
             long nanos = sample.stop(timer);
 
-            logExecutionTime(point, result, nanos);
+            logExecutionTime(signature, point.getArgs(), result, nanos);
         }
 
         return result;
     }
 
-    private Timer buildTimer(ProceedingJoinPoint point) {
-        String className = point.getStaticPart().getSignature().getDeclaringTypeName();
-        String methodName = point.getStaticPart().getSignature().getName();
+    private Timer buildTimer(Signature signature) {
+        String className = signature.getDeclaringTypeName();
+        String methodName = signature.getName();
 
         return Timer.builder(className + "." + methodName)
                 .tags(Tags.of("class", className, "method", methodName))
@@ -99,17 +100,17 @@ public class ExecutionTimeLogger {
                 .register(registry);
     }
 
-    private void logExecutionTime(ProceedingJoinPoint point, @Nullable Object result, long nanos) {
+    private void logExecutionTime(Signature signature, Object[] args, @Nullable Object result, long nanos) {
         if (log.isInfoEnabled()) {
             String duration = formatDuration(nanos);
-            Signature signature = point.getSignature();
-            Class declaringType = signature.getDeclaringType();
+            String declaringTypeName = signature.getDeclaringTypeName();
+            String methodName = signature.getName();
 
             if (log.isDebugEnabled()) {
-                log.debug("class: {}, method: {}, time: {} ({}), args {}, result {}", declaringType.getSimpleName(),
-                        signature.getName(), duration, nanos, formatLongString(point.getArgs()), formatLongString(result));
+                log.debug("class: {}, method: {}, time: {} ({}), args {}, result {}", declaringTypeName,
+                        methodName, duration, nanos, formatLongString(args), formatLongString(result));
             } else {
-                log.info("class: {}, method: {}, time: {} ({})", declaringType.getSimpleName(), signature.getName(),
+                log.info("class: {}, method: {}, time: {} ({})", declaringTypeName, methodName,
                         duration, nanos);
             }
         }

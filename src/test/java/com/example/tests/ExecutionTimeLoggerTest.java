@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.example.component.ExecutionTimeLogger;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.junit.jupiter.api.Test;
@@ -49,14 +48,10 @@ class ExecutionTimeLoggerTest {
                 " 749679ad-bb19-42c3-9431-f65014ba0551, 2cad3579-c97b-4532-b9dd-b58170f7e9ef, c81d9e4c-a391-466d-90a2-1b932ba0734e]";
         ExecutionTimeLogger executionTimeLogger = new ExecutionTimeLogger(new SimpleMeterRegistry());
         ProceedingJoinPoint joinPoint = Mockito.mock(ProceedingJoinPoint.class);
-        JoinPoint.StaticPart staticPart = Mockito.mock(JoinPoint.StaticPart.class);
-        given(joinPoint.getStaticPart()).willReturn(staticPart);
         Signature signature = Mockito.mock(Signature.class);
-        given(staticPart.getSignature()).willReturn(signature);
 
         given(signature.getName()).willReturn(methodName);
         given(signature.getDeclaringTypeName()).willReturn(ExecutionTimeLoggerTest.class.getName());
-        given(signature.getDeclaringType()).willReturn(ExecutionTimeLoggerTest.class);
 
         given(joinPoint.proceed()).willReturn(result);
         given(joinPoint.getArgs()).willReturn(null);
