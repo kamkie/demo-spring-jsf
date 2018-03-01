@@ -1,12 +1,16 @@
 package com.example.component;
 
 import com.example.utils.SubMillis;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
+import io.micrometer.core.instrument.Timer;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
@@ -40,6 +44,13 @@ public class ExecutionTimeLogger {
             .appendFraction(SubMillis.NANOS_OF_MICRO_SECOND, 0, 3, false)
             .appendLiteral("ns")
             .toFormatter(Locale.ROOT);
+    private static final double[] PERCENTILES = {0.5, 0.9, 0.95, 0.99, 0.999};
+
+    private final MeterRegistry registry;
+
+    public ExecutionTimeLogger(MeterRegistry registry) {
+        this.registry = registry;
+    }
 
     @Pointcut("within(@com.example.annotation.TimedMethod *)")
     public void beanAnnotatedWithTimed() {
@@ -63,11 +74,33 @@ public class ExecutionTimeLogger {
 
     @Around("publicMethodInsideAClassMarkedWithAtTimed() || methodMarkedWithAtTimed()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        long start = System.nanoTime();
-        Object result = point.proceed();
+        Timer timer = buildTimer(point);
+        Timer.Sample sample = Timer.start(registry);
 
+        Object result = null;
+        try {
+            result = point.proceed();
+        } finally {
+            long nanos = sample.stop(timer);
+
+            logExecutionTime(point, result, nanos);
+        }
+
+        return result;
+    }
+
+    private Timer buildTimer(ProceedingJoinPoint point) {
+        String className = point.getStaticPart().getSignature().getDeclaringTypeName();
+        String methodName = point.getStaticPart().getSignature().getName();
+
+        return Timer.builder(className + "." + methodName)
+                .tags(Tags.of("class", className, "method", methodName))
+                .publishPercentiles(PERCENTILES)
+                .register(registry);
+    }
+
+    private void logExecutionTime(ProceedingJoinPoint point, @Nullable Object result, long nanos) {
         if (log.isInfoEnabled()) {
-            long nanos = System.nanoTime() - start;
             String duration = formatDuration(nanos);
             Signature signature = point.getSignature();
             Class declaringType = signature.getDeclaringType();
@@ -80,8 +113,6 @@ public class ExecutionTimeLogger {
                         duration, nanos);
             }
         }
-
-        return result;
     }
 
     public static String formatDuration(long nanos) {
