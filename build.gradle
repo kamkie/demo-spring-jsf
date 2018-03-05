@@ -47,7 +47,7 @@ repositories {
 }
 
 ext['spring-boot.version'] = '2.0.0.RELEASE'
-//ext['selenium.version'] = '3.9.1'
+ext['selenium.version'] = '3.10.0'
 //ext['caffeine.version'] = '2.6.2'
 //ext['liquibase.version'] = '3.5.5'
 //ext['junit-jupiter.version'] = '5.1.0'
@@ -160,12 +160,9 @@ liquibase {
     }
 }
 
-jacoco {
-    toolVersion = "0.8.0"
-}
-
-spotbugs.toolVersion = "3.1.1"
-pmd.toolVersion = "6.0.1"
+jacoco.toolVersion = "0.8.0"
+spotbugs.toolVersion = "3.1.2"
+pmd.toolVersion = "6.1.0"
 
 sonarqube {
     properties {
