@@ -14,10 +14,9 @@ spring:
     open-in-view: false
 
   datasource:
-    url: jdbc:h2:mem:demo-jsf
-#    url: jdbc:h2:tcp://localhost:9092/~/.demo/demo-jsf
-    username: sa
-    password: sa
+    url: jdbc:postgresql://localhost:5432/spring-demo
+    username: dev
+    password: dev
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 #    enabled: false

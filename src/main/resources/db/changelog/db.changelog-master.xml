@@ -58,7 +58,7 @@
     </changeSet>
     <changeSet author="kamkie" id="5">
         <createTable tableName="users">
-            <column name="id" type="IDENTITY">
+            <column name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="USERS_PK"/>
             </column>
             <column name="login" type="VARCHAR(255)">
@@ -77,7 +77,7 @@
     </changeSet>
     <changeSet author="kamkie" id="7">
         <createTable tableName="roles">
-            <column name="id" type="IDENTITY">
+            <column name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="ROLES_PK"/>
             </column>
             <column name="name" type="VARCHAR(255)">
@@ -87,7 +87,7 @@
     </changeSet>
     <changeSet author="kamkie" id="8">
         <createTable tableName="users_roles">
-            <column name="id" type="IDENTITY">
+            <column name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="USERS_ROLES_PK"/>
             </column>
             <column name="user_id" type="BIGINT">
@@ -132,7 +132,7 @@
     </changeSet>
     <changeSet author="kamkie" id="12">
         <createTable tableName="messages">
-            <column name="id" type="IDENTITY">
+            <column name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="MESSAGES_PK"/>
             </column>
             <column name="lang" type="VARCHAR(255)">

@@ -4,8 +4,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.h2database:h2:1.4.196")
         classpath("org.liquibase:liquibase-core:3.5.5")
+        classpath("org.postgresql:postgresql:42.2.1")
         classpath('com.moowork.gradle:gradle-node-plugin:1.1.0')
         classpath('com.toomuchcoding:uptodate-gradle-plugin:1.0.1')
     }
@@ -44,10 +44,7 @@ repositories {
 
 ext['spring-boot.version'] = '2.0.0.RELEASE'
 ext['selenium.version'] = '3.10.0'
-//ext['caffeine.version'] = '2.6.2'
-//ext['liquibase.version'] = '3.5.5'
-//ext['junit-jupiter.version'] = '5.1.0'
-//ext['junit-platform.version'] = '1.1.0'
+ext['postgresql.version'] = '42.2.1'
 
 configurations {
     testCompile.exclude group: "junit", module: "junit"
@@ -88,7 +85,7 @@ dependencies {
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
 //    compile("org.apache.commons:commons-pool2:2.4.2")
 
-    runtime('com.h2database:h2')
+    runtime("org.postgresql:postgresql")
 
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
     runtime group: 'de.appelgriepsch.logback', name: 'logback-gelf-appender', version: '1.4'
@@ -151,9 +148,9 @@ liquibase {
     activities {
         main {
             changeLogFile 'src/main/resources/db/changelog/db.changelog-master.xml'
-            url 'jdbc:h2:file:~/.demo/demo-jsf;AUTO_SERVER=TRUE'
-            username 'sa'
-            password 'sa'
+            url 'jdbc:postgresql://localhost:5432/spring-demo'
+            username 'dev'
+            password 'dev'
         }
     }
 }

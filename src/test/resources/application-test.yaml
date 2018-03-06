@@ -1,8 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:demo
-    username: sa
-    password: sa
   devtools.restart.enabled: false
 
 logging:

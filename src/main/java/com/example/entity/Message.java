@@ -16,6 +16,7 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 6720661546911326511L;
 
     @Id
+    @Column(columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

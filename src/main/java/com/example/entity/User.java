@@ -19,6 +19,7 @@ public class User implements Principal, UserDetails {
     private static final long serialVersionUID = 6720661546911326516L;
 
     @Id
+    @Column(columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
