@@ -8,6 +8,7 @@ import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.bonigarcia.DockerBrowser;
 import io.github.bonigarcia.Options;
 import io.github.bonigarcia.SeleniumExtension;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static io.github.bonigarcia.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -63,6 +65,9 @@ class DemoApplicationTests {
             Environment environment,
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
+        System.setProperty("sel.jup.docker.server.url", "tcp://127.0.0.1:2375");// NOPMD
+        System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
+
         this.objectMapper = objectMapper;
         JacksonTester.initFields(this, objectMapper);
 
@@ -169,8 +174,8 @@ class DemoApplicationTests {
     }
 
     @Test
-    void adminLoginFailPassword(ChromeDriver webDriver) {
-        webDriver.get("http://localhost:" + port + "/admin");
+    void adminLoginFailPassword(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+        webDriver.get("http://192.168.1.100:" + port + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
 
         String content = webDriver.findElement(By.id("login-error")).getText();
@@ -178,8 +183,8 @@ class DemoApplicationTests {
     }
 
     @Test
-    void adminLoginFailUserName(ChromeDriver webDriver) {
-        webDriver.get("http://localhost:" + port + "/admin");
+    void adminLoginFailUserName(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+        webDriver.get("http://192.168.1.100:" + port + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
 
         String content = webDriver.findElement(By.id("login-error")).getText();
@@ -187,25 +192,25 @@ class DemoApplicationTests {
     }
 
     @Test
-    void hello(ChromeDriver webDriver) {
-        webDriver.get("http://localhost:" + port + "/hello");
+    void hello(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+        webDriver.get("http://192.168.1.100:" + port + "/hello");
         new LoginPage(webDriver).login("user", "password");
 
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
 
-        webDriver.get("http://localhost:" + port + "/hello?lang=en");
+        webDriver.get("http://192.168.1.100:" + port + "/hello?lang=en");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
-        webDriver.get("http://localhost:" + port + "/hello");
+        webDriver.get("http://192.168.1.100:" + port + "/hello");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
-        webDriver.get("http://localhost:" + port + "/hello?lang=pl");
+        webDriver.get("http://192.168.1.100:" + port + "/hello?lang=pl");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
     }
 
     @Test
-    void adminLogin(ChromeDriver webDriver) throws Exception {
-        webDriver.get("http://localhost:" + port + "/admin");
+    void adminLogin(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
+        webDriver.get("http://192.168.1.100:" + port + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
         String content = webDriver.findElement(By.tagName("pre")).getText();
@@ -220,8 +225,8 @@ class DemoApplicationTests {
     }
 
     @Test
-    void tableXhtml(ChromeDriver webDriver) throws Exception {
-        webDriver.get("http://localhost:" + port + "/table.xhtml");
+    void tableXhtml(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
+        webDriver.get("http://192.168.1.100:" + port + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
@@ -248,8 +253,8 @@ class DemoApplicationTests {
     }
 
     @Test
-    void changeLanguageInJsf(ChromeDriver webDriver) {
-        webDriver.get("http://localhost:" + port + "/table.xhtml");
+    void changeLanguageInJsf(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+        webDriver.get("http://192.168.1.100:" + port + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
 
@@ -258,32 +263,32 @@ class DemoApplicationTests {
     }
 
     @Test
-    void changeLanguageInJsfAndMvc(ChromeDriver webDriver) {
-        webDriver.get("http://localhost:" + port + "/hello");
+    void changeLanguageInJsfAndMvc(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+        webDriver.get("http://192.168.1.100:" + port + "/hello");
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
 
         // locale is pl
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
-        webDriver.get("http://localhost:" + port + "/table.xhtml");
+        webDriver.get("http://192.168.1.100:" + port + "/table.xhtml");
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
 
         // change locale to en in jsf
         new ToolbarPanel(webDriver).changeLanguage(Locale.ENGLISH);
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale en");
-        webDriver.get("http://localhost:" + port + "/hello");
+        webDriver.get("http://192.168.1.100:" + port + "/hello");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
         // change locale to pl in mvc
-        webDriver.get("http://localhost:" + port + "/hello?lang=pl");
+        webDriver.get("http://192.168.1.100:" + port + "/hello?lang=pl");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
-        webDriver.get("http://localhost:" + port + "/table.xhtml");
+        webDriver.get("http://192.168.1.100:" + port + "/table.xhtml");
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
     }
 
     @Test
-    void jsfSessionMessages(ChromeDriver webDriver) {
-        webDriver.get("http://localhost:" + port + "/index.xhtml");
+    void jsfSessionMessages(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+        webDriver.get("http://192.168.1.100:" + port + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
         SessionMessagesPanel sessionMessagesPanel = new SessionMessagesPanel(webDriver);

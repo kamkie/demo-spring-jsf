@@ -4,7 +4,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.liquibase:liquibase-gradle-plugin:1.2.4")
         classpath("com.h2database:h2:1.4.196")
         classpath("org.liquibase:liquibase-core:3.5.5")
         classpath('com.moowork.gradle:gradle-node-plugin:1.1.0')
@@ -20,18 +19,15 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.17.0'
     id "com.github.spotbugs" version "1.6.1"
     id "org.springframework.boot" version "2.0.0.RELEASE"
+    id "org.liquibase.gradle" version "1.2.4"
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.moowork.node"
-apply plugin: 'com.gorylenko.gradle-git-properties'
-apply plugin: 'org.liquibase.gradle'
 apply plugin: 'pmd'
-apply plugin: 'com.github.spotbugs'
 apply plugin: 'jacoco'
-apply plugin: 'com.diffplug.gradle.spotless'
 apply plugin: 'com.toomuchcoding.uptodate'
 
 version = gitVersion()
@@ -108,6 +104,8 @@ dependencies {
     testCompile("io.github.bonigarcia:selenium-jupiter:2.0.0")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
+    testCompile("org.glassfish.jersey.inject:jersey-hk2:2.26")
+    testCompile group: 'javax.activation', name: 'activation', version: '1.1.1'
 }
 
 sourceSets {
