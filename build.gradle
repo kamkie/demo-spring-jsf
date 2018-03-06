@@ -46,10 +46,10 @@ ext['spring-boot.version'] = '2.0.0.RELEASE'
 ext['selenium.version'] = '3.10.0'
 ext['postgresql.version'] = '42.2.1'
 
-configurations {
-    testCompile.exclude group: "junit", module: "junit"
-    testRuntimee.exclude group: "junit", module: "junit"
-}
+//configurations {
+//    testCompile.exclude group: "junit", module: "junit"
+//    testRuntimee.exclude group: "junit", module: "junit"
+//}
 
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
@@ -101,6 +101,7 @@ dependencies {
     testCompile("io.github.bonigarcia:selenium-jupiter:2.0.0")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
+    testCompile("org.testcontainers:postgresql:1.6.0")
     testCompile("org.glassfish.jersey.inject:jersey-hk2:2.26")
     testCompile group: 'javax.activation', name: 'activation', version: '1.1.1'
 }

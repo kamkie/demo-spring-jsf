@@ -1,15 +1,14 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+    <module name="demo-spring-jsf_main" />
+    <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.example.tests.*" />
+        <option name="PATTERN" value="com.example.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.DemoApplication" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <module name="demo-spring-jsf_main" />
-    <envs />
     <method />
   </configuration>
 </component>

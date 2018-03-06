@@ -2,6 +2,9 @@ package com.example.tests;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import com.example.DemoApplication;
+import com.example.extension.DockerExtension;
+import com.example.extension.TestContainerInitializer;
 import com.example.pageobjects.LoginPage;
 import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
@@ -33,6 +36,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
@@ -45,11 +49,13 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @Slf4j
 @TestInstance(PER_CLASS)
+@ExtendWith(DockerExtension.class)
 @ExtendWith(SpringExtension.class)
 @ExtendWith(SeleniumExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DemoApplicationTests {
+@ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
+class DemoApplicationTest {
 
     @Options
     private ChromeOptions chromeOptions;
@@ -61,7 +67,7 @@ class DemoApplicationTests {
     private TestRestTemplate restAdminAuthTemplate;
 
     @Autowired
-    DemoApplicationTests(
+    DemoApplicationTest(
             Environment environment,
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
