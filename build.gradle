@@ -39,7 +39,6 @@ repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
     maven { url "https://artifacts.alfresco.com/nexus/content/repositories/public/" }
-    maven { url "https://repo.spring.io/milestone" }
 }
 
 ext['spring-boot.version'] = '2.0.0.RELEASE'
@@ -79,7 +78,7 @@ dependencies {
 
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.0.RC1')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.0')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
