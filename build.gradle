@@ -118,7 +118,7 @@ springBoot {
 bootRun {
     systemProperty 'spring.output.ansi.enabled', "always"
     systemProperty 'spring.profiles.active', "graylog"
-    sourceResources sourceSets.main
+    classpath = getProject().files(sourceSets.main.getResources().getSrcDirs(), classpath)
 }
 
 bootJar {
@@ -136,7 +136,7 @@ task springConfiguration(type: Copy) {
 }
 classes.dependsOn springConfiguration
 compileJava.dependsOn processResources
-processResources.dependsOn generateGitProperties
+generateGitProperties.mustRunAfter processResources
 bootBuildInfo.mustRunAfter processResources
 springConfiguration.mustRunAfter compileJava
 build.dependsOn jacocoTestReport
