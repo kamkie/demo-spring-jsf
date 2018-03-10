@@ -78,7 +78,7 @@ dependencies {
 
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.0')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.1')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
@@ -107,9 +107,7 @@ dependencies {
 
 sourceSets {
     main {
-        resources {
-            srcDirs = ["build/generated/", "src/main/resources"]
-        }
+        resources.srcDir "${buildDir}/generated/"
     }
 }
 
@@ -118,9 +116,9 @@ springBoot {
 }
 
 bootRun {
-//    sourceResources sourceSets.main
     systemProperty 'spring.output.ansi.enabled', "always"
     systemProperty 'spring.profiles.active', "graylog"
+    sourceResources sourceSets.main
 }
 
 bootJar {
@@ -128,7 +126,7 @@ bootJar {
 }
 
 task springConfiguration(type: Copy) {
-    inputs.files("$buildDir/classes/main", "$buildDir/classes/java/main")
+    inputs.files("$buildDir/classes/java/main")
     outputs.dir("$buildDir/generated")
     from file("$buildDir/classes/java/main/META-INF/")
     into file("$buildDir/generated/META-INF/")

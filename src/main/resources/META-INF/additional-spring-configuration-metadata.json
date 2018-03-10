@@ -19,11 +19,6 @@
       "name": "logging.custom.request.enable",
       "type": "java.lang.Boolean",
       "description": "Description for ble.custom.request.enable."
-    },
-    {
-      "name": "jsf.PROJECT_STAGE",
-      "type": "java.lang.String",
-      "description": "Description for jsf.PROJECT_STAGE."
     }
   ]
 }

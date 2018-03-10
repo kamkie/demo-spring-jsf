@@ -11,6 +11,8 @@
     <ui:param name="activeIndex" value="0"/>
 
     <ui:define name="content">
+        <p:tooltip/>
+
         <p>Hello #{request.userPrincipal.name}</p>
         <p>session #{session.id}</p>
         <p>user #{usersRepository.findAll()}</p>
@@ -18,8 +20,6 @@
         <p>msg #{msg['hello.foo']}</p>
         <p>locale #{localeModel.getLocale()}</p>
         <p>property #{environment.getProperty('spring.application.name')}</p>
-
-        <p:tooltip/>
 
         <h:form id="messages-form">
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
@@ -34,26 +34,33 @@
 
         <p:separator/>
 
-        <h:form>
-            <h:panelGrid id="grid" columns="3" cellpadding="5">
+        <h:form id="panel">
+            <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
+            <p:panel>
                 <p:outputLabel for="default" value="Default:"/>
                 <p:inputText id="default" required="true"/>
-                <p:message for="default"/>
+                <p:message for="default" display="default"/>
+            </p:panel>
 
+            <p:panel>
                 <p:outputLabel for="txt" value="Text:"/>
                 <p:inputText id="txt" required="true"/>
                 <p:message for="txt" display="text"/>
+            </p:panel>
 
+            <p:panel>
                 <p:outputLabel for="icon" value="Icon:"/>
                 <p:inputText id="icon" required="true"/>
                 <p:message for="icon" display="icon"/>
+            </p:panel>
 
+            <p:panel>
                 <p:outputLabel for="tt" value="Tooltip:"/>
                 <p:inputText id="tt" required="true"/>
-                <p:message for="tt" display="tooltip"/>
-            </h:panelGrid>
+                <p:message for="tt" display="default"/>
+            </p:panel>
 
-            <p:commandButton id="submitButton" value="Submit" update="grid"/>
+            <p:commandButton id="submitButton" value="Submit" update="panel"/>
         </h:form>
 
     </ui:define>

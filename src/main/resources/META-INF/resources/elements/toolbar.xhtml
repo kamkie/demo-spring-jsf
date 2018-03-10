@@ -4,7 +4,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:body>
     <ui:composition>
-        <h:form id="toolbarForm">
+        <div>
             <p:toolbar styleClass="toolBar">
                 <f:facet name="left">
                     <p:outputPanel rendered="#{not empty request.userPrincipal}">
@@ -18,14 +18,14 @@
                 </f:facet>
 
                 <f:facet name="right">
-                    <p:outputPanel rendered="#{not empty request.userPrincipal}">
+                    <p:outputPanel rendered="#{not empty request.userPrincipal}" styleClass="toolbar">
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
                         <h:form id="localeForm">
                             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
-                            <h:selectOneMenu id="language-select-box" value="#{localeModel.localeCode}"
-                                             onchange="submit()">
+                            <h:selectOneMenu id="language-select-box" value="#{localeModel.localeCode}">
                                 <f:selectItem itemValue="en" itemLabel="English"/>
                                 <f:selectItem itemValue="pl" itemLabel="Polski"/>
+                                <p:ajax listener="#{localeModel.onLocaleChange}" async="false"/>
                             </h:selectOneMenu>
                         </h:form>
 
@@ -33,16 +33,14 @@
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
                         <h:outputText value="Użytkownik: #{request.userPrincipal.name}"/>
                         <span class="ui-separator"><span class="ui-icon ui-icon-grip-dotted-vertical"/></span>
-                        <form action="${pageContext.request.contextPath}/logout" method="post"
-                              style="display: inline-block">
+                        <form action="${pageContext.request.contextPath}/logout" method="post">
                             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
-                            <p:commandButton id="logoutButton" styleClass="logoutButton" value="Wyloguj się"
-                                             action="/logout" ajax="false"/>
+                            <input type="submit" id="logoutButton" class="logoutButton" value="Wyloguj się"/>
                         </form>
                     </p:outputPanel>
                 </f:facet>
             </p:toolbar>
-        </h:form>
+        </div>
     </ui:composition>
 </h:body>
 </html>

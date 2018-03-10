@@ -5,13 +5,15 @@
 
 <h:body>
     <ui:composition>
-        <h:form id="tabsForm">
-            <p:tabMenu activeIndex="#{activeIndex}">
-                <p:menuitem id="index" icon="ui-icon-home" outcome="/index.xhtml"/>
-                <p:menuitem id="results" value="#{msg['menu.results']}" outcome="/results.xhtml"/>
-                <p:menuitem id="table" value="#{msg['menu.table']}" outcome="/table.xhtml"/>
-            </p:tabMenu>
-        </h:form>
+        <div>
+            <h:form id="tabsForm">
+                <p:tabMenu activeIndex="#{activeIndex}">
+                    <p:menuitem id="index" icon="ui-icon-home" outcome="/index.xhtml"/>
+                    <p:menuitem id="results" value="#{msg['menu.results']}" outcome="/results.xhtml"/>
+                    <p:menuitem id="table" value="#{msg['menu.table']}" outcome="/table.xhtml"/>
+                </p:tabMenu>
+            </h:form>
+        </div>
     </ui:composition>
 </h:body>
 </html>

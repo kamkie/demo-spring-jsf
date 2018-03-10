@@ -6,24 +6,29 @@
     <h:head>
         <title>demo</title>
 
+        <h:outputStylesheet>
+            .toolbar {
+                display: flex;
+                flex-direction: row;
+            }
+        </h:outputStylesheet>
         <ui:insert name="css"/>
 
         <ui:insert name="js"/>
     </h:head>
-    <h:body>
+    <h:body id="body">
         <p:growl id="messages" globalOnly="true"/>
         <p:layout fullPage="true">
             <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 
             <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
                       showHeader="false">
-                <p:graphicImage name="/images/loading-v2.gif" style="width:100px"/>
+                <p:graphicImage name="/images/javafx-loading-100x100.gif" style="width:100px"/>
             </p:dialog>
 
-            <p:layoutUnit position="north">
+            <p:layoutUnit position="north" style="min-height: 122px">
                 <ui:include src="elements/toolbar.xhtml"/>
                 <ui:include src="elements/menu.xhtml"/>
-
             </p:layoutUnit>
 
             <p:layoutUnit position="south">

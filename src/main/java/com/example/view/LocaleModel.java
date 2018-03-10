@@ -5,7 +5,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.LocaleResolver;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Locale;
 
 @Component
@@ -35,6 +39,12 @@ public class LocaleModel {
 
     public void setLocaleCode(String locale) {
         setLocale(Locale.forLanguageTag(locale));
+    }
+
+    public void onLocaleChange(AjaxBehaviorEvent event) throws IOException {
+        System.out.println(event);
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
 
 }

@@ -43,6 +43,8 @@ jsf:
   facelets-skip-comments: true
   primefaces:
     theme: bootstrap
+  mojarra:
+    facelet-cache: false
 
 server:
   port: 8080

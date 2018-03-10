@@ -11,6 +11,8 @@
     <ui:param name="activeIndex" value="2"/>
 
     <ui:define name="content">
+        <p:tooltip/>
+
         <p>Hello #{request.userPrincipal.name}</p>
         <p>session #{session.id}</p>
         <p>user #{usersRepository.findAll()}</p>
@@ -18,7 +20,7 @@
 
         <div class="row-fluid">
             <div class="ui-grid-row">
-                <div class="ui-grid-col-4">
+                <div class="ui-grid-col-11">
                     <h:form id="deviceListForm">
                         <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
                         <p:dataTable id="messagesTable" var="element" value="#{tableView.messages}" lazy="true"
