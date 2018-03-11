@@ -100,17 +100,22 @@ user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39
     com:
       sun:
         faces: info
+      example:
+        component:
+          RequestIdFilter: warn
+          SessionIdFilter: warn
+          UserNameFilter: warn
     javax:
       faces: info
   custom:
     time:
       enable: true
     user:
-      enable: false
+      enable: true
     session:
-      enable: false
+      enable: true
     request:
-      enable: false
+      enable: true
 
 #logbook:
 #    exclude:

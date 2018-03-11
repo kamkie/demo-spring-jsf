@@ -21,7 +21,7 @@ import static javax.servlet.DispatcherType.*;
 
 @Slf4j
 @ConditionalOnProperty(name = "logging.custom.user.enable")
-@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 2)
+@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 103)
 @Component
 @WebFilter(urlPatterns = {"/", "/*"}, asyncSupported = true, dispatcherTypes = {REQUEST, ASYNC, ERROR, FORWARD, INCLUDE})
 public class UserNameFilter extends OncePerRequestFilter {

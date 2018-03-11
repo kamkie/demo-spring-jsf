@@ -20,7 +20,7 @@ import static javax.servlet.DispatcherType.*;
 
 @Slf4j
 @ConditionalOnProperty(name = "logging.custom.request.enable")
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE + 101)
 @Component
 @WebFilter(urlPatterns = {"/", "/*"}, asyncSupported = true, dispatcherTypes = {REQUEST, ASYNC, ERROR, FORWARD, INCLUDE})
 public class RequestIdFilter extends OncePerRequestFilter {

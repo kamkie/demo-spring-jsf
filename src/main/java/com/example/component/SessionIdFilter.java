@@ -21,7 +21,7 @@ import static javax.servlet.DispatcherType.*;
 
 @Slf4j
 @ConditionalOnProperty(name = "logging.custom.session.enable")
-@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 1)
+@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 102)
 @Component
 @WebFilter(urlPatterns = {"/", "/*"}, asyncSupported = true, dispatcherTypes = {REQUEST, ASYNC, ERROR, FORWARD, INCLUDE})
 public class SessionIdFilter extends OncePerRequestFilter {

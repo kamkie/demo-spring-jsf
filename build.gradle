@@ -176,6 +176,8 @@ task h2Tcp(type: JavaExec) {
 }
 
 task webpack(type: NodeTask, dependsOn: 'npmInstall') {
+    inputs.files("src/main/resources/static/javascript")
+    outputs.dir("build/resources/main/static/javascript")
     script = project.file('node_modules/webpack/bin/webpack.js')
 }
 
