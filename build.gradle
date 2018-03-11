@@ -42,7 +42,7 @@ repositories {
 }
 
 ext['spring-boot.version'] = '2.0.0.RELEASE'
-ext['selenium.version'] = '3.10.0'
+ext['selenium.version'] = '3.11.0'
 ext['postgresql.version'] = '42.2.1'
 
 //configurations {
@@ -78,7 +78,7 @@ dependencies {
 
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.1')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.2')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
