@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="jar" type="JarApplication" factoryName="JAR Application" singleton="true">
-    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/demo-spring-jsf-0.5-19-gd587945.dirty-boot.jar" />
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/demo-spring-jsf-0.5-20-gc35d207-boot.jar" />
     <option name="WORKING_DIRECTORY" value="D:\Projekty\demo-spring-jsf" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="9" />

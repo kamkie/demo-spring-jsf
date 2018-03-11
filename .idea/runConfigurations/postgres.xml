@@ -1,0 +1,42 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="postgres" type="docker-deploy" factoryName="docker-image" singleton="true" server-name="Docker">
+    <deployment type="docker-image">
+      <settings>
+        <option name="JSONFilePath" value="" />
+        <option name="command" value="" />
+        <option name="commandLineOptions" value="" />
+        <option name="containerName" value="spring-demo" />
+        <option name="entrypoint" value="" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_USER" />
+              <option name="value" value="dev" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_PASSWORD" />
+              <option name="value" value="dev" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_DB" />
+              <option name="value" value="spring-demo" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="imageTag" value="postgres" />
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="5432" />
+              <option name="hostPort" value="5432" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="startBrowserSettings">
+          <browser url="http://127.0.0.1" />
+        </option>
+      </settings>
+    </deployment>
+    <method />
+  </configuration>
+</component>

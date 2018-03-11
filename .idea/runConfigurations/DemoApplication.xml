@@ -9,8 +9,8 @@
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.DemoApplication" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndTriggerFile" />
-    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+    <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateTriggerFile" />
+    <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateResources" />
     <method />
   </configuration>
 </component>

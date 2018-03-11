@@ -8,7 +8,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @Configuration
-@EnableJdbcHttpSession
+@EnableJdbcHttpSession(maxInactiveIntervalInSeconds = 24 * 60 * 60)
 public class SessionConfiguration {
 
     @Bean

@@ -43,14 +43,17 @@ jsf:
   facelets-skip-comments: true
   primefaces:
     theme: bootstrap
-  mojarra:
-    facelet-cache: false
 
 server:
   port: 8080
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/plain
+  servlet:
+    session:
+      timeout: 24h
+      cookie:
+        max-age: 7d
 #  tomcat:
 #    basedir: .
 #    accesslog:
@@ -103,11 +106,11 @@ user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39
     time:
       enable: true
     user:
-      enable: true
+      enable: false
     session:
-      enable: true
+      enable: false
     request:
-      enable: true
+      enable: false
 
 #logbook:
 #    exclude:

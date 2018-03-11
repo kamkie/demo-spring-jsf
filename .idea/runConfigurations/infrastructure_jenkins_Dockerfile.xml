@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="D:\Projekty\demo-spring-jsf\infrastructure\jenkins\Dockerfile" type="docker-deploy" factoryName="dockerfile" singleton="true" server-name="Docker">
+  <configuration default="false" name="infrastructure\jenkins\Dockerfile" type="docker-deploy" factoryName="dockerfile" singleton="true" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
         <option name="JSONFilePath" value="" />
@@ -17,7 +17,7 @@
             </DockerPortBindingImpl>
           </list>
         </option>
-        <option name="sourceFilePath" value="$PROJECT_DIR$/infrastructure/jenkins/Dockerfile" />
+        <option name="sourceFilePath" value="infrastructure/jenkins/Dockerfile" />
         <option name="startBrowserSettings">
           <browser url="http://127.0.0.1" />
         </option>
