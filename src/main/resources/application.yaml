@@ -37,6 +37,13 @@ spring:
   devtools:
     restart:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
+  resources:
+    cache:
+      period: 365d
+      cachecontrol:
+        no-cache: false
+        no-store: false
+        max-age: 365d
 
 jsf:
   project-stage: development
