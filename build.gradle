@@ -114,7 +114,6 @@ dependencies {
 sourceSets {
     main {
         resources.srcDir "${buildDir}/generated/"
-        resources.srcDir "${buildDir}/restdocs/"
     }
 }
 
@@ -140,12 +139,18 @@ bootJar {
     dependsOn asciidoctor
 }
 
+test {
+    outputs.dir("build/generated-snippets")
+}
+
 asciidoctor {
     mustRunAfter test
+    inputs.dir("build/generated-snippets")
+    outputs.dir("build/resources/main")
     doLast {
         copy {
             from 'build/asciidoc/html5'
-            into "build/restdocs/static/docs"
+            into "build/resources/main/static/docs"
             include 'index.html'
         }
     }
