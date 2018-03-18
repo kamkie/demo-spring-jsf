@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         classpath("org.liquibase:liquibase-core:3.5.5")
-        classpath("org.postgresql:postgresql:42.2.1")
+        classpath("org.postgresql:postgresql:42.2.2")
         classpath('com.moowork.gradle:gradle-node-plugin:1.1.0')
         classpath('com.toomuchcoding:uptodate-gradle-plugin:1.0.1')
     }
@@ -20,6 +20,7 @@ plugins {
     id "com.github.spotbugs" version "1.6.1"
     id "org.springframework.boot" version "2.0.0.RELEASE"
     id "org.liquibase.gradle" version "1.2.4"
+    id "org.asciidoctor.convert" version "1.5.7"
 }
 
 apply plugin: 'java'
@@ -44,7 +45,8 @@ repositories {
 
 ext['spring-boot.version'] = '2.0.0.RELEASE'
 ext['selenium.version'] = '3.11.0'
-ext['postgresql.version'] = '42.2.1'
+ext['postgresql.version'] = '42.2.2'
+ext['spring-restdocs.version'] = '2.0.0.RELEASE'
 
 //configurations {
 //    testCompile.exclude group: "junit", module: "junit"
@@ -93,10 +95,13 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0' //required on java 9
 
+    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
+
     testCompile("org.junit.jupiter:junit-jupiter-api")
     testRuntime("org.junit.jupiter:junit-jupiter-engine")
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
+    testCompile("org.springframework.restdocs:spring-restdocs-mockmvc")
     testCompile("io.github.bonigarcia:webdrivermanager:2.1.0")
     testCompile("io.github.bonigarcia:selenium-jupiter:2.0.0")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
@@ -109,6 +114,7 @@ dependencies {
 sourceSets {
     main {
         resources.srcDir "${buildDir}/generated/"
+        resources.srcDir "${buildDir}/restdocs/"
     }
 }
 
@@ -131,6 +137,18 @@ bootRun {
 
 bootJar {
     classifier = 'boot'
+    dependsOn asciidoctor
+}
+
+asciidoctor {
+    mustRunAfter test
+    doLast {
+        copy {
+            from 'build/asciidoc/html5'
+            into "build/restdocs/static/docs"
+            include 'index.html'
+        }
+    }
 }
 
 task springConfiguration(type: Copy) {

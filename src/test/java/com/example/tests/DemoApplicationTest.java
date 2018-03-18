@@ -15,6 +15,7 @@ import io.github.bonigarcia.DockerBrowser;
 import io.github.bonigarcia.Options;
 import io.github.bonigarcia.SeleniumExtension;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,9 +36,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -45,12 +52,16 @@ import java.util.Map;
 
 import static io.github.bonigarcia.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
 @TestInstance(PER_CLASS)
 @ExtendWith(DockerExtension.class)
-@ExtendWith(SpringExtension.class)
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @ExtendWith(SeleniumExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -62,6 +73,7 @@ class DemoApplicationTest {
     @LocalServerPort
     private int port;
     private ObjectMapper objectMapper;
+    private MockMvc mockMvc;
     private TestRestTemplate restAnonymousTemplate;
     private TestRestTemplate restUserAuthTemplate;
     private TestRestTemplate restAdminAuthTemplate;
@@ -79,6 +91,14 @@ class DemoApplicationTest {
 
         this.chromeOptions = initChromeOptions();
         initRestTemplate(restTemplateBuilder.uriTemplateHandler(new LocalHostUriTemplateHandler(environment)));
+    }
+
+    @BeforeEach
+    void setUp(WebApplicationContext webApplicationContext,
+               RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .build();
     }
 
     private ChromeOptions initChromeOptions() {
@@ -103,13 +123,12 @@ class DemoApplicationTest {
     }
 
     @Test
-    void home() {
-        ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/", String.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.hasBody()).isTrue();
-        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
-        assertThat(responseEntity.getBody()).contains("principal");
+    void home() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(content().string(containsString("principal")))
+                .andDo(document("index"));
     }
 
     @Test

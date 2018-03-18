@@ -1,1 +1,3 @@
 rootProject.name = 'demo-spring-jsf'
+gradle.startParameter.showStacktrace = org.gradle.api.logging.configuration.ShowStacktrace.ALWAYS
+
