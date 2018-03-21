@@ -6,8 +6,6 @@ buildscript {
     dependencies {
         classpath("org.liquibase:liquibase-core:3.5.5")
         classpath("org.postgresql:postgresql:42.2.2")
-        classpath('com.moowork.gradle:gradle-node-plugin:1.1.0')
-        classpath('com.toomuchcoding:uptodate-gradle-plugin:1.0.1')
     }
 }
 
@@ -17,10 +15,12 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "1.4.21"
     id "com.diffplug.gradle.spotless" version "3.10.0"
     id 'com.github.ben-manes.versions' version '0.17.0'
-    id "com.github.spotbugs" version "1.6.1"
+//    id "com.github.spotbugs" version "1.6.1"
     id "org.springframework.boot" version "2.0.0.RELEASE"
     id "org.liquibase.gradle" version "1.2.4"
     id "org.asciidoctor.convert" version "1.5.7"
+    id "com.moowork.node" version "1.2.0"
+    id "com.ofg.uptodate" version "1.6.3"
 }
 
 apply plugin: 'java'
@@ -29,13 +29,12 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.moowork.node"
 apply plugin: 'pmd'
-apply plugin: 'jacoco'
-apply plugin: 'com.toomuchcoding.uptodate'
+//apply plugin: 'jacoco'
 
 version = gitVersion()
 group = 'demo'
-sourceCompatibility = 1.9
-targetCompatibility = 1.9
+sourceCompatibility = 1.10
+targetCompatibility = 1.10
 
 repositories {
     mavenCentral()
@@ -57,7 +56,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
-    compile('org.projectlombok:lombok:1.16.20')
+//    compile('org.projectlombok:lombok:1.16.20')
+    compile files('lib/lombok-edge.jar')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-configuration-processor')
@@ -170,7 +170,7 @@ compileJava.dependsOn processResources
 generateGitProperties.mustRunAfter processResources
 bootBuildInfo.mustRunAfter processResources
 springConfiguration.mustRunAfter compileJava
-build.dependsOn jacocoTestReport
+//build.dependsOn jacocoTestReport
 
 
 liquibase {
@@ -184,8 +184,8 @@ liquibase {
     }
 }
 
-jacoco.toolVersion = "0.8.0"
-spotbugs.toolVersion = "3.1.2"
+//jacoco.toolVersion = "0.8.0"
+//spotbugs.toolVersion = "3.1.2"
 pmd.toolVersion = "6.1.0"
 
 sonarqube {
