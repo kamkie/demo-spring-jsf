@@ -193,10 +193,12 @@ sonarqube {
         property "sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:9000"
         property "sonar.projectName", "spring jsf project"
         property "sonar.projectKey", "${project.group}:${project.name}"
-        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+        property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
         property "sonar.exclusions", ""
     }
 }
+tasks.sonarqube.setDependsOn([])
+
 
 task h2Tcp(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
