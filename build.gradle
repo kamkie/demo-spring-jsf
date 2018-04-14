@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.liquibase:liquibase-core:3.5.5")
+        classpath("org.liquibase:liquibase-core:3.6.1")
         classpath("org.postgresql:postgresql:42.2.2")
     }
 }
@@ -16,7 +16,7 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.10.0"
     id 'com.github.ben-manes.versions' version '0.17.0'
 //    id "com.github.spotbugs" version "1.6.1"
-    id "org.springframework.boot" version "2.0.0.RELEASE"
+    id "org.springframework.boot" version "2.0.1.RELEASE"
     id "org.liquibase.gradle" version "1.2.4"
     id "org.asciidoctor.convert" version "1.5.7"
     id "com.moowork.node" version "1.2.0"
@@ -42,10 +42,10 @@ repositories {
     maven { url "https://artifacts.alfresco.com/nexus/content/repositories/public/" }
 }
 
-ext['spring-boot.version'] = '2.0.0.RELEASE'
+ext['spring-boot.version'] = '2.0.1.RELEASE'
 ext['selenium.version'] = '3.11.0'
 ext['postgresql.version'] = '42.2.2'
-ext['spring-restdocs.version'] = '2.0.0.RELEASE'
+ext['spring-restdocs.version'] = '2.0.1.RELEASE'
 
 //configurations {
 //    testCompile.exclude group: "junit", module: "junit"
@@ -81,7 +81,7 @@ dependencies {
 
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.0.2')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.1.1')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
@@ -102,12 +102,13 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testCompile("io.github.bonigarcia:webdrivermanager:2.1.0")
-    testCompile("io.github.bonigarcia:selenium-jupiter:2.0.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:2.2.1")
+    testCompile("io.github.bonigarcia:selenium-jupiter:2.1.1")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
-    testCompile("org.testcontainers:postgresql:1.6.0")
-    testCompile("org.glassfish.jersey.inject:jersey-hk2:2.26")
+    testCompile("org.testcontainers:postgresql:1.7.0")
+    testCompile("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
+    testCompile("org.glassfish.jersey.inject:jersey-hk2:2.27")
     testCompile group: 'javax.activation', name: 'activation', version: '1.1.1'
 }
 
