@@ -46,6 +46,7 @@ ext['spring-boot.version'] = '2.0.1.RELEASE'
 ext['selenium.version'] = '3.11.0'
 ext['postgresql.version'] = '42.2.2'
 ext['spring-restdocs.version'] = '2.0.1.RELEASE'
+ext['liquibase.version'] = '3.6.1'
 
 //configurations {
 //    testCompile.exclude group: "junit", module: "junit"
@@ -81,7 +82,7 @@ dependencies {
 
     compile('io.springfox:springfox-swagger2:2.8.0')
     compile('io.springfox:springfox-swagger-ui:2.8.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.1.1')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.2.0')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
@@ -281,6 +282,6 @@ tasks.withType(Test) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+    gradleVersion = '4.7'
     distributionType = org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 }
