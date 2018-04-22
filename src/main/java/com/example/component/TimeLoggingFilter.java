@@ -58,9 +58,9 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
     private String getHeadersAsString(HttpServletRequest request) {
         Function<String, Pair<String, Enumeration<String>>> mapHeaderNameToHeaders = s -> Pair
                 .of(s, request.getHeaders(s));
-        Function<Pair<String, Enumeration<String>>, Stream<? extends String>> mapPairToStrings = header -> Collections
-                .list(header.getSecond()).stream().map(s -> header.getFirst() + "= " + s);
-        return Collections.list(request.getHeaderNames()).stream().map(mapHeaderNameToHeaders).flatMap(mapPairToStrings)
+        return Collections.list(request.getHeaderNames()).stream()
+                .map(mapHeaderNameToHeaders)
+                .flatMap(TimeLoggingFilter::mapPairToStrings)
                 .collect(Collectors.joining("\n"));
     }
 
@@ -78,6 +78,10 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
 
         msg.append(suffix);
         return msg.toString();
+    }
+
+    private static Stream<? extends String> mapPairToStrings(Pair<String, Enumeration<String>> header) {
+        return Collections.list(header.getSecond()).stream().map(s -> header.getFirst() + "= " + s);
     }
 
 }

@@ -21,8 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Timed
@@ -69,10 +67,10 @@ public class HomeController {
     private ResponseEntity getResponseEntity(Principal principal, HttpSession session) throws JsonProcessingException {
         log.info("home controller called principal: {}", principal);
 
-        List<User> userList = usersRepository.findAll();
+        var userList = usersRepository.findAll();
         User user = usersRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
 
-        Map<String, Object> map = new LinkedHashMap<>();
+        var map = new LinkedHashMap<String, Object>();
         session.setAttribute("principal", objectMapper.writeValueAsString(principal));
         map.put("sessionId", session.getId());
         map.put("message", msg.get("hello.text"));

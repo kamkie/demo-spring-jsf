@@ -1,5 +1,6 @@
 package com.example.view;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Locale;
 
+@Slf4j
 @Component
 @RequestScope
 public class LocaleModel {
@@ -42,7 +44,7 @@ public class LocaleModel {
     }
 
     public void onLocaleChange(AjaxBehaviorEvent event) throws IOException {
-        System.out.println(event);
+        log.info("onLocaleChange: {}", event);
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }

@@ -116,7 +116,7 @@ public class ExecutionTimeLogger {
         }
     }
 
-    public static String formatDuration(long nanos) {
+    static String formatDuration(long nanos) {
         return TIME_FORMATTER.format(LocalTime.ofNanoOfDay(nanos));
     }
 

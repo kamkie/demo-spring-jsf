@@ -1,15 +1,11 @@
 package com.example.utils;
 
-public class LongStringUtils {
+public interface LongStringUtils {
 
-    private static final int MAX_CHARS = 60;
-    private static final String STR_SUFFIX = " ...>";
+    int MAX_CHARS = 60;
+    String STR_SUFFIX = " ...>";
 
-    private LongStringUtils() {
-        throw new UnsupportedOperationException();
-    }
-
-    public static String formatLongString(Object input) {
+    static String formatLongString(Object input) {
         if (input == null) {
             return "{null}";
         }

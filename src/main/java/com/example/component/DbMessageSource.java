@@ -43,9 +43,9 @@ public class DbMessageSource implements MessageSource {
 
     @Override
     public String getMessage(MessageSourceResolvable resolvable, Locale locale) {
-        String[] codes = resolvable.getCodes();
-        Object[] arguments = resolvable.getArguments();
-        String defaultMessage = resolvable.getDefaultMessage();
+        var codes = resolvable.getCodes();
+        var arguments = resolvable.getArguments();
+        var defaultMessage = resolvable.getDefaultMessage();
 
         if (codes != null) {
             for (String code : codes) {
