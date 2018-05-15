@@ -13,7 +13,7 @@ plugins {
     id 'com.palantir.git-version' version '0.10.1'
     id "org.sonarqube" version "2.6.2"
     id "com.gorylenko.gradle-git-properties" version "1.4.21"
-    id "com.diffplug.gradle.spotless" version "3.10.0"
+    id "com.diffplug.gradle.spotless" version "3.12.0"
     id 'com.github.ben-manes.versions' version '0.17.0'
 //    id "com.github.spotbugs" version "1.6.1"
     id "org.springframework.boot" version "2.0.1.RELEASE"
@@ -43,10 +43,11 @@ repositories {
 }
 
 ext['spring-boot.version'] = '2.0.1.RELEASE'
-ext['selenium.version'] = '3.11.0'
+ext['selenium.version'] = '3.12.0'
 ext['postgresql.version'] = '42.2.2'
 ext['spring-restdocs.version'] = '2.0.1.RELEASE'
 ext['liquibase.version'] = '3.6.1'
+ext['junit-jupiter.version'] = '5.2.0'
 
 //configurations {
 //    testCompile.exclude group: "junit", module: "junit"
@@ -80,9 +81,9 @@ dependencies {
     compile('com.github.ben-manes.caffeine:caffeine')
     compile('io.micrometer:micrometer-registry-prometheus')
 
-    compile('io.springfox:springfox-swagger2:2.8.0')
-    compile('io.springfox:springfox-swagger-ui:2.8.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.2.0')
+    compile('io.springfox:springfox-swagger2:2.9.0')
+    compile('io.springfox:springfox-swagger-ui:2.9.0')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.2.1')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
@@ -107,7 +108,7 @@ dependencies {
     testCompile("io.github.bonigarcia:selenium-jupiter:2.1.1")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
-    testCompile("org.testcontainers:postgresql:1.7.0")
+    testCompile("org.testcontainers:postgresql:1.7.2")
     testCompile("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
     testCompile("org.glassfish.jersey.inject:jersey-hk2:2.27")
     testCompile group: 'javax.activation', name: 'activation', version: '1.1.1'
