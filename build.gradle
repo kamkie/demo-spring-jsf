@@ -58,8 +58,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
-//    compile('org.projectlombok:lombok:1.16.20')
-    compile files('lib/lombok-edge.jar')
+    compile('org.projectlombok:lombok:1.18.0')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-configuration-processor')
