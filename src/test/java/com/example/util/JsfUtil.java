@@ -5,13 +5,13 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.function.Function;
 
-public class JsfUtil {
-    private static final String JS_JQUERY_DEFINED = "return typeof jQuery != 'undefined';";
-    private static final String JS_PRIMEFACES_DEFINED = "return typeof PrimeFaces != 'undefined';";
-    private static final String JS_JQUERY_ACTIVE = "return jQuery.active != 0;";
-    private static final String JS_PRIMEFACES_QUEUE_NOT_EMPTY = "return !PrimeFaces.ajax.Queue.isEmpty();";
+public interface JsfUtil {
+    String JS_JQUERY_DEFINED = "return typeof jQuery != 'undefined';";
+    String JS_PRIMEFACES_DEFINED = "return typeof PrimeFaces != 'undefined';";
+    String JS_JQUERY_ACTIVE = "return jQuery.active != 0;";
+    String JS_PRIMEFACES_QUEUE_NOT_EMPTY = "return !PrimeFaces.ajax.Queue.isEmpty();";
 
-    public static Function<WebDriver, Boolean> waitForJQueryAndPrimeFaces() {
+    static Function<WebDriver, Boolean> waitForJQueryAndPrimeFaces() {
         return input -> {
             boolean ajax = false;
             boolean jQueryDefined = executeBooleanJavascript(input, JS_JQUERY_DEFINED);

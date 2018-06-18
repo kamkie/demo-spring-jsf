@@ -14,37 +14,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SubMillisTest {
     @Test
-    void getBaseUnit() throws Exception {
+    void getBaseUnit() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.getBaseUnit()).isEqualTo(ChronoUnit.MICROS);
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.getBaseUnit()).isEqualTo(ChronoUnit.NANOS);
     }
 
     @Test
-    void getRangeUnit() throws Exception {
+    void getRangeUnit() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.getRangeUnit()).isEqualTo(ChronoUnit.MILLIS);
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.getRangeUnit()).isEqualTo(ChronoUnit.MICROS);
     }
 
     @Test
-    void range() throws Exception {
+    void range() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.range()).isEqualTo(ValueRange.of(0, 999));
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.range()).isEqualTo(ValueRange.of(0, 999));
     }
 
     @Test
-    void isDateBased() throws Exception {
+    void isDateBased() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.isDateBased()).isFalse();
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.isDateBased()).isFalse();
     }
 
     @Test
-    void isTimeBased() throws Exception {
+    void isTimeBased() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.isTimeBased()).isTrue();
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.isTimeBased()).isTrue();
     }
 
     @Test
-    void isSupportedBy() throws Exception {
+    void isSupportedBy() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.isSupportedBy(LocalTime.NOON)).isTrue();
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.isSupportedBy(LocalTime.NOON)).isTrue();
 
@@ -53,13 +53,13 @@ class SubMillisTest {
     }
 
     @Test
-    void rangeRefinedBy() throws Exception {
+    void rangeRefinedBy() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.rangeRefinedBy(LocalTime.NOON)).isEqualTo(ValueRange.of(0, 999));
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.rangeRefinedBy(LocalTime.NOON)).isEqualTo(ValueRange.of(0, 999));
     }
 
     @Test
-    void adjustInto() throws Exception {
+    void adjustInto() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.adjustInto(LocalTime.NOON, 100))
                 .isEqualTo(LocalTime.ofNanoOfDay(100_000));
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.adjustInto(LocalTime.NOON, 100))
@@ -67,13 +67,13 @@ class SubMillisTest {
     }
 
     @Test
-    void adjustIntoFail1() throws Exception {
+    void adjustIntoFail1() {
         Assertions.assertThrows(UnsupportedTemporalTypeException.class,
                 () -> SubMillis.MICROS_OF_MILLI_SECOND.adjustInto(LocalDate.now(), 100));
     }
 
     @Test
-    void adjustIntoFail2() throws Exception {
+    void adjustIntoFail2() {
         Assertions.assertThrows(UnsupportedTemporalTypeException.class,
                 () -> SubMillis.NANOS_OF_MICRO_SECOND.adjustInto(LocalDate.now(), 100));
     }

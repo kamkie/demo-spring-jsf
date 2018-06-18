@@ -39,6 +39,7 @@ class ExecutionTimeLoggerTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.NcssCount")
     void noLogging() throws Throwable {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.setLevel(Level.OFF);

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ResourceBundleBeanTest {
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
-    void equals() {
+    void testEquals() {
         ResourceBundleBean resourceBundleBean = new ResourceBundleBean(null, null);
 
         assertThat(resourceBundleBean).isEqualTo(resourceBundleBean)
@@ -21,7 +21,7 @@ class ResourceBundleBeanTest {
 
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @Test
-    void notEquals() {
+    void testNotEquals() {
         assertThat(new ResourceBundleBean(new LocaleModel(null, null), null))
                 .isNotEqualTo(new ResourceBundleBean(null, null))
                 .isNotEqualTo(null)

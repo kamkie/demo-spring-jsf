@@ -40,7 +40,7 @@ public class TableXhtmlPage {
         WebDriverWait wait = new WebDriverWait(webDriver, 30, 1);
         try {
             wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
-        } catch (Exception e) {
+        } catch (Exception e) { // NOPMD
             log.warn("unable to find loading dialog, probably already gone, ignoring");
         }
         wait.until(JsfUtil.waitForJQueryAndPrimeFaces());

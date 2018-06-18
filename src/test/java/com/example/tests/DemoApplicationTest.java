@@ -59,6 +59,15 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
+@SuppressWarnings({
+        "PMD.AvoidDuplicateLiterals",
+        "PMD.SignatureDeclareThrowsException",
+        "PMD.UseConcurrentHashMap",
+        "PMD.NcssCount",
+        "PMD.TooManyMethods",
+        "PMD.ExcessiveImports",
+        "PMD.TooManyStaticImports",
+})
 @TestInstance(PER_CLASS)
 @ExtendWith(DockerExtension.class)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
@@ -69,10 +78,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DemoApplicationTest {
 
     @Options
-    private ChromeOptions chromeOptions;
+    @SuppressWarnings({"unused", "PMD.SingularField"})
+    private final ChromeOptions chromeOptions;
     @LocalServerPort
     private int port;
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
     private MockMvc mockMvc;
     private TestRestTemplate restAnonymousTemplate;
     private TestRestTemplate restUserAuthTemplate;
@@ -94,8 +104,8 @@ class DemoApplicationTest {
     }
 
     @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext,
-               RestDocumentationContextProvider restDocumentation) {
+    void beforeEach(WebApplicationContext webApplicationContext,
+                    RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
                 .build();
