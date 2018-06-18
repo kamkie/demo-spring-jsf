@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 @Primary
@@ -47,20 +48,22 @@ public class DbMessageSource implements MessageSource {
         var arguments = resolvable.getArguments();
         var defaultMessage = resolvable.getDefaultMessage();
 
-        if (codes != null) {
-            for (String code : codes) {
-                String message = getMessage(code, arguments, null, locale);
-                if (message != null) {
-                    return message;
-                }
-            }
-        }
+        return Optional.ofNullable(codes)
+                .flatMap(c -> tryFormatMessage(arguments, c, locale))
+                .orElseGet(() -> formatDefaultMessage(codes, arguments, defaultMessage));
+    }
 
-        if (defaultMessage != null) {
-            return String.format(defaultMessage, arguments);
-        }
+    private String formatDefaultMessage(@Nullable String[] codes, @Nullable Object[] args, @Nullable String defaultMessage) {
+        return Optional.ofNullable(defaultMessage)
+                .map(message -> String.format(message, args))
+                .orElseGet(() -> Arrays.toString(codes));
+    }
 
-        return Arrays.toString(codes);
+    private Optional<String> tryFormatMessage(@Nullable Object[] args, String[] codes, Locale locale) {
+        return Arrays.stream(codes)
+                .map(code -> getMessage(code, args, null, locale))
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 
 }

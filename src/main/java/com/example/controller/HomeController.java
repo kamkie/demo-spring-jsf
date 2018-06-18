@@ -21,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Timed
@@ -70,8 +72,12 @@ public class HomeController {
         var userList = usersRepository.findAll();
         User user = usersRepository.findById(1L).orElseThrow(IllegalArgumentException::new);
 
-        var map = new LinkedHashMap<String, Object>();
         session.setAttribute("principal", objectMapper.writeValueAsString(principal));
+        return ResponseEntity.ok(buildResponse(principal, session, userList, user));
+    }
+
+    private Map<String, Object> buildResponse(Principal principal, HttpSession session, List<User> userList, User user) {
+        var map = new LinkedHashMap<String, Object>();
         map.put("sessionId", session.getId());
         map.put("message", msg.get("hello.text"));
         map.put("principal", principal);
@@ -79,8 +85,7 @@ public class HomeController {
         map.put("userList", userList);
         map.put("buildProperties", buildProperties);
         map.put("gitProperties", gitProperties);
-
-        return ResponseEntity.ok(map);
+        return map;
     }
 
 }

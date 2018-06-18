@@ -66,17 +66,14 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
 
     private String createMessage(HttpServletRequest request, String prefix, String suffix) {
         StringBuilder msg = new StringBuilder();
-        msg.append(prefix);
-        msg.append("uri=").append(request.getRequestURI());
+        msg.append(prefix).append("uri=").append(request.getRequestURI());
 
         String queryString = request.getQueryString();
         if (queryString != null) {
             msg.append('?').append(queryString);
         }
 
-        msg.append(";client=").append(request.getRemoteAddr());
-
-        msg.append(suffix);
+        msg.append(";client=").append(request.getRemoteAddr()).append(suffix);
         return msg.toString();
     }
 

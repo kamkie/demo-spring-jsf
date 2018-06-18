@@ -8,26 +8,24 @@ import java.time.temporal.*;
 @ToString
 public enum SubMillis implements TemporalField {
 
-    MICROS_OF_MILLI_SECOND("MicrosOfMilliSecond", ChronoUnit.MICROS, ChronoUnit.MILLIS, ValueRange.of(0, 999)) {
+    MICROS_OF_MILLI_SECOND(ChronoUnit.MICROS, ChronoUnit.MILLIS, ValueRange.of(0, 999)) {
         @Override
         public long getFrom(TemporalAccessor temporal) {
             return ChronoField.NANO_OF_SECOND.getFrom(temporal) % 1_000_000 / 1000;
         }
     },
-    NANOS_OF_MICRO_SECOND("NanosOfMicroSecond", ChronoUnit.NANOS, ChronoUnit.MICROS, ValueRange.of(0, 999)) {
+    NANOS_OF_MICRO_SECOND(ChronoUnit.NANOS, ChronoUnit.MICROS, ValueRange.of(0, 999)) {
         @Override
         public long getFrom(TemporalAccessor temporal) {
             return ChronoField.NANO_OF_SECOND.getFrom(temporal) % 1_000;
         }
     };
 
-    private final String name;
     private final TemporalUnit baseUnit;
     private final TemporalUnit rangeUnit;
     private final ValueRange range;
 
-    SubMillis(String name, TemporalUnit baseUnit, TemporalUnit rangeUnit, ValueRange range) {
-        this.name = name;
+    SubMillis(TemporalUnit baseUnit, TemporalUnit rangeUnit, ValueRange range) {
         this.baseUnit = baseUnit;
         this.rangeUnit = rangeUnit;
         this.range = range;

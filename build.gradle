@@ -190,7 +190,10 @@ liquibase {
 
 jacoco.toolVersion = "0.8.1"
 //spotbugs.toolVersion = "3.1.5"
-pmd.toolVersion = "6.1.0"
+pmd {
+    toolVersion = "6.4.0"
+    ruleSets = ["pmd.ruleset.xml"]
+}
 
 sonarqube {
     properties {

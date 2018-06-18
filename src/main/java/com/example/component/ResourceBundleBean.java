@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
-@Component(value = "msg")
+@Component("msg")
 public class ResourceBundleBean extends AbstractMap<String, String> {
 
     private final MessageSource messageSource;

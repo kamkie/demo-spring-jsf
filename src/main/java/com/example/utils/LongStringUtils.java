@@ -17,13 +17,16 @@ public interface LongStringUtils {
         int length = string.length();
         if (length <= MAX_CHARS) {
             return string;
-        } else {
-            String substring = string.substring(0, MAX_CHARS);
-            int indexOf = substring.lastIndexOf(' ');
-            if (indexOf > -1) {
-                substring = substring.substring(0, indexOf);
-            }
-            return substring.concat(STR_SUFFIX);
         }
+        return getSubString(string);
+    }
+
+    static String getSubString(String string) {
+        String substring = string.substring(0, MAX_CHARS);
+        int indexOf = substring.lastIndexOf(' ');
+        if (indexOf > -1) {
+            substring = substring.substring(0, indexOf);
+        }
+        return substring.concat(STR_SUFFIX);
     }
 }
