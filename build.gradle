@@ -14,7 +14,7 @@ plugins {
     id "org.sonarqube" version "2.6.2"
     id "com.gorylenko.gradle-git-properties" version "1.5.1"
     id "com.diffplug.gradle.spotless" version "3.13.0"
-    id 'com.github.ben-manes.versions' version '0.19.0'
+    id 'com.github.ben-manes.versions' version '0.20.0'
 //    id "com.github.spotbugs" version "1.6.2"
     id "org.springframework.boot" version "2.0.3.RELEASE"
     id "org.liquibase.gradle" version "1.2.4"
@@ -82,7 +82,7 @@ dependencies {
 
     compile('io.springfox:springfox-swagger2:2.9.0')
     compile('io.springfox:springfox-swagger-ui:2.9.0')
-    compile('org.joinfaces:primefaces-spring-boot-starter:3.2.1')
+    compile('org.joinfaces:primefaces-spring-boot-starter:3.2.3')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
 //    compile 'org.zalando:logbook-spring-boot-starter:1.2.1'
@@ -95,6 +95,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0' //required on java 9
+// https://mvnrepository.com/artifact/javax.enterprise/cdi-api
+    compile group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
 
     asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
 
@@ -103,7 +105,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testCompile("io.github.bonigarcia:webdrivermanager:2.2.2")
+    testCompile("io.github.bonigarcia:webdrivermanager:2.2.3")
     testCompile("io.github.bonigarcia:selenium-jupiter:2.1.1")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
@@ -287,6 +289,6 @@ tasks.withType(Test) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.8'
+    gradleVersion = '4.8.1'
     distributionType = org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 }
