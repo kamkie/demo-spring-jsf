@@ -26,7 +26,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -102,8 +101,6 @@ class DemoApplicationTest {
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        JacksonTester.initFields(this, objectMapper);
-
         this.chromeOptions = initChromeOptions();
         initRestTemplate(restTemplateBuilder.uriTemplateHandler(new LocalHostUriTemplateHandler(environment)));
     }
