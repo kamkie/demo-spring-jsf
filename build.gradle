@@ -43,7 +43,7 @@ repositories {
 }
 
 ext['spring-boot.version'] = '2.0.3.RELEASE'
-ext['selenium.version'] = '3.12.0'
+ext['selenium.version'] = '3.13.0'
 ext['postgresql.version'] = '42.2.2'
 ext['spring-restdocs.version'] = '2.0.1.RELEASE'
 ext['liquibase.version'] = '3.6.1'
@@ -80,8 +80,8 @@ dependencies {
     compile('com.github.ben-manes.caffeine:caffeine')
     compile('io.micrometer:micrometer-registry-prometheus')
 
-    compile('io.springfox:springfox-swagger2:2.9.0')
-    compile('io.springfox:springfox-swagger-ui:2.9.0')
+    compile('io.springfox:springfox-swagger2:2.9.2')
+    compile('io.springfox:springfox-swagger-ui:2.9.2')
     compile('org.joinfaces:primefaces-spring-boot-starter:3.2.3')
     compile('org.primefaces.themes:bootstrap:1.0.10')
     compile('de.ruedigermoeller:fst:2.57')
@@ -95,7 +95,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0' //required on java 9
-// https://mvnrepository.com/artifact/javax.enterprise/cdi-api
+    // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
     compile group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
 
     asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"

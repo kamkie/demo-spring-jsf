@@ -77,6 +77,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
 class DemoApplicationTest {
 
+    static {
+        System.setProperty("sel.jup.docker.server.url", "tcp://127.0.0.1:2375");// NOPMD
+        System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
+        System.setProperty("sel.jup.screenshot.at.the.end.of.tests", "true");// NOPMD
+        System.setProperty("sel.jup.recording", "true");// NOPMD
+        System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
+    }
+
     @Options
     @SuppressWarnings({"unused", "PMD.SingularField"})
     private final ChromeOptions chromeOptions;
@@ -93,9 +101,6 @@ class DemoApplicationTest {
             Environment environment,
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
-        System.setProperty("sel.jup.docker.server.url", "tcp://127.0.0.1:2375");// NOPMD
-        System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
-
         this.objectMapper = objectMapper;
         JacksonTester.initFields(this, objectMapper);
 
@@ -113,7 +118,10 @@ class DemoApplicationTest {
 
     private ChromeOptions initChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--lang=pl", "--headless", "--window-size=1600,900");
+        chromeOptions.addArguments(
+                "--lang=pl",
+                // "--headless",
+                "--window-size=1600,900");
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("intl.accept_languages", "pl");
         chromeOptions.setExperimentalOption("prefs", prefs);
