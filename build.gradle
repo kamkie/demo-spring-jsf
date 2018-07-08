@@ -7,6 +7,7 @@ buildscript {
         classpath("org.liquibase:liquibase-core:3.6.2")
         classpath("org.postgresql:postgresql:42.2.2")
     }
+    configurations.classpath { exclude group: 'ch.qos.logback' }
 }
 
 plugins {
@@ -15,7 +16,7 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "1.5.1"
     id "com.diffplug.gradle.spotless" version "3.13.0"
     id 'com.github.ben-manes.versions' version '0.20.0'
-//    id "com.github.spotbugs" version "1.6.2"
+    id "com.github.spotbugs" version "1.6.2"
     id "org.springframework.boot" version "2.0.3.RELEASE"
     id "org.liquibase.gradle" version "1.2.4"
     id "org.asciidoctor.convert" version "1.5.8.1"
@@ -191,7 +192,7 @@ liquibase {
 }
 
 jacoco.toolVersion = "0.8.1"
-//spotbugs.toolVersion = "3.1.5"
+spotbugs.toolVersion = "3.1.5"
 pmd {
     toolVersion = "6.4.0"
     ruleSets = ["pmd.ruleset.xml"]
