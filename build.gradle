@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.liquibase:liquibase-core:3.6.1")
+        classpath("org.liquibase:liquibase-core:3.6.2")
         classpath("org.postgresql:postgresql:42.2.2")
     }
 }
@@ -18,7 +18,7 @@ plugins {
 //    id "com.github.spotbugs" version "1.6.2"
     id "org.springframework.boot" version "2.0.3.RELEASE"
     id "org.liquibase.gradle" version "1.2.4"
-    id "org.asciidoctor.convert" version "1.5.7"
+    id "org.asciidoctor.convert" version "1.5.8.1"
     id "com.moowork.node" version "1.2.0"
     id "com.ofg.uptodate" version "1.6.3"
 }
@@ -46,7 +46,7 @@ ext['spring-boot.version'] = '2.0.3.RELEASE'
 ext['selenium.version'] = '3.13.0'
 ext['postgresql.version'] = '42.2.2'
 ext['spring-restdocs.version'] = '2.0.1.RELEASE'
-ext['liquibase.version'] = '3.6.1'
+ext['liquibase.version'] = '3.6.2'
 ext['junit-jupiter.version'] = '5.2.0'
 
 //configurations {
@@ -91,7 +91,7 @@ dependencies {
     runtime("org.postgresql:postgresql")
 
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
-    runtime group: 'de.appelgriepsch.logback', name: 'logback-gelf-appender', version: '1.4'
+    runtime group: 'de.appelgriepsch.logback', name: 'logback-gelf-appender', version: '1.5'
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0' //required on java 9
@@ -105,8 +105,8 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testCompile("io.github.bonigarcia:webdrivermanager:2.2.3")
-    testCompile("io.github.bonigarcia:selenium-jupiter:2.1.1")
+    testCompile("io.github.bonigarcia:webdrivermanager:2.2.4")
+    testCompile("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testCompile("org.seleniumhq.selenium:selenium-chrome-driver")
     testCompile("org.seleniumhq.selenium:selenium-support")
     testCompile("org.testcontainers:postgresql:1.8.0") {
