@@ -2,7 +2,7 @@ plugins {
     id 'com.palantir.git-version' version '0.12.0-rc2'
     id "org.sonarqube" version "2.6.2"
     id "com.gorylenko.gradle-git-properties" version "1.5.1"
-    id "com.diffplug.gradle.spotless" version "3.13.0"
+    id "com.diffplug.gradle.spotless" version "3.14.0"
     id 'com.github.ben-manes.versions' version '0.20.0'
     id "com.github.spotbugs" version "1.6.2"
     id "org.springframework.boot" version "2.0.3.RELEASE"
@@ -34,7 +34,7 @@ repositories {
 ext['spring-boot.version'] = '2.0.3.RELEASE'
 ext['selenium.version'] = '3.13.0'
 ext['postgresql.version'] = '42.2.4'
-ext['spring-restdocs.version'] = '2.0.1.RELEASE'
+ext['spring-restdocs.version'] = '2.0.2.RELEASE'
 ext['liquibase.version'] = '3.6.2'
 ext['junit-jupiter.version'] = '5.2.0'
 
@@ -42,11 +42,11 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
-    annotationProcessor('org.projectlombok:lombok:1.18.0')
+    annotationProcessor('org.projectlombok:lombok:1.18.2')
     annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
 //    annotationProcessor('org.springframework:spring-context-indexer')
 
-    implementation('org.projectlombok:lombok:1.18.0')
+    implementation('org.projectlombok:lombok:1.18.2')
     implementation('org.springframework.boot:spring-boot-devtools')
     implementation('org.springframework.boot:spring-boot-starter-actuator')
     implementation('org.springframework.boot:spring-boot-starter-aop')
@@ -80,9 +80,9 @@ dependencies {
     implementation group: 'de.appelgriepsch.logback', name: 'logback-gelf-appender', version: '1.5'
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0' //required on java 9
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
     // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
-    implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+    implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0.SP1'
 
     asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
 
@@ -277,7 +277,7 @@ tasks.withType(Test) {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.8.1'
-    distributionType = org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
+wrapper {
+    gradleVersion = '4.9'
+    distributionType = Wrapper.DistributionType.ALL
 }
