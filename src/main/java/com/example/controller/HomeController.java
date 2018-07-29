@@ -14,8 +14,7 @@ import org.springframework.boot.info.GitProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -45,23 +44,23 @@ public class HomeController {
         this.gitProperties = gitProperties;
     }
 
-    @RequestMapping({"/hello"})
+    @GetMapping({"/hello"})
     public ModelAndView hello() {
         return new ModelAndView("hello").addObject("buildProperties", buildProperties);
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    @GetMapping("/login")
     public ModelAndView login() {
         return new ModelAndView("login");
     }
 
-    @RequestMapping({"/", "/home"})
+    @GetMapping({"/", "/home"})
     public ResponseEntity home(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
 
     @Secured({"ROLE_ADMIN"})
-    @RequestMapping({"/admin"})
+    @GetMapping({"/admin"})
     public ResponseEntity admin(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
