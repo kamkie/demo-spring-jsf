@@ -5,7 +5,7 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.14.0"
     id 'com.github.ben-manes.versions' version '0.20.0'
     id "com.github.spotbugs" version "1.6.2"
-    id "org.springframework.boot" version "2.0.3.RELEASE"
+    id "org.springframework.boot" version "2.0.4.RELEASE"
     id "org.liquibase.gradle" version "2.0.0"
     id "org.asciidoctor.convert" version "1.5.8.1"
     id "com.moowork.node" version "1.2.0"
@@ -31,7 +31,7 @@ repositories {
     maven { url "https://artifacts.alfresco.com/nexus/content/repositories/public/" }
 }
 
-ext['spring-boot.version'] = '2.0.3.RELEASE'
+ext['spring-boot.version'] = '2.0.4.RELEASE'
 ext['selenium.version'] = '3.13.0'
 ext['postgresql.version'] = '42.2.4'
 ext['spring-restdocs.version'] = '2.0.2.RELEASE'
