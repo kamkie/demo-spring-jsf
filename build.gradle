@@ -28,7 +28,6 @@ targetCompatibility = 1.10
 repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
-    maven { url "https://artifacts.alfresco.com/nexus/content/repositories/public/" }
 }
 
 ext['spring-boot.version'] = '2.0.4.RELEASE'
@@ -37,6 +36,7 @@ ext['postgresql.version'] = '42.2.4'
 ext['spring-restdocs.version'] = '2.0.2.RELEASE'
 ext['liquibase.version'] = '3.6.2'
 ext['junit-jupiter.version'] = '5.2.0'
+ext['lombok.version'] = '1.8.2'
 
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
@@ -98,7 +98,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.8.1") {
+    testImplementation("org.testcontainers:postgresql:1.8.2") {
         exclude group: "log4j", module: "log4j"
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
