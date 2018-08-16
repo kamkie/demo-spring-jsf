@@ -31,7 +31,7 @@ repositories {
 }
 
 ext['spring-boot.version'] = '2.0.4.RELEASE'
-ext['selenium.version'] = '3.13.0'
+ext['selenium.version'] = '3.14.0'
 ext['postgresql.version'] = '42.2.4'
 ext['spring-restdocs.version'] = '2.0.2.RELEASE'
 ext['liquibase.version'] = '3.6.2'
@@ -98,7 +98,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.8.2") {
+    testImplementation("org.testcontainers:postgresql:1.8.3") {
         exclude group: "log4j", module: "log4j"
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
