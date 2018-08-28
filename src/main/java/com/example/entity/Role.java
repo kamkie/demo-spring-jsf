@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
+    @SuppressWarnings("PMD.FieldNamingConventions")
     private static final long serialVersionUID = -8703578331855685793L;
 
     @Id

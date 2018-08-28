@@ -1,12 +1,12 @@
 plugins {
     id 'com.palantir.git-version' version '0.12.0-rc2'
     id "org.sonarqube" version "2.6.2"
-    id "com.gorylenko.gradle-git-properties" version "1.5.1"
+    id "com.gorylenko.gradle-git-properties" version "1.5.2"
     id "com.diffplug.gradle.spotless" version "3.14.0"
     id 'com.github.ben-manes.versions' version '0.20.0'
-    id "com.github.spotbugs" version "1.6.2"
-    id "org.springframework.boot" version "2.0.4.RELEASE"
-    id "org.liquibase.gradle" version "2.0.0"
+    id "com.github.spotbugs" version "1.6.3"
+    id "org.springframework.boot" version "2.0.5.RELEASE"
+    id "org.liquibase.gradle" version "2.0.1"
     id "org.asciidoctor.convert" version "1.5.8.1"
     id "com.moowork.node" version "1.2.0"
     id "com.ofg.uptodate" version "1.6.3"
@@ -30,12 +30,12 @@ repositories {
     maven { url "http://repository.primefaces.org" }
 }
 
-ext['spring-boot.version'] = '2.0.4.RELEASE'
+ext['spring-boot.version'] = '2.0.5.RELEASE'
 ext['selenium.version'] = '3.14.0'
-ext['postgresql.version'] = '42.2.4'
+ext['postgresql.version'] = '42.2.5'
 ext['spring-restdocs.version'] = '2.0.2.RELEASE'
 ext['liquibase.version'] = '3.6.2'
-ext['junit-jupiter.version'] = '5.2.0'
+ext['junit-jupiter.version'] = '5.3.1'
 ext['lombok.version'] = '1.8.2'
 
 dependencies {
@@ -80,7 +80,7 @@ dependencies {
     implementation group: 'de.appelgriepsch.logback', name: 'logback-gelf-appender', version: '1.5'
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'
     // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
     implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0.SP1'
 
@@ -94,7 +94,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.github.bonigarcia:webdrivermanager:2.2.5")
+    testImplementation("io.github.bonigarcia:webdrivermanager:3.0.0")
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
@@ -179,10 +179,10 @@ liquibase {
     }
 }
 
-jacoco.toolVersion = "0.8.1"
-spotbugs.toolVersion = "3.1.5"
+jacoco.toolVersion = "0.8.2"
+spotbugs.toolVersion = "3.1.7"
 pmd {
-    toolVersion = "6.4.0"
+    toolVersion = "6.7.0"
     ruleSets = ["pmd.ruleset.xml"]
 }
 
@@ -278,6 +278,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = '4.9'
+    gradleVersion = '4.10.1'
     distributionType = Wrapper.DistributionType.ALL
 }

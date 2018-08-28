@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 class DbMessageSourceTest {
 
     @Test
-    void getMessageEmpty() {
+    void testMessageEmpty() {
         MessagesRepository repository = mock(MessagesRepository.class);
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
@@ -31,7 +31,7 @@ class DbMessageSourceTest {
     }
 
     @Test
-    void getMessage() {
+    void testMessage() {
         MessagesRepository repository = mock(MessagesRepository.class);
         DbMessageSource dbMessageSource = new DbMessageSource(repository);
 
@@ -43,7 +43,7 @@ class DbMessageSourceTest {
     }
 
     @Test
-    void getMessage2() {
+    void testMessage2() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         String lang = "eng";
@@ -60,7 +60,7 @@ class DbMessageSourceTest {
     }
 
     @Test
-    void getMessage3() {
+    void testMessage3() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         String lang = "fra";
@@ -77,7 +77,7 @@ class DbMessageSourceTest {
 
     @Test
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
-    void getMessage4() {
+    void testMessage4() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         given(repository.findByKeyAndLang(key, "fra")).willReturn(Optional.empty());
@@ -92,7 +92,7 @@ class DbMessageSourceTest {
     }
 
     @Test
-    void getMessage5() {
+    void testMessage5() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";
         given(repository.findByKeyAndLang(key, "fra")).willReturn(Optional.empty());

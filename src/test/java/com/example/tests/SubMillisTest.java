@@ -14,13 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SubMillisTest {
     @Test
-    void getBaseUnit() {
+    void testBaseUnit() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.getBaseUnit()).isEqualTo(ChronoUnit.MICROS);
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.getBaseUnit()).isEqualTo(ChronoUnit.NANOS);
     }
 
     @Test
-    void getRangeUnit() {
+    void testRangeUnit() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND.getRangeUnit()).isEqualTo(ChronoUnit.MILLIS);
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND.getRangeUnit()).isEqualTo(ChronoUnit.MICROS);
     }

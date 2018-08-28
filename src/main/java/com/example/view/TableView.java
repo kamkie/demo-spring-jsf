@@ -20,6 +20,7 @@ import java.util.Map;
 @Component
 @SessionScope
 public class TableView implements Serializable {
+    @SuppressWarnings("PMD.FieldNamingConventions")
     private static final long serialVersionUID = -8703578331855685793L;
 
     private LazyDataModel<Message> messages;
@@ -33,6 +34,7 @@ public class TableView implements Serializable {
     }
 
     private static class MessageLazyDataModel extends LazyDataModel<Message> {
+        @SuppressWarnings("PMD.FieldNamingConventions")
         private static final long serialVersionUID = -8803578331856683793L;
 
         @Override
