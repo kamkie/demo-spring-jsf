@@ -98,7 +98,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.8.3") {
+    testImplementation("org.testcontainers:postgresql:1.9.0-rc1") {
         exclude group: "log4j", module: "log4j"
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
