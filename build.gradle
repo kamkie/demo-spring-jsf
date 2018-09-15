@@ -7,7 +7,7 @@ plugins {
     id "com.github.spotbugs" version "1.6.3"
     id "org.springframework.boot" version "2.0.5.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
-    id "org.asciidoctor.convert" version "1.5.8.1"
+    id "org.asciidoctor.convert" version "1.5.3"
     id "com.moowork.node" version "1.2.0"
     id "com.ofg.uptodate" version "1.6.3"
 }
