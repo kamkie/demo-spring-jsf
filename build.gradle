@@ -22,8 +22,8 @@ apply plugin: 'jacoco'
 
 version = gitVersion()
 group = 'demo'
-sourceCompatibility = 1.10
-targetCompatibility = 1.10
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 repositories {
     mavenCentral()
