@@ -1,9 +1,9 @@
 plugins {
-    id 'com.palantir.git-version' version '0.12.0-rc2'
+    id "com.palantir.git-version" version "0.12.0-rc2"
     id "org.sonarqube" version "2.6.2"
     id "com.gorylenko.gradle-git-properties" version "2.0.0-beta1"
-    id "com.diffplug.gradle.spotless" version "3.15.0"
-    id 'com.github.ben-manes.versions' version '0.20.0'
+    id "com.diffplug.gradle.spotless" version "3.16.0"
+    id "com.github.ben-manes.versions" version "0.20.0"
     id "com.github.spotbugs" version "1.6.5"
     id "org.springframework.boot" version "2.1.0.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
@@ -12,87 +12,89 @@ plugins {
     id "com.ofg.uptodate" version "1.6.3"
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "org.springframework.boot"
 apply plugin: "com.moowork.node"
-apply plugin: 'pmd'
-apply plugin: 'jacoco'
+apply plugin: "pmd"
+apply plugin: "jacoco"
+
+def javaVersion = JavaVersion.VERSION_11
+def springBootVersion = "2.1.0.RELEASE"
+def springRestdocsVersion = "2.0.2.RELEASE"
+def springfoxVersion = "2.9.2"
+def joinfacesVersion = "3.2.6"
 
 version = gitVersion()
-group = 'demo'
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+group = "demo"
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
 
 repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
 }
 
-ext['spring-boot.version'] = '2.1.0.RELEASE'
-ext['selenium.version'] = '3.14.0'
-ext['postgresql.version'] = '42.2.5'
-ext['spring-restdocs.version'] = '2.0.2.RELEASE'
-ext['liquibase.version'] = '3.6.2'
-ext['junit-jupiter.version'] = '5.3.1'
-ext['lombok.version'] = '1.8.2'
-
 dependencies {
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    testAnnotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+
+    annotationProcessor("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+//    annotationProcessor("org.springframework:spring-context-indexer")
+
+    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:$springRestdocsVersion"
+
+    liquibaseRuntime("org.postgresql:postgresql")
+    liquibaseRuntime("org.liquibase:liquibase-core")
+
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("org.projectlombok:lombok")
 
-    annotationProcessor('org.projectlombok:lombok:1.18.4')
-    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
-//    annotationProcessor('org.springframework:spring-context-indexer')
-
-    implementation('org.projectlombok:lombok:1.18.4')
-    implementation('org.springframework.boot:spring-boot-devtools')
-    implementation('org.springframework.boot:spring-boot-starter-actuator')
-    implementation('org.springframework.boot:spring-boot-starter-aop')
-    implementation('org.springframework.boot:spring-boot-starter-cache')
-//    implementation('org.springframework.boot:spring-boot-starter-mail')
-    implementation('org.springframework.boot:spring-boot-starter-security')
-    implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.springframework.boot:spring-boot-starter-validation')
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    implementation('org.springframework.session:spring-session-jdbc')
-    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
-//    implementation('org.springframework.retry:spring-retry')
+    implementation("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+//    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.session:spring-session-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+//    implementation("org.springframework.retry:spring-retry")
 
     implementation("org.thymeleaf.extras:thymeleaf-extras-java8time")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
-    implementation('org.liquibase:liquibase-core')
-    implementation('com.github.ben-manes.caffeine:caffeine')
-    implementation('io.micrometer:micrometer-registry-prometheus')
+    implementation("org.liquibase:liquibase-core")
+    implementation("com.github.ben-manes.caffeine:caffeine")
+    implementation("io.micrometer:micrometer-registry-prometheus")
 
-    implementation('io.springfox:springfox-swagger2:2.9.2')
-    implementation('io.springfox:springfox-swagger-ui:2.9.2')
-    implementation('org.joinfaces:primefaces-spring-boot-starter:3.2.6')
-    implementation('org.primefaces.themes:bootstrap:1.0.10')
-    implementation('de.ruedigermoeller:fst:2.57')
-//    implementation 'org.zalando:logbook-spring-boot-starter:1.2.1'
+    implementation("io.springfox:springfox-swagger2:$springfoxVersion")
+    implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
+    implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
+    implementation("org.primefaces.themes:bootstrap:1.0.10")
+    implementation("de.ruedigermoeller:fst:2.57")
+//    implementation "org.zalando:logbook-spring-boot-starter:1.2.1"
 //    implementation("org.apache.commons:commons-pool2:2.4.2")
 
     implementation("org.postgresql:postgresql")
 
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
-    implementation group: 'de.appelgriepsch.logback', name: 'logback-gelf-appender', version: '1.5'
+    implementation group: "de.appelgriepsch.logback", name: "logback-gelf-appender", version: "1.5"
 
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'
+    implementation group: "javax.xml.bind", name: "jaxb-api", version: "2.4.0-b180830.0359"
     // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
-    implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0.SP1'
-
-    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
-
-    liquibaseRuntime("org.postgresql:postgresql")
-    liquibaseRuntime("org.liquibase:liquibase-core")
+    implementation group: "javax.enterprise", name: "cdi-api", version: "2.0.SP1"
 
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
-    testImplementation('org.springframework.security:spring-security-test')
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("io.github.bonigarcia:webdrivermanager:3.0.0")
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
@@ -103,7 +105,7 @@ dependencies {
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
     testImplementation("org.glassfish.jersey.inject:jersey-hk2:2.27")
-    testImplementation group: 'javax.activation', name: 'activation', version: '1.1.1'
+    testImplementation group: "javax.activation", name: "activation", version: "1.1.1"
 }
 
 sourceSets {
@@ -124,13 +126,13 @@ springBoot {
 }
 
 bootRun {
-    systemProperty 'spring.output.ansi.enabled', "always"
-    systemProperty 'spring.profiles.active', "graylog"
+    systemProperty "spring.output.ansi.enabled", "always"
+    systemProperty "spring.profiles.active", "graylog"
     classpath = getProject().files(sourceSets.main.getResources().getSrcDirs(), classpath)
 }
 
 bootJar {
-    classifier = 'boot'
+    classifier = "boot"
     dependsOn asciidoctor
 }
 
@@ -144,9 +146,9 @@ asciidoctor {
     outputs.dir("build/resources/main")
     doLast {
         copy {
-            from 'build/asciidoc/html5'
+            from "build/asciidoc/html5"
             into "build/resources/main/static/docs"
-            include 'index.html'
+            include "index.html"
         }
     }
 }
@@ -171,18 +173,18 @@ build.dependsOn jacocoTestReport
 liquibase {
     activities {
         main {
-            changeLogFile 'src/main/resources/db/changelog/db.changelog-master.xml'
-            url 'jdbc:postgresql://localhost:5432/spring-demo'
-            username 'dev'
-            password 'dev'
+            changeLogFile "src/main/resources/db/changelog/db.changelog-master.xml"
+            url "jdbc:postgresql://localhost:5432/spring-demo"
+            username "dev"
+            password "dev"
         }
     }
 }
 
 jacoco.toolVersion = "0.8.2"
-spotbugs.toolVersion = "3.1.7"
+spotbugs.toolVersion = "3.1.8"
 pmd {
-    toolVersion = "6.7.0"
+    toolVersion = "6.8.0"
     ruleSets = ["pmd.ruleset.xml"]
 }
 
@@ -206,31 +208,31 @@ task h2Tcp(type: JavaExec) {
     setDependsOn([])
 }
 
-task webpack(type: NodeTask, dependsOn: 'npmInstall') {
+task webpack(type: NodeTask, dependsOn: "npmInstall") {
     inputs.files("src/main/resources/static/javascript")
     outputs.dir("build/resources/main/static/javascript")
-    script = project.file('node_modules/webpack/bin/webpack.js')
+    script = project.file("node_modules/webpack/bin/webpack.js")
 }
 
-task webpackWatch(type: NodeTask, dependsOn: 'npmInstall') {
-    script = project.file('node_modules/webpack/bin/webpack.js')
-    args = ['--watch', '--display-error-details']
+task webpackWatch(type: NodeTask, dependsOn: "npmInstall") {
+    script = project.file("node_modules/webpack/bin/webpack.js")
+    args = ["--watch", "--display-error-details"]
 }
-processResources.dependsOn 'webpack'
+processResources.dependsOn "webpack"
 
 compileJava {
-    options.encoding = 'UTF-8'
+    options.encoding = "UTF-8"
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 compileTestJava {
-    options.encoding = 'UTF-8'
+    options.encoding = "UTF-8"
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 spotless {
     java {
-        eclipse().configFile 'spotless.eclipseformat.xml'    // XML file dumped out by the Eclipse formatter
+        eclipse().configFile "spotless.eclipseformat.xml"    // XML file dumped out by the Eclipse formatter
         indentWithSpaces()
         trimTrailingWhitespace()
         endWithNewline()
@@ -238,17 +240,17 @@ spotless {
         // Eclipse formatter puts excess whitespace after lambda blocks
         //    funcThatTakesLambdas(x -> {} , y -> {} )	// what Eclipse does
         //    funcThatTakesLambdas(x -> {}, y -> {})	// what I wish Eclipse did
-        custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+        custom "Lambda fix", { it.replace("} )", "})").replace("} ,", "},") }
 
         // Eclipse formatter screws up long literals with underscores inside of annotations (see issue #14)
         //    @Max(value = 9_999_999 L) // what Eclipse does
         //    @Max(value = 9_999_999L)  // what I wish Eclipse did
-        custom 'Long literal fix', { it.replaceAll('([0-9_]+) [Ll]', '$1L') }
+        custom "Long literal fix", { it.replaceAll("([0-9_]+) [Ll]", "\$1L") }
     }
-    format 'misc', {
-        target fileTree('.') {
-            include '.gitignore', '**/.gitignore', 'build.gradle', '*.md', 'src/**/*.md', '*.sh', 'src/**/*.sh'
-            exclude 'node_modules/**', 'out/**'
+    format "misc", {
+        target fileTree(".") {
+            include ".gitignore", "**/.gitignore", "build.gradle", "*.md", "src/**/*.md", "*.sh", "src/**/*.sh"
+            exclude "node_modules/**", "out/**"
         }
         indentWithSpaces()
         trimTrailingWhitespace()
@@ -269,15 +271,15 @@ tasks.withType(Test) {
         afterSuite { desc, result ->
             if (!desc.parent) { // will match the outermost suite
                 def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
+                def startItem = "|  ", endItem = "  |"
                 def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+                println("\n" + ("-" * repeatLength) + "\n" + startItem + output + endItem + "\n" + ("-" * repeatLength))
             }
         }
     }
 }
 
 wrapper {
-    gradleVersion = '4.10.2'
+    gradleVersion = "5.0-rc-1"
     distributionType = Wrapper.DistributionType.ALL
 }
