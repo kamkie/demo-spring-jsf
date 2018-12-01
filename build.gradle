@@ -5,7 +5,7 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.16.0"
     id "com.github.ben-manes.versions" version "0.20.0"
     id "com.github.spotbugs" version "1.6.5"
-    id "org.springframework.boot" version "2.1.0.RELEASE"
+    id "org.springframework.boot" version "2.1.1.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
     id "org.asciidoctor.convert" version "1.5.3"
     id "com.moowork.node" version "1.2.0"
@@ -20,10 +20,10 @@ apply plugin: "pmd"
 apply plugin: "jacoco"
 
 def javaVersion = JavaVersion.VERSION_11
-def springBootVersion = "2.1.0.RELEASE"
+def springBootVersion = "2.1.1.RELEASE"
 def springRestdocsVersion = "2.0.2.RELEASE"
 def springfoxVersion = "2.9.2"
-def joinfacesVersion = "3.3.0-rc2"
+def joinfacesVersion = "3.3.0-rc4"
 
 version = gitVersion()
 group = "demo"
@@ -100,7 +100,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.10.1") {
+    testImplementation("org.testcontainers:postgresql:1.10.2") {
         exclude group: "log4j", module: "log4j"
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
@@ -280,6 +280,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "5.0-rc-3"
+    gradleVersion = "5.0"
     distributionType = Wrapper.DistributionType.ALL
 }
