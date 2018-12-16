@@ -4,7 +4,7 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "2.0.0-beta1"
     id "com.diffplug.gradle.spotless" version "3.16.0"
     id "com.github.ben-manes.versions" version "0.20.0"
-    id "com.github.spotbugs" version "1.6.5"
+//    id "com.github.spotbugs" version "1.6.6"
     id "org.springframework.boot" version "2.1.1.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
     id "org.asciidoctor.convert" version "1.5.3"
@@ -21,9 +21,8 @@ apply plugin: "jacoco"
 
 def javaVersion = JavaVersion.VERSION_11
 def springBootVersion = "2.1.1.RELEASE"
-def springRestdocsVersion = "2.0.2.RELEASE"
 def springfoxVersion = "2.9.2"
-def joinfacesVersion = "3.3.0-rc4"
+def joinfacesVersion = "4.0.0"
 
 version = gitVersion()
 group = "demo"
@@ -39,13 +38,14 @@ dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
     annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
     testAnnotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    asciidoctor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 //    annotationProcessor("org.springframework:spring-context-indexer")
 
-    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:$springRestdocsVersion"
+    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor"
 
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core")
@@ -96,7 +96,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.github.bonigarcia:webdrivermanager:3.0.0")
+    testImplementation("io.github.bonigarcia:webdrivermanager:3.1.1")
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
@@ -182,7 +182,7 @@ liquibase {
 }
 
 jacoco.toolVersion = "0.8.2"
-spotbugs.toolVersion = "3.1.8"
+//spotbugs.toolVersion = "3.1.9"
 pmd {
     toolVersion = "6.8.0"
     ruleSets = ["pmd.ruleset.xml"]
@@ -280,6 +280,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "5.0"
+    gradleVersion = "5.1-rc-1"
     distributionType = Wrapper.DistributionType.ALL
 }
