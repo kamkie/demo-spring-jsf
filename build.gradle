@@ -132,7 +132,7 @@ bootRun {
 }
 
 bootJar {
-    classifier = "boot"
+    archiveClassifier.set("boot")
     dependsOn asciidoctor
 }
 
