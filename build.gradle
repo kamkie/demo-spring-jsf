@@ -4,7 +4,7 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "2.0.0-beta1"
     id "com.diffplug.gradle.spotless" version "3.16.0"
     id "com.github.ben-manes.versions" version "0.20.0"
-//    id "com.github.spotbugs" version "1.6.6"
+    id "com.github.spotbugs" version "1.6.8"
     id "org.springframework.boot" version "2.1.1.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
     id "org.asciidoctor.convert" version "1.5.3"
@@ -22,7 +22,7 @@ apply plugin: "jacoco"
 def javaVersion = JavaVersion.VERSION_11
 def springBootVersion = "2.1.1.RELEASE"
 def springfoxVersion = "2.9.2"
-def joinfacesVersion = "4.0.0"
+def joinfacesVersion = "4.0.1"
 
 version = gitVersion()
 group = "demo"
@@ -100,7 +100,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:selenium-jupiter:2.2.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.10.2") {
+    testImplementation("org.testcontainers:postgresql:1.10.5") {
         exclude group: "log4j", module: "log4j"
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
@@ -182,7 +182,7 @@ liquibase {
 }
 
 jacoco.toolVersion = "0.8.2"
-//spotbugs.toolVersion = "3.1.9"
+spotbugs.toolVersion = "3.1.10"
 pmd {
     toolVersion = "6.8.0"
     ruleSets = ["pmd.ruleset.xml"]
@@ -280,6 +280,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "5.1-rc-1"
+    gradleVersion = "5.1"
     distributionType = Wrapper.DistributionType.ALL
 }
