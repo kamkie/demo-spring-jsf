@@ -11,9 +11,9 @@ import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bonigarcia.DockerBrowser;
-import io.github.bonigarcia.Options;
-import io.github.bonigarcia.SeleniumExtension;
+import io.github.bonigarcia.seljup.DockerBrowser;
+import io.github.bonigarcia.seljup.Options;
+import io.github.bonigarcia.seljup.SeleniumExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static io.github.bonigarcia.BrowserType.CHROME;
+import static io.github.bonigarcia.seljup.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -77,7 +77,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DemoApplicationTest {
 
     static {
-        System.setProperty("sel.jup.docker.server.url", "tcp://127.0.0.1:2375");// NOPMD
         System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
         System.setProperty("sel.jup.screenshot.at.the.end.of.tests", "true");// NOPMD
         System.setProperty("sel.jup.recording", "true");// NOPMD
