@@ -91,12 +91,12 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
     implementation group: "javax.enterprise", name: "cdi-api", version: "2.0.SP1"
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine")
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.4.0'
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.github.bonigarcia:selenium-jupiter:3.1.0")
+    testImplementation("io.github.bonigarcia:selenium-jupiter:3.1.1")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
     testImplementation("org.testcontainers:postgresql:1.10.6") {
