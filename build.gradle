@@ -3,7 +3,7 @@ plugins {
     id "org.sonarqube" version "2.7"
     id "com.gorylenko.gradle-git-properties" version "2.0.0"
     id "com.diffplug.gradle.spotless" version "3.18.0"
-    id "com.github.ben-manes.versions" version "0.20.0"
+    id "com.github.ben-manes.versions" version "0.21.0"
     id "com.github.spotbugs" version "1.6.9"
     id "org.springframework.boot" version "2.1.3.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
@@ -70,12 +70,13 @@ dependencies {
     implementation("org.thymeleaf.extras:thymeleaf-extras-java8time")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     implementation("org.liquibase:liquibase-core")
-    implementation("com.github.ben-manes.caffeine:caffeine")
+    implementation("com.github.ben-manes.caffeine:caffeine:2.7.0")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("io.springfox:springfox-swagger2:$springfoxVersion")
     implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
+    implementation("com.google.guava:guava:27.0.1-jre")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("de.ruedigermoeller:fst:2.57")
 //    implementation "org.zalando:logbook-spring-boot-starter:1.2.1"
@@ -179,8 +180,8 @@ liquibase {
     }
 }
 
-jacoco.toolVersion = "0.8.2"
-spotbugs.toolVersion = "3.1.10"
+jacoco.toolVersion = "0.8.3"
+spotbugs.toolVersion = "3.1.11"
 pmd {
     toolVersion = "6.8.0"
     ruleSets = ["pmd.ruleset.xml"]
