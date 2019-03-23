@@ -7,7 +7,7 @@
             <server>localhost</server>
             <port>12201</port>
             <hostName>localhost</hostName>
-            <protocol>UDP</protocol>
+            <protocol>TCP</protocol>
             <includeSource>true</includeSource>
             <includeMDC>true</includeMDC>
             <queueSize>512</queueSize>
@@ -15,7 +15,7 @@
             <reconnectDelay>500</reconnectDelay>
             <additionalFields>app=demo-spring-jsf</additionalFields>
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%.-25m</pattern>
+                <pattern>%m</pattern>
             </layout>
         </appender>
 
