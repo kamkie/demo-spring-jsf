@@ -14,7 +14,7 @@ stage('Build') {
                         npm --version
                         node --version
                         docker version
-                        java -version
+                        JAVA_TOOL_OPTIONS='' java -version
                         """
                         sh "JAVA_TOOL_OPTIONS='' ./gradlew clean build"
                     }
