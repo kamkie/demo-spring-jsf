@@ -10,6 +10,7 @@ plugins {
     id "org.asciidoctor.convert" version "1.5.3"
     id "com.moowork.node" version "1.3.1"
     id "com.ofg.uptodate" version "1.6.3"
+    id 'com.adarshr.test-logger' version '1.6.0'
 }
 
 apply plugin: "java"
@@ -259,23 +260,23 @@ spotless {
 
 tasks.withType(Test) {
     useJUnitPlatform()
-    testLogging {
-        // set options for log level LIFECYCLE
-        events "passed", "skipped", "failed", /*"standardOut",*/ "standardError"
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = "|  ", endItem = "  |"
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println("\n" + ("-" * repeatLength) + "\n" + startItem + output + endItem + "\n" + ("-" * repeatLength))
-            }
-        }
-    }
+//    testLogging {
+//        // set options for log level LIFECYCLE
+//        events "passed", "skipped", "failed", /*"standardOut",*/ "standardError"
+//        showExceptions true
+//        exceptionFormat "full"
+//        showCauses true
+//        showStackTraces true
+//
+//        afterSuite { desc, result ->
+//            if (!desc.parent) { // will match the outermost suite
+//                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+//                def startItem = "|  ", endItem = "  |"
+//                def repeatLength = startItem.length() + output.length() + endItem.length()
+//                println("\n" + ("-" * repeatLength) + "\n" + startItem + output + endItem + "\n" + ("-" * repeatLength))
+//            }
+//        }
+//    }
 }
 
 wrapper {

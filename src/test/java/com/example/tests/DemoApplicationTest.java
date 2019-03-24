@@ -83,7 +83,7 @@ class DemoApplicationTest {
         System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
     }
 
-    private static final String HOST_FOR_SELENIUM = System.getenv("HOST_FOR_SELENIUM") != null ? System.getenv("HOST_FOR_SELENIUM") : "host.docker.internal";
+    private static final String HOST_FOR_SELENIUM = System.getenv("HOST_FOR_SELENIUM") == null ? "host.docker.internal" : System.getenv("HOST_FOR_SELENIUM");
 
     @Options
     @SuppressWarnings({"unused", "PMD.SingularField"})
