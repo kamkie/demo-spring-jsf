@@ -9,14 +9,14 @@ stage('Build') {
             git 'https://github.com/kamkie/demo-spring-jsf.git'
             try {
                 nodejs(nodeJSInstallationName: 'node11') {
-                    withEnv(["JAVA_HOME=$jdkHome", "PATH=$jdkHome/bin:${env.PATH}", "JAVA_TOOL_OPTIONS=", "HOST_FOR_SELENIUM=172.17.0.1"]) {
+                    withEnv(["JAVA_HOME=$jdkHome", "PATH=$jdkHome/bin:${env.PATH}", "HOST_FOR_SELENIUM=172.17.0.1"]) {
                         sh """
                         npm --version
                         node --version
                         docker version
                         java -version
                         """
-                        sh "./gradlew clean build"
+                        sh "JAVA_TOOL_OPTIONS='' ./gradlew clean build"
                     }
                 }
             } finally {
