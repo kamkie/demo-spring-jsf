@@ -1,6 +1,5 @@
 package com.example;
 
-import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -22,11 +21,11 @@ public class DemoApplication implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
         setStaticApplicationContext((ConfigurableApplicationContext) applicationContext);
     }
 
-    private static void setStaticApplicationContext(ConfigurableApplicationContext applicationContext) throws BeansException {
+    private static void setStaticApplicationContext(ConfigurableApplicationContext applicationContext) {
         DemoApplication.applicationContext = applicationContext;
     }
 }

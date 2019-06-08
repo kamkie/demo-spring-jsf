@@ -5,12 +5,12 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.23.0"
     id "com.github.ben-manes.versions" version "0.21.0"
     id "com.github.spotbugs" version "1.6.9" // 1.7.1 is not working
-    id "org.springframework.boot" version "2.1.4.RELEASE"
+    id "org.springframework.boot" version "2.1.5.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
     id "org.asciidoctor.convert" version "1.5.3"
     id "com.moowork.node" version "1.3.1"
     id "com.ofg.uptodate" version "1.6.3"
-    id 'com.adarshr.test-logger' version '1.6.0'
+    id 'com.adarshr.test-logger' version '1.7.0'
 }
 
 apply plugin: "java"
@@ -21,9 +21,9 @@ apply plugin: "pmd"
 apply plugin: "jacoco"
 
 def javaVersion = JavaVersion.VERSION_11
-def springBootVersion = "2.1.4.RELEASE"
+def springBootVersion = "2.1.5.RELEASE"
 def springfoxVersion = "2.9.2"
-def joinfacesVersion = "4.0.4"
+def joinfacesVersion = "4.0.5"
 
 version = gitVersion()
 group = "demo"
@@ -91,10 +91,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.github.bonigarcia:selenium-jupiter:3.2.0")
+    testImplementation("io.github.bonigarcia:selenium-jupiter:3.2.1")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.11.2") {
+    testImplementation("org.testcontainers:postgresql:1.11.3") {
         exclude group: "log4j", module: "log4j"
     }
     testImplementation("org.glassfish.jersey.bundles.repackaged:jersey-guava:2.26-b03")
@@ -175,10 +175,11 @@ liquibase {
 }
 
 jacoco.toolVersion = "0.8.3"
-spotbugs.toolVersion = "3.1.11"
+spotbugs.toolVersion = "3.1.12"
 pmd {
-    toolVersion = "6.8.0"
-    ruleSets = ["pmd.ruleset.xml"]
+    toolVersion = "6.15.0"
+    ruleSetFiles(new File("pmd.ruleset.xml"))
+    ruleSets = []
 }
 
 sonarqube {
@@ -264,6 +265,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "5.4"
+    gradleVersion = "5.4.1"
     distributionType = Wrapper.DistributionType.ALL
 }
