@@ -6,5 +6,12 @@ logging:
     com:
       sun:
         faces: trace
+    io:
+      github:
+        bonigarcia:
+          wdm: trace
+    org:
+      openqa:
+        selenium: debug
     javax:
       faces: trace
