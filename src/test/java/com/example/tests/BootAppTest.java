@@ -16,7 +16,7 @@ class BootAppTest {
         PostgreSQLContainer postgres = DockerExtension.getPostgres();
         DemoApplication.main(new String[]{
                 "--server.port=-1",
-                "--spring.profiles.active=test",
+                "--spring.profiles.active=test,swagger",
                 "--spring.datasource.url=" + postgres.getJdbcUrl(),
                 "--spring.datasource.username=" + postgres.getUsername(),
                 "--spring.datasource.password=" + postgres.getPassword()

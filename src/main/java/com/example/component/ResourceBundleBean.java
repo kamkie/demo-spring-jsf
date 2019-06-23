@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Set;
 
 @Component("msg")
@@ -34,19 +33,11 @@ public class ResourceBundleBean extends AbstractMap<String, String> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass() || !super.equals(o)) {
-            return false;
-        }
-        ResourceBundleBean that = (ResourceBundleBean) o;
-        return Objects.equals(messageSource, that.messageSource) &&
-                Objects.equals(localeModel, that.localeModel);
+        return this == o;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), messageSource, localeModel);
+        return System.identityHashCode(this);
     }
 }

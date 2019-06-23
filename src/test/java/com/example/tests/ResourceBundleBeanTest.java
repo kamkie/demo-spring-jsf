@@ -15,8 +15,14 @@ class ResourceBundleBeanTest {
     void testEquals() {
         ResourceBundleBean resourceBundleBean = new ResourceBundleBean(null, null);
 
-        assertThat(resourceBundleBean).isEqualTo(resourceBundleBean)
-                .isEqualTo(new ResourceBundleBean(null, null));
+        assertThat(resourceBundleBean).isEqualTo(resourceBundleBean);
+    }
+
+    @Test
+    void testEntrySet() {
+        ResourceBundleBean resourceBundleBean = new ResourceBundleBean(null, null);
+
+        assertThat(resourceBundleBean.entrySet()).hasSize(0);
     }
 
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")

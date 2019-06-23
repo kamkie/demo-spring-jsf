@@ -1,7 +1,6 @@
 package com.example.tests;
 
 import com.example.utils.SubMillis;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.time.temporal.ValueRange;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SubMillisTest {
     @Test
@@ -68,14 +68,23 @@ class SubMillisTest {
 
     @Test
     void adjustIntoFail1() {
-        Assertions.assertThrows(UnsupportedTemporalTypeException.class,
+        assertThrows(UnsupportedTemporalTypeException.class,
                 () -> SubMillis.MICROS_OF_MILLI_SECOND.adjustInto(LocalDate.now(), 100));
     }
 
     @Test
     void adjustIntoFail2() {
-        Assertions.assertThrows(UnsupportedTemporalTypeException.class,
+        assertThrows(UnsupportedTemporalTypeException.class,
                 () -> SubMillis.NANOS_OF_MICRO_SECOND.adjustInto(LocalDate.now(), 100));
+    }
+
+    @Test
+    void testToString() {
+        assertThat(SubMillis.MICROS_OF_MILLI_SECOND)
+                .hasToString("SubMillis.MICROS_OF_MILLI_SECOND(baseUnit=Micros, rangeUnit=Millis, range=0 - 999)");
+
+        assertThat(SubMillis.NANOS_OF_MICRO_SECOND)
+                .hasToString("SubMillis.NANOS_OF_MICRO_SECOND(baseUnit=Nanos, rangeUnit=Micros, range=0 - 999)");
     }
 
 }
