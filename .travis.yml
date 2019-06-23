@@ -1,8 +1,0 @@
-jdk:
-  - openjdk11
-
-language: java
-
-install: true
-
-script: ./gradlew build
