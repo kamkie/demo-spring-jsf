@@ -2,7 +2,7 @@ Spring Boot Aplication with Docker
 ==================================
 [`Spring Boot`](https://projects.spring.io/spring-boot/) application with [`Docker`](https://www.docker.com/) on which database is running.
 
-[![Build Status](https://travis-ci.com/kamkie/demo-spring-jsf.svg?branch=master)](https://travis-ci.com/kamkie/demo-spring-jsf)
+[![Build Status](https://travis-ci.com/kamkie/demo-spring-jsf.svg?branch=master)](https://travis-ci.com/kamkie/demo-spring-jsf) [![codecov](https://codecov.io/gh/kamkie/demo-spring-jsf/branch/master/graph/badge.svg)](https://codecov.io/gh/kamkie/demo-spring-jsf)
 
 ## Build and Run
 ### gradle Build
