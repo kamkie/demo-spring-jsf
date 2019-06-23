@@ -181,6 +181,13 @@ liquibase {
 }
 
 jacoco.toolVersion = "0.8.3"
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
 spotbugs.toolVersion = "3.1.12"
 pmd {
     toolVersion = "6.15.0"

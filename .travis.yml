@@ -10,3 +10,6 @@ install: true
 before_script:
   - source configure.sh
 script: ./gradlew build --info
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
