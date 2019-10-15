@@ -4,7 +4,6 @@
       <settings>
         <option name="JSONFilePath" value="" />
         <option name="command" value="" />
-        <option name="commandLineOptions" value="" />
         <option name="containerName" value="spring-demo" />
         <option name="entrypoint" value="" />
         <option name="envVars">
@@ -23,7 +22,7 @@
             </DockerEnvVarImpl>
           </list>
         </option>
-        <option name="imageTag" value="postgres" />
+        <option name="imageTag" value="postgres:9.6.12" />
         <option name="portBindings">
           <list>
             <DockerPortBindingImpl>
@@ -32,11 +31,9 @@
             </DockerPortBindingImpl>
           </list>
         </option>
-        <option name="startBrowserSettings">
-          <browser url="http://127.0.0.1" />
-        </option>
+        <option name="commandLineOptions" value="" />
       </settings>
     </deployment>
-    <method />
+    <method v="2" />
   </configuration>
 </component>
