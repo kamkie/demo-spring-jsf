@@ -142,7 +142,7 @@ class DemoApplicationTest {
     void home() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().string(containsString("principal")))
                 .andDo(document("index"));
     }
@@ -177,7 +177,7 @@ class DemoApplicationTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.hasBody()).isTrue();
-        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         assertThat(responseEntity.getHeaders().get(HttpHeaders.WWW_AUTHENTICATE)).contains("Basic realm=\"Realm\"");
         assertThat(responseEntity.getHeaders().getCacheControl()).isEqualTo("no-cache, no-store, max-age=0, must-revalidate");
     }
@@ -188,9 +188,9 @@ class DemoApplicationTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(responseEntity.hasBody()).isTrue();
-        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<Map<String, Object>>() {
+        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<>() {
         });
         assertThat(payload)
                 .containsKey("message")
@@ -205,7 +205,7 @@ class DemoApplicationTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.hasBody()).isTrue();
-        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
         Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<Map<String, Object>>() {
         });
@@ -255,7 +255,7 @@ class DemoApplicationTest {
         new LoginPage(webDriver).login("admin", "password");
 
         String content = webDriver.findElement(By.tagName("pre")).getText();
-        Map<String, Object> payload = objectMapper.readValue(content, new TypeReference<Map<String, Object>>() {
+        Map<String, Object> payload = objectMapper.readValue(content, new TypeReference<>() {
         });
         assertThat(payload)
                 .containsKey("principal")
