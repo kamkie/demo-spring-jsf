@@ -7,7 +7,7 @@ plugins {
     id "com.github.spotbugs" version "2.0.1"
     id "org.springframework.boot" version "2.2.1.RELEASE"
     id "org.liquibase.gradle" version "2.0.1"
-    id "org.asciidoctor.convert" version "1.5.3"
+    id "org.asciidoctor.jvm.convert" version "2.3.0"
     id "com.moowork.node" version "1.3.1"
     id "com.ofg.uptodate" version "1.6.3"
     id 'com.adarshr.test-logger' version '2.0.0'
@@ -25,6 +25,7 @@ def springBootVersion = "2.2.1.RELEASE"
 def springfoxVersion = "2.9.2"
 def joinfacesVersion = "4.0.9"
 def liquibaseVersion = "3.8.1"
+ext["snippetsDir"] = "build/generated-snippets"
 
 version = gitVersion()
 group = "demo"
@@ -34,6 +35,10 @@ targetCompatibility = javaVersion
 repositories {
     mavenCentral()
     maven { url "http://repository.primefaces.org" }
+}
+
+configurations {
+    create("asciidoctor")
 }
 
 dependencies {
@@ -132,12 +137,20 @@ test {
 }
 
 asciidoctor {
-    mustRunAfter test
-    inputs.dir("build/generated-snippets")
+    configurations("asciidoctor")
+    inputs.dir(snippetsDir)
+    dependsOn(test)
+    sourceDir("src/docs/asciidoc")
+    attributes(
+            stylesheet: "amies.css",
+            stylesdir: "styles",
+            springbootversion: "$springBootVersion",
+            projectdir: "$projectDir"
+    )
     outputs.dir("build/resources/main")
     doLast {
         copy {
-            from "build/asciidoc/html5"
+            from "build/docs/asciidoc/"
             into "build/resources/main/static/docs"
             include "index.html"
         }
