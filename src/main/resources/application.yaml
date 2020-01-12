@@ -84,7 +84,9 @@ management:
         enabled: true
     web:
       server:
-        auto-time-requests: true
+        request:
+          autotime:
+            enabled: true
 
 info:
   name: ${spring.application.name}
