@@ -89,7 +89,7 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
     implementation group: "javax.xml.bind", name: "jaxb-api", version: "2.4.0-b180830.0359"
     // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
-    implementation group: "javax.enterprise", name: "cdi-api", version: "2.0.SP1"
+    implementation group: "javax.enterprise", name: "cdi-api", version: "2.0"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
