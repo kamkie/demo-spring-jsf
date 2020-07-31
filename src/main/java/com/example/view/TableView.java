@@ -47,7 +47,6 @@ public class TableView implements Serializable {
             MessagesRepository repository = getMessagesRepository();
 
             Map<String, Object> collect = filters.entrySet().stream()
-                    .filter(e -> e.getValue() != null)
                     .filter(e -> e.getValue().getFilterValue() != null)
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getFilterValue()));
             Page<Message> page = repository.findPageWithFilters(collect, pageRequest);
