@@ -82,7 +82,7 @@ dependencies {
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
     implementation("com.google.guava:guava:29.0-jre")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
-    implementation("de.ruedigermoeller:fst:2.57")
+    implementation("de.ruedigermoeller:fst:3.0.1")
     implementation("org.postgresql:postgresql")
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
     implementation group: "de.appelgriepsch.logback", name: "logback-gelf-appender", version: "1.5"
