@@ -4,6 +4,7 @@ import com.example.DemoApplication;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class TableView implements Serializable {
         private static final long serialVersionUID = -8803578331856683793L;
 
         @Override
-        public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+        public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filters) {
             log.info("----------- load messages ------------------");
             Sort.Direction direction = getDirection(sortOrder);
             PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
