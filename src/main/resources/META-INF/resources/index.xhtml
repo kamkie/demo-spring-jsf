@@ -22,7 +22,10 @@
         <p>property #{environment.getProperty('spring.application.name')}</p>
 
         <h:form id="messages-form">
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+
             <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
 
 

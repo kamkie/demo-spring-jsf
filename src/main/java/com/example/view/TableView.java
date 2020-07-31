@@ -16,6 +16,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -45,7 +46,11 @@ public class TableView implements Serializable {
             PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
             MessagesRepository repository = getMessagesRepository();
 
-            Page<Message> page = repository.findPageWithFilters(filters, pageRequest);
+            Map<String, Object> collect = filters.entrySet().stream()
+                    .filter(e -> e.getValue() != null)
+                    .filter(e -> e.getValue().getFilterValue() != null)
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getFilterValue()));
+            Page<Message> page = repository.findPageWithFilters(collect, pageRequest);
 
             setRowCount((int) page.getTotalElements());
             return page.getContent();

@@ -1,7 +1,6 @@
 package com.example.repository;
 
 import com.example.entity.Message;
-import org.primefaces.model.FilterMeta;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +32,7 @@ public interface MessagesRepository extends JpaRepository<Message, Long> {
             "and (:#{#filters['text']} is null OR (LOWER(m.text) like LOWER(CONCAT('%', :#{#filters['text']}, '%')))) ")
     Page<Message> findPage(@Param("filters") Map<String, Object> filters, Pageable pageable);
 
-    default Page<Message> findPageWithFilters(Map<String, FilterMeta> filters, Pageable pageable) {
+    default Page<Message> findPageWithFilters(Map<String, Object> filters, Pageable pageable) {
         String key = Optional.ofNullable(filters.get("key")).map(Object::toString).orElse("");
         String lang = Optional.ofNullable(filters.get("lang")).map(Object::toString).orElse("");
         String text = Optional.ofNullable(filters.get("text")).map(Object::toString).orElse("");

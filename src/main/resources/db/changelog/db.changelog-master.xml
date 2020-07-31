@@ -1,217 +1,144 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
-    <changeSet author="kamkie" id="1">
-        <createTable tableName="SPRING_SESSION">
-            <column name="PRIMARY_ID" type="CHAR(36)">
-                <constraints primaryKey="true" primaryKeyName="SPRING_SESSION_PK"/>
-            </column>
-            <column name="SESSION_ID" type="CHAR(36)">
-                <constraints unique="true" uniqueConstraintName="SPRING_SESSION_ID_UN"/>
-            </column>
-            <column name="CREATION_TIME" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="LAST_ACCESS_TIME" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MAX_INACTIVE_INTERVAL" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="EXPIRY_TIME" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PRINCIPAL_NAME" type="VARCHAR(100)">
-                <constraints nullable="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="kamkie" id="2">
-        <createIndex indexName="SPRING_SESSION_IX1"
-                     tableName="SPRING_SESSION">
-            <column name="LAST_ACCESS_TIME"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="kamkie" id="3">
-        <createTable tableName="SPRING_SESSION_ATTRIBUTES">
-            <column name="SESSION_PRIMARY_ID" type="CHAR(36)">
-                <constraints primaryKey="true" primaryKeyName="SPRING_SESSION_ATTRIBUTES_PK"
-                             foreignKeyName="SPRING_SESSION_ATTRIBUTES_FK" referencedTableName="SPRING_SESSION"
-                             referencedColumnNames="PRIMARY_ID" deleteCascade="true"/>
-            </column>
-            <column name="ATTRIBUTE_NAME" type="VARCHAR(200)">
-                <constraints primaryKey="true" primaryKeyName="SPRING_SESSION_ATTRIBUTES_PK"/>
-            </column>
-            <column name="LAST_ACCESS_TIME" type="BIGINT">
-            </column>
-            <column name="ATTRIBUTE_BYTES" type="LONGVARBINARY">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="kamkie" id="4">
-        <createIndex indexName="SPRING_SESSION_ATTRIBUTES_IX1"
-                     tableName="SPRING_SESSION_ATTRIBUTES">
-            <column name="SESSION_PRIMARY_ID"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="kamkie" id="5">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="kamkie (generated)" id="1596218942871-1">
         <createTable tableName="users">
-            <column name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="USERS_PK"/>
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_pk"/>
             </column>
             <column name="login" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false" unique="false"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="kamkie" id="6">
-        <createIndex indexName="users_login_index"
-                     tableName="users">
+    <changeSet author="kamkie (generated)" id="1596218942871-2">
+        <createTable tableName="spring_session_attributes">
+            <column name="session_primary_id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="spring_session_attributes_pk"/>
+            </column>
+            <column name="attribute_name" type="VARCHAR(200)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="spring_session_attributes_pk"/>
+            </column>
+            <column name="last_access_time" type="BIGINT"/>
+            <column name="attribute_bytes" type="BYTEA">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamkie (generated)" id="1596218942871-3">
+        <createTable tableName="messages">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="messages_pk"/>
+            </column>
+            <column name="lang" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamkie (generated)" id="1596218942871-4">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="roles_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamkie (generated)" id="1596218942871-5">
+        <createTable tableName="spring_session">
+            <column name="primary_id" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="spring_session_pk"/>
+            </column>
+            <column name="session_id" type="CHAR(36)"/>
+            <column name="creation_time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_access_time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_inactive_interval" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_time" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamkie (generated)" id="1596218942871-6">
+        <createTable tableName="users_roles">
+            <column name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_roles_pk"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="roles_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamkie (generated)" id="1596218942871-7">
+        <createIndex indexName="users_login_index" tableName="users">
             <column name="login"/>
         </createIndex>
     </changeSet>
-    <changeSet author="kamkie" id="7">
-        <createTable tableName="roles">
-            <column name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="ROLES_PK"/>
-            </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
+    <changeSet author="kamkie (generated)" id="1596218942871-8">
+        <addUniqueConstraint columnNames="login" constraintName="users_login_key" tableName="users"/>
     </changeSet>
-    <changeSet author="kamkie" id="8">
-        <createTable tableName="users_roles">
-            <column name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="USERS_ROLES_PK"/>
-            </column>
-            <column name="user_id" type="BIGINT">
-                <constraints nullable="false" unique="false" referencedTableName="users" referencedColumnNames="id"
-                             foreignKeyName="users_roles_fk1"/>
-            </column>
-            <column name="roles_id" type="BIGINT">
-                <constraints nullable="false" unique="false" referencedTableName="roles" referencedColumnNames="id"
-                             foreignKeyName="users_roles_fk2"/>
-            </column>
-        </createTable>
+    <changeSet author="kamkie (generated)" id="1596218942871-9">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_roles" constraintName="users_roles_fk1"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="users" validate="true"/>
     </changeSet>
-    <changeSet author="kamkie" id="9">
-        <insert tableName="users">
-            <column name="id" type="varchar(255)" value="1"/>
-            <column name="login" type="varchar(255)" value="kamkie"/>
-            <column name="password" type="varchar(255)"
-                    value="{bcrypt}$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-10">
+        <createIndex indexName="spring_session_attributes_ix1" tableName="spring_session_attributes">
+            <column name="session_primary_id"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="kamkie" id="10">
-        <insert tableName="roles">
-            <column name="id" type="varchar(255)" value="1"/>
-            <column name="name" type="varchar(255)" value="ROLE_USER"/>
-        </insert>
-        <insert tableName="roles">
-            <column name="id" type="varchar(255)" value="2"/>
-            <column name="name" type="varchar(255)" value="ROLE_ADMIN"/>
-        </insert>
-    </changeSet>
-    <changeSet author="kamkie" id="11">
-        <insert tableName="users_roles">
-            <column name="id" type="varchar(255)" value="1"/>
-            <column name="user_id" type="varchar(255)" value="1"/>
-            <column name="roles_id" type="varchar(255)" value="1"/>
-        </insert>
-        <insert tableName="users_roles">
-            <column name="id" type="varchar(255)" value="2"/>
-            <column name="user_id" type="varchar(255)" value="1"/>
-            <column name="roles_id" type="varchar(255)" value="2"/>
-        </insert>
-    </changeSet>
-    <changeSet author="kamkie" id="12">
-        <createTable tableName="messages">
-            <column name="id" type="SERIAL">
-                <constraints primaryKey="true" primaryKeyName="MESSAGES_PK"/>
-            </column>
-            <column name="lang" type="VARCHAR(255)">
-                <constraints nullable="false" unique="false"/>
-            </column>
-            <column name="key" type="VARCHAR(255)">
-                <constraints nullable="false" unique="false"/>
-            </column>
-            <column name="text" type="VARCHAR(255)">
-                <constraints nullable="false" unique="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="kamkie" id="13">
-        <addUniqueConstraint columnNames="lang, key"
-                             constraintName="messages_unique"
-                             tableName="messages"/>
-        <createIndex indexName="messages_index"
-                     tableName="messages">
+    <changeSet author="kamkie (generated)" id="1596218942871-11">
+        <createIndex indexName="messages_index" tableName="messages">
             <column name="key"/>
             <column name="lang"/>
         </createIndex>
     </changeSet>
-    <changeSet author="kamkie" id="14">
-        <insert tableName="messages">
-            <column name="lang" type="varchar(255)" value="eng"/>
-            <column name="key" type="varchar(255)" value="hello.text"/>
-            <column name="text" type="varchar(255)" value="hello word"/>
-        </insert>
-        <insert tableName="messages">
-            <column name="lang" type="varchar(255)" value="pol"/>
-            <column name="key" type="varchar(255)" value="hello.text"/>
-            <column name="text" type="varchar(255)" value="witaj świecie"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-12">
+        <addUniqueConstraint columnNames="lang, key" constraintName="messages_unique" tableName="messages"/>
     </changeSet>
-    <changeSet author="kamkie" id="15">
-        <insert tableName="users">
-            <column name="id" type="varchar(255)" value="2"/>
-            <column name="login" type="varchar(255)" value="user"/>
-            <column name="password" type="varchar(255)"
-                    value="{bcrypt}$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-13">
+        <addUniqueConstraint columnNames="name" constraintName="roles_name_key" tableName="roles"/>
     </changeSet>
-    <changeSet author="kamkie" id="16">
-        <insert tableName="users_roles">
-            <column name="id" type="varchar(255)" value="3"/>
-            <column name="user_id" type="varchar(255)" value="2"/>
-            <column name="roles_id" type="varchar(255)" value="1"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-14">
+        <addForeignKeyConstraint baseColumnNames="roles_id" baseTableName="users_roles" constraintName="users_roles_fk2"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="roles" validate="true"/>
     </changeSet>
-    <changeSet author="kamkie" id="17">
-        <insert tableName="users">
-            <column name="id" type="varchar(255)" value="3"/>
-            <column name="login" type="varchar(255)" value="admin"/>
-            <column name="password" type="varchar(255)"
-                    value="{bcrypt}$2a$10$.LCG4WLBrXd0iNIcRZjfcehDMwaZcqstb4AJb8SmX2hVNSHUIa79W"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-15">
+        <addUniqueConstraint columnNames="session_id" constraintName="spring_session_id_un" tableName="spring_session"/>
     </changeSet>
-    <changeSet author="kamkie" id="18">
-        <insert tableName="users_roles">
-            <column name="id" type="varchar(255)" value="4"/>
-            <column name="user_id" type="varchar(255)" value="3"/>
-            <column name="roles_id" type="varchar(255)" value="1"/>
-        </insert>
-        <insert tableName="users_roles">
-            <column name="id" type="varchar(255)" value="5"/>
-            <column name="user_id" type="varchar(255)" value="3"/>
-            <column name="roles_id" type="varchar(255)" value="2"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-16">
+        <createIndex indexName="spring_session_ix1" tableName="spring_session">
+            <column name="last_access_time"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="kamkie" id="19">
-        <insert tableName="roles">
-            <column name="id" type="varchar(255)" value="3"/>
-            <column name="name" type="varchar(255)" value="ROLE_ACTUATOR"/>
-        </insert>
-        <insert tableName="users_roles">
-            <column name="id" type="varchar(255)" value="6"/>
-            <column name="user_id" type="varchar(255)" value="3"/>
-            <column name="roles_id" type="varchar(255)" value="3"/>
-        </insert>
+    <changeSet author="kamkie (generated)" id="1596218942871-17">
+        <addForeignKeyConstraint baseColumnNames="session_primary_id" baseTableName="spring_session_attributes"
+                                 constraintName="spring_session_attributes_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
+                                 referencedColumnNames="primary_id" referencedTableName="spring_session"
+                                 validate="true"/>
     </changeSet>
+
+    <include file="db/changelog/db.changelog-inserts.xml"/>
 </databaseChangeLog>

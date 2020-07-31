@@ -38,6 +38,7 @@ repositories {
 
 configurations {
     create("asciidoctor")
+    liquibaseRuntime.extendsFrom implementation
 }
 
 dependencies {
