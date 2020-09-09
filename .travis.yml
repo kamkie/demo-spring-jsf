@@ -1,5 +1,9 @@
 dist: xenial
 
+branches:
+  only: 
+    - master
+
 jdk:
   - openjdk11
 
