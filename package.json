@@ -39,7 +39,7 @@
     "html-webpack-plugin": "^2.22.0",
     "http-proxy-middleware": "^0.17.0",
     "less": "^2.7.3",
-    "less-loader": "^2.2.3",
+    "less-loader": "^3.0.0",
     "redux-devtools": "^3.7.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.6.2",
