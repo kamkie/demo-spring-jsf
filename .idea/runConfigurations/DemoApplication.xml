@@ -18,8 +18,9 @@
       </ENTRIES>
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.DemoApplication" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
+    <option name="INCLUDE_PROVIDED_SCOPE" value="false" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateTriggerFile" />
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <method v="2">

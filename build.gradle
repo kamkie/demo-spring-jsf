@@ -22,7 +22,7 @@ apply plugin: "jacoco"
 
 def javaVersion = JavaVersion.VERSION_11
 def springBootVersion = "2.3.3.RELEASE"
-def springfoxVersion = "2.10.5"
+def springfoxVersion = "3.0.0"
 def joinfacesVersion = "4.3.3"
 ext["snippetsDir"] = "build/generated-snippets"
 
@@ -58,7 +58,7 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.1.1'
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.1.2'
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
