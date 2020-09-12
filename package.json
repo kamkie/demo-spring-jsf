@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "babel-core": "^6.26.0",
-    "react": "^15.2.0",
+    "react": "^15.6.2",
     "react-dom": "^15.2.0",
     "react-redux": "latest",
     "redux": "^3.7.2",
