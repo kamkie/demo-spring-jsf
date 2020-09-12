@@ -41,7 +41,7 @@
     "less": "^2.7.3",
     "less-loader": "^3.0.0",
     "redux-devtools": "^3.7.0",
-    "style-loader": "^0.13.1",
+    "style-loader": "^0.23.1",
     "url-loader": "^0.6.2",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^3.7.2",
