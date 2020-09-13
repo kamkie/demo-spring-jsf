@@ -23,7 +23,7 @@ module.exports = {
         publicPath: '/javascript/'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,  // Notice the regex here. We're matching on js and jsx files.
                 loaders: ['babel-loader?presets[]=es2015&presets[]=react'],
