@@ -43,7 +43,7 @@
     "redux-devtools": "^3.7.0",
     "style-loader": "^1.2.1",
     "url-loader": "^4.1.0",
-    "webpack": "^4.44.1",
+    "webpack": "^4.44.2",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "^3.11.0",
     "webpack-hot-middleware": "^2.25.0"
