@@ -101,7 +101,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:1.14.3") {
         exclude group: "log4j", module: "log4j"
     }
-    testImplementation("org.glassfish.jersey.inject:jersey-hk2:2.31")
+    testImplementation("org.glassfish.jersey.inject:jersey-hk2:2.32")
 }
 
 sourceSets {
