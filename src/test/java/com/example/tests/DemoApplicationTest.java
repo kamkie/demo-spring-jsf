@@ -79,6 +79,7 @@ class DemoApplicationTest {
     static {
         System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
         System.setProperty("sel.jup.screenshot.at.the.end.of.tests", "true");// NOPMD
+        System.setProperty("sel.jup.recording", "true");// NOPMD
         System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
     }
 
