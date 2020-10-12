@@ -1,8 +1,11 @@
 dist: xenial
 
 branches:
-  only: 
+  only:
     - master
+
+node_js:
+  - 14
 
 jdk:
   - openjdk11
