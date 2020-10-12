@@ -220,6 +220,11 @@ task h2Tcp(type: JavaExec) {
     setDependsOn([])
 }
 
+node {
+        // Version of node to use.
+        version = '14.13.1'
+}
+
 task webpack(type: NodeTask, dependsOn: "npmInstall") {
     inputs.files("src/main/resources/static/javascript")
     outputs.dir("build/resources/main/static/javascript")

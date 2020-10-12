@@ -1,19 +1,28 @@
 dist: xenial
 
 branches:
-  only: 
+  only:
     - master
 
 jdk:
   - openjdk11
+env:
+  - NODE_VERSION=14.14.0
+
+install:
+  - nvm install $NODE_VERSION
 
 language: java
 
-install: true
-
 before_script:
   - source configure.sh
-script: ./gradlew build --info
+  - npm --version
+  - node --version
+  - java -version
+
+script:
+  - nvm use $NODE_VERSION
+  - ./gradlew build --info
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
