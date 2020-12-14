@@ -21,7 +21,7 @@ apply plugin: "pmd"
 apply plugin: "jacoco"
 
 def javaVersion = JavaVersion.VERSION_11
-def springBootVersion = "2.4.0"
+def springBootVersion = "2.4.1"
 def springfoxVersion = "3.0.0"
 def joinfacesVersion = "4.3.6"
 ext["snippetsDir"] = "build/generated-snippets"
