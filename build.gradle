@@ -81,7 +81,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger2:$springfoxVersion")
     implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
-    implementation("com.google.guava:guava:30.0-jre")
+    implementation("com.google.guava:guava:30.1-jre")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("de.ruedigermoeller:fst:2.57")
     implementation("org.postgresql:postgresql")
