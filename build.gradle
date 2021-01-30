@@ -58,7 +58,7 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.1.2'
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.2.0'
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
@@ -87,10 +87,6 @@ dependencies {
     implementation("org.postgresql:postgresql")
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
     implementation group: "de.appelgriepsch.logback", name: "logback-gelf-appender", version: "1.5"
-    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
-    implementation group: "javax.xml.bind", name: "jaxb-api", version: "2.4.0-b180830.0359"
-    // https://mvnrepository.com/artifact/javax.enterprise/cdi-api
-    implementation group: "javax.enterprise", name: "cdi-api", version: "2.0"
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
@@ -101,7 +97,6 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:1.15.1") {
         exclude group: "log4j", module: "log4j"
     }
-    testImplementation("org.glassfish.jersey.inject:jersey-hk2:3.0.1")
 }
 
 sourceSets {
@@ -288,6 +283,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "6.5.1"
+    gradleVersion = "6.8.1"
     distributionType = Wrapper.DistributionType.ALL
 }
