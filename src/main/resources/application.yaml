@@ -37,13 +37,14 @@ spring:
   devtools:
     restart:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
-  resources:
-    cache:
-      period: 365d
-      cachecontrol:
-        no-cache: false
-        no-store: false
-        max-age: 365d
+  web:
+    resources:
+      cache:
+        period: 365d
+        cachecontrol:
+          max-age: 365d
+          no-store: false
+          no-cache: false
 
 jsf:
   project-stage: development
@@ -61,7 +62,8 @@ server:
       timeout: 24h
       cookie:
         max-age: 7d
-#  tomcat:
+  tomcat:
+    additional-tld-skip-patterns: "*.jar"
 #    basedir: .
 #    accesslog:
 #      enabled: true
