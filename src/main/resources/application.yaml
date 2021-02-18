@@ -62,8 +62,8 @@ server:
       timeout: 24h
       cookie:
         max-age: 7d
-  tomcat:
-    additional-tld-skip-patterns: "*.jar"
+#  tomcat:
+#    additional-tld-skip-patterns: "*.jar"
 #    basedir: .
 #    accesslog:
 #      enabled: true
@@ -100,6 +100,7 @@ logging:
 user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
   level:
     org:
+      apache.tomcat.util.scan.StandardJarScanner: error
       springframework.web:
         filter: debug
 #        servlet.DispatcherServlet: debug
