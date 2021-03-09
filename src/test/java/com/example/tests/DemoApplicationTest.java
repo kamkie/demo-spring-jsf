@@ -3,7 +3,6 @@ package com.example.tests;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import com.example.DemoApplication;
-import com.example.extension.DockerExtension;
 import com.example.extension.TestContainerInitializer;
 import com.example.pageobjects.LoginPage;
 import com.example.pageobjects.SessionMessagesPanel;
@@ -11,16 +10,17 @@ import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bonigarcia.seljup.DockerBrowser;
-import io.github.bonigarcia.seljup.Options;
-import io.github.bonigarcia.seljup.SeleniumExtension;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.LoggerFactory;
@@ -44,18 +44,31 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static io.github.bonigarcia.seljup.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
+import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
 
 @Slf4j
 @SuppressWarnings({
@@ -68,42 +81,57 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "PMD.TooManyStaticImports",
 })
 @TestInstance(PER_CLASS)
-@ExtendWith(DockerExtension.class)
+@Testcontainers
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@ExtendWith(SeleniumExtension.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
 class DemoApplicationTest {
 
-    static {
-        System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
-        System.setProperty("sel.jup.screenshot.at.the.end.of.tests", "true");// NOPMD
-        System.setProperty("sel.jup.recording", "true");// NOPMD
-        System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
-    }
+    private static final String SCREENSHOT_PATH = "./build/screenshot/";
+    @Container
+    private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer<>()
+            .withCapabilities(initChromeOptions())
+            .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4);
 
     private static final String HOST_FOR_SELENIUM = System.getenv("HOST_FOR_SELENIUM") == null ? "host.docker.internal" : System.getenv("HOST_FOR_SELENIUM");
 
-    @Options
-    @SuppressWarnings({"unused", "PMD.SingularField"})
-    private final ChromeOptions chromeOptions;
-    @LocalServerPort
-    private int port;
     private final ObjectMapper objectMapper;
+
     private MockMvc mockMvc;
     private TestRestTemplate restAnonymousTemplate;
     private TestRestTemplate restUserAuthTemplate;
     private TestRestTemplate restAdminAuthTemplate;
+    @LocalServerPort
+    private int port;
 
     @Autowired
     DemoApplicationTest(
             Environment environment,
             RestTemplateBuilder restTemplateBuilder,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper) throws IOException {
         this.objectMapper = objectMapper;
-        this.chromeOptions = initChromeOptions();
         initRestTemplate(restTemplateBuilder.uriTemplateHandler(new LocalHostUriTemplateHandler(environment)));
+        createDirForScreenshots();
+    }
+
+    private static void createDirForScreenshots() throws IOException {
+        Path path = Paths.get(SCREENSHOT_PATH);
+        if (!Files.exists(path)) {
+            Files.createDirectory(path);
+        }
+    }
+
+    private static ChromeOptions initChromeOptions() {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments(
+                "--lang=pl",
+                "--window-size=1600,900");
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("intl.accept_languages", "pl");
+        chromeOptions.setExperimentalOption("prefs", prefs);
+
+        return chromeOptions;
     }
 
     @BeforeEach
@@ -112,19 +140,15 @@ class DemoApplicationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(documentationConfiguration(restDocumentation))
                 .build();
+        WEB_DRIVER_CONTAINER.getWebDriver().manage().deleteAllCookies();
     }
 
-    private ChromeOptions initChromeOptions() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments(
-                "--lang=pl",
-                // "--headless",
-                "--window-size=1600,900");
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("intl.accept_languages", "pl");
-        chromeOptions.setExperimentalOption("prefs", prefs);
-
-        return chromeOptions;
+    @AfterEach
+    void makeScreenshot(TestInfo testInfo) throws IOException {
+        File screenshotAs = WEB_DRIVER_CONTAINER.getWebDriver().getScreenshotAs(OutputType.FILE);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
+        Path target = Paths.get("./build/screenshot/", testInfo.getDisplayName() + "-" + dateTimeFormatter.format(LocalDateTime.now()) + ".png");
+        Files.copy(screenshotAs.toPath(), target);
     }
 
     private void initRestTemplate(RestTemplateBuilder restTemplateBuilder) {
@@ -163,6 +187,7 @@ class DemoApplicationTest {
     }
 
     @Test
+    @Disabled
     void adminRedirectToLogin() {
         ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/admin", String.class);
 
@@ -215,7 +240,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void adminLoginFailPassword(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void adminLoginFailPassword() {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
 
@@ -224,7 +250,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void adminLoginFailUserName(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void adminLoginFailUserName() {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
 
@@ -233,7 +260,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void hello(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void hello() {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello");
         new LoginPage(webDriver).login("user", "password");
 
@@ -250,7 +278,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void adminLogin(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
+    void adminLogin() throws Exception {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
@@ -266,7 +295,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void tableXhtml(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
+    void tableXhtml() throws Exception {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
@@ -294,7 +324,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void changeLanguageInJsf(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void changeLanguageInJsf() {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
@@ -304,7 +335,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void changeLanguageInJsfAndMvc(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void changeLanguageInJsfAndMvc() {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello");
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
@@ -328,7 +360,8 @@ class DemoApplicationTest {
     }
 
     @Test
-    void jsfSessionMessages(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void jsfSessionMessages() {
+        RemoteWebDriver webDriver = WEB_DRIVER_CONTAINER.getWebDriver();
         webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");
 

@@ -24,6 +24,7 @@ def javaVersion = JavaVersion.VERSION_11
 def springBootVersion = "2.4.3"
 def springfoxVersion = "3.0.0"
 def joinfacesVersion = "4.4.3"
+def testContainersVersion = "1.15.2"
 ext["snippetsDir"] = "build/generated-snippets"
 
 version = gitVersion()
@@ -90,12 +91,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.github.bonigarcia:selenium-jupiter:3.4.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver")
     testImplementation("org.seleniumhq.selenium:selenium-support")
-    testImplementation("org.testcontainers:postgresql:1.15.2") {
-        exclude group: "log4j", module: "log4j"
-    }
+    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:selenium:$testContainersVersion")
 }
 
 sourceSets {
@@ -215,8 +215,8 @@ task h2Tcp(type: JavaExec) {
 }
 
 node {
-        // Version of node to use.
-        version = '14.13.1'
+    // Version of node to use.
+    version = '14.13.1'
 }
 
 task webpack(type: NodeTask, dependsOn: "npmInstall") {
