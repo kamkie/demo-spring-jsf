@@ -1,5 +1,6 @@
 node('maven-docker') {
-    git 'https://github.com/kamkie/demo-spring-jsf.git'
+    def gitProps = checkout scm
+    echo gitProps
     stage('Build jar') {
         ansiColor('xterm') {
             try {
