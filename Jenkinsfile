@@ -1,22 +1,19 @@
 stage('Build') {
     node('maven-docker') {
         ansiColor('xterm') {
-            def jdk = tool 'jdk11'
-            def jdkHome = "$jdk/jdk-11.0.2+9"
-            sh """
-            docker info
-            """
             git 'https://github.com/kamkie/demo-spring-jsf.git'
             try {
-                nodejs(nodeJSInstallationName: 'node11') {
-                    withEnv(["JAVA_HOME=$jdkHome", "PATH=$jdkHome/bin:${env.PATH}", "HOST_FOR_SELENIUM=172.17.0.1"]) {
+                def jdk = tool 'jdk11'
+                nodejs(nodeJSInstallationName: 'node14') {
+                    withEnv(["JAVA_HOME=$jdk", "PATH=$jdk/bin:${env.PATH}", "HOST_FOR_SELENIUM=172.17.0.1"]) {
                         sh """
                         npm --version
                         node --version
                         docker version
-                        JAVA_TOOL_OPTIONS='' java -version
+                        java -version
+                        docker info
                         """
-                        sh "JAVA_TOOL_OPTIONS='' ./gradlew clean build"
+                        sh "./gradlew clean build"
                     }
                 }
             } finally {
