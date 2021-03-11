@@ -39,4 +39,11 @@ node('maven-docker') {
         docker push image-registry.openshift-image-registry.svc:5000/jenkins2/demo-spring-jsf:latest
         """
     }
+    stage("rollout") {
+        sh """
+        oc login --help https://172.30.0.1:443 --token=\$(cat /run/secrets/kubernetes.io/serviceaccount/token)
+        oc project jenkins2
+        oc rollout status dc/demo-spring-jsf -w
+        """
+    }
 }
