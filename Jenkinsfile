@@ -1,7 +1,7 @@
-stage('Build') {
-    node('maven-docker') {
+node('maven-docker') {
+    git 'https://github.com/kamkie/demo-spring-jsf.git'
+    stage('Build jar') {
         ansiColor('xterm') {
-            git 'https://github.com/kamkie/demo-spring-jsf.git'
             try {
                 def jdk = tool 'jdk11'
                 nodejs(nodeJSInstallationName: 'node14') {
@@ -25,6 +25,10 @@ stage('Build') {
                 recordIssues enabledForFailure: true, tool: pmdParser(pattern: 'build/reports/pmd/*.xml')
                 recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
             }
+
         }
+    }
+    stage("build docker image") {
+        sh "docker build -t demo-spring-jsf ."
     }
 }
