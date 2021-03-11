@@ -1,6 +1,6 @@
 node('maven-docker') {
     def gitProps = checkout scm
-    echo gitProps
+    echo "GIT_BRANCH=${gitProps.GIT_BRANCH}, GIT_COMMIT=${gitProps.GIT_COMMIT}"
     stage('Build jar') {
         ansiColor('xterm') {
             try {
