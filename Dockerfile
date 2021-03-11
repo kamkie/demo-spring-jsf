@@ -10,6 +10,7 @@ WORKDIR application
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
+COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
