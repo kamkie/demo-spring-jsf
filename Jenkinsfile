@@ -9,8 +9,8 @@ stage('Build') {
                         sh """
                         npm --version
                         node --version
-                        docker version
                         java -version
+                        docker version
                         docker info
                         """
                         sh "./gradlew clean build"
