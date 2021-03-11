@@ -1,7 +1,7 @@
 FROM azul/zulu-openjdk-alpine:11 as base
 RUN addgroup -S spring && adduser -S spring -G spring
-RUN mkdir /application
-WORKDIR /application
+RUN mkdir /app
+WORKDIR /app
 
 FROM base as builder
 ARG JAR_FILE=build/libs/demo-spring-jsf-*-boot.jar
@@ -10,10 +10,10 @@ RUN java -Djarmode=layertools -jar app.jar extract && ls -lah
 
 FROM base
 
-COPY --from=builder /application/spring-boot-loader/ ./
-COPY --from=builder /application/dependencies/ ./
-COPY --from=builder /application/snapshot-dependencies/ ./
-COPY --from=builder /application/application/ ./
+COPY --from=builder /app/spring-boot-loader/ ./
+COPY --from=builder /app/dependencies/ ./
+COPY --from=builder /app/snapshot-dependencies/ ./
+COPY --from=builder /app/application/ ./
 USER spring:spring
 
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
