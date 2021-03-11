@@ -124,6 +124,9 @@ bootRun {
 bootJar {
     archiveClassifier.set("boot")
     dependsOn asciidoctor
+    layered {
+        enabled = true
+    }
 }
 
 test {

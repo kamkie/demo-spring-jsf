@@ -30,7 +30,9 @@ node('maven-docker') {
         }
     }
     stage("build docker image") {
-        sh "docker build -t demo-spring-jsf ."
+        sh """
+        docker build -t demo-spring-jsf .
+        """
     }
     stage("push docker image") {
         sh """
