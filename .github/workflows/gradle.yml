@@ -33,6 +33,22 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build
+      env:
+        HOST_FOR_SELENIUM|: "172.17.0.1"
+    
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: build/test-results/test/*.xml
+        
+    - name: publish screenshots
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: screenshots
+        path: build/screenshot/
       
     - name: code coverage
       uses: codecov/codecov-action@v1
+      if: always()
