@@ -30,11 +30,19 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        
+    - name: print versions
+      run: |
+        java -version
+        node --version
+        npm --version
+        docker version
+        docker info
 
     - name: Build with Gradle
       run: ./gradlew build
       env:
-        HOST_FOR_SELENIUM|: "172.17.0.1"
+        HOST_FOR_SELENIUM: "172.17.0.1"
     
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
