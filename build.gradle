@@ -168,7 +168,7 @@ compileJava.dependsOn processResources
 generateGitProperties.mustRunAfter processResources
 bootBuildInfo.mustRunAfter processResources
 springConfiguration.mustRunAfter compileJava
-build.dependsOn jacocoTestReport
+test.finalizedBy(jacocoTestReport)
 
 
 liquibase {
