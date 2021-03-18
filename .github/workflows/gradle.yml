@@ -59,13 +59,13 @@ jobs:
 
       - name: publish spotbugs
         uses: jwgmeligmeyling/spotbugs-github-action@master
-          with:
-            path: 'build/reports/spotbugs/*.xml'
+        with:
+          path: 'build/reports/spotbugs/*.xml'
 
       - name: publish pmd
         uses: jwgmeligmeyling/pmd-github-action@master
-          with:
-            path: 'build/reports/pmd/*.xml'
+        with:
+          path: 'build/reports/pmd/*.xml'
 
       - name: code coverage
         uses: codecov/codecov-action@v1
