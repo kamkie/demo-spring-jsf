@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DemoApplicationTest" type="JUnit" factoryName="JUnit" singleton="true" nameIsGenerated="true">
-    <module name="demo-spring-jsf_test" />
+    <module name="demo-spring-jsf.test" />
     <shortenClasspath name="ARGS_FILE" />
     <extension name="coverage">
       <pattern>
@@ -18,6 +18,8 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </extension>
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="PACKAGE_NAME" value="com.example.tests" />
     <option name="MAIN_CLASS_NAME" value="com.example.tests.DemoApplicationTest" />
     <option name="METHOD_NAME" value="" />

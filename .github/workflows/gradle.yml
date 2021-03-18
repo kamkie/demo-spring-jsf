@@ -15,48 +15,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Java JDK
-      uses: joschi/setup-jdk@v2
-      with:
-        java-version: '11'
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.5
-      with:
-         node-version: 14
-    
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        
-    - name: print versions
-      run: |
-        java -version
-        node --version
-        npm --version
-        docker version
-        docker info
+      - uses: actions/checkout@v2
+      - name: Setup Java JDK
+        uses: joschi/setup-jdk@v2
+        with:
+          java-version: '11'
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14
 
-    - name: Build with Gradle
-      run: ./gradlew build
-      env:
-        HOST_FOR_SELENIUM: "172.17.0.1"
-    
-    - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: always()
-      with:
-        files: build/test-results/test/*.xml
-        
-    - name: publish screenshots
-      uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: screenshots
-        path: build/screenshot/
-      
-    - name: code coverage
-      uses: codecov/codecov-action@v1
-      if: always()
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: print versions
+        run: |
+          java -version
+          node --version
+          npm --version
+          docker version
+          docker info
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        env:
+          HOST_FOR_SELENIUM: "172.17.0.1"
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: build/test-results/test/*.xml
+
+      - name: publish screenshots
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: screenshots
+          path: build/screenshot/
+
+      - name: publish spotbugs
+        uses: jwgmeligmeyling/spotbugs-github-action@master
+          with:
+            path: 'build/reports/spotbugs/*.xml'
+
+      - name: publish pmd
+        uses: jwgmeligmeyling/pmd-github-action@master
+          with:
+            path: 'build/reports/pmd/*.xml'
+
+      - name: code coverage
+        uses: codecov/codecov-action@v1
+        if: always()
