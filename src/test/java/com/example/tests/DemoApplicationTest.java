@@ -11,6 +11,7 @@ import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -151,7 +153,8 @@ class DemoApplicationTest {
     }
 
     private void initRestTemplate(RestTemplateBuilder restTemplateBuilder) {
-        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder);
+        OkHttpClient client = new OkHttpClient.Builder().followRedirects(false).build();
+        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder.requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client)));
         this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder, "user", "password");
         this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder, "admin", "password");
     }
