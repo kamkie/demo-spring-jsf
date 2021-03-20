@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
@@ -187,7 +186,6 @@ class DemoApplicationTest {
     }
 
     @Test
-    @Disabled
     void adminRedirectToLogin() {
         ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/admin", String.class);
 
