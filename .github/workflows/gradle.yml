@@ -59,11 +59,13 @@ jobs:
           path: build/screenshot/
 
       - name: publish spotbugs
+        if: github.actor != 'dependabot[bot]'
         uses: jwgmeligmeyling/spotbugs-github-action@master
         with:
           path: 'build/reports/spotbugs/*.xml'
 
       - name: publish pmd
+        if: github.actor != 'dependabot[bot]'
         uses: jwgmeligmeyling/pmd-github-action@master
         with:
           path: 'build/reports/pmd/*.xml'
