@@ -37,7 +37,7 @@
     "express": "^4.17.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.2",
-    "http-proxy-middleware": "^1.0.6",
+    "http-proxy-middleware": "^1.1.0",
     "less": "^4.1.1",
     "less-loader": "^7.3.0",
     "redux-devtools": "^3.7.0",
