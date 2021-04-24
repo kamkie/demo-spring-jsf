@@ -33,7 +33,7 @@ targetCompatibility = javaVersion
 
 repositories {
     mavenCentral()
-    maven { url "http://repository.primefaces.org" }
+    maven { url "https://repository.primefaces.org" }
 }
 
 configurations {
@@ -58,7 +58,7 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.2.1'
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.2.3'
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
@@ -285,6 +285,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "6.8.2"
+    gradleVersion = "7.0"
     distributionType = Wrapper.DistributionType.ALL
 }
