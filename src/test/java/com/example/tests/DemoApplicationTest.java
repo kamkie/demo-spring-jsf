@@ -26,11 +26,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,7 +53,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 @SuppressWarnings({
@@ -83,14 +83,11 @@ class DemoApplicationTest {
         System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
     }
 
-    private static final String HOST_FOR_SELENIUM = System.getenv("HOST_FOR_SELENIUM") == null ? "host.docker.internal" : System.getenv("HOST_FOR_SELENIUM");
-
     @Options
     @SuppressWarnings({"unused", "PMD.SingularField"})
     private final ChromeOptions chromeOptions;
-    @LocalServerPort
-    private int port;
     private final ObjectMapper objectMapper;
+    private final String seleniumBaseUrl;
     private MockMvc mockMvc;
     private TestRestTemplate restAnonymousTemplate;
     private TestRestTemplate restUserAuthTemplate;
@@ -98,12 +95,14 @@ class DemoApplicationTest {
 
     @Autowired
     DemoApplicationTest(
-            Environment environment,
+            @LocalServerPort int port,
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.chromeOptions = initChromeOptions();
-        initRestTemplate(restTemplateBuilder.uriTemplateHandler(new LocalHostUriTemplateHandler(environment)));
+        String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null ? "host.docker.internal" : System.getenv("HOST_FOR_SELENIUM");
+        this.seleniumBaseUrl = "http://" + hostForSelenium + ":" + port;
+        initRestTemplate(restTemplateBuilder.rootUri("http://localhost:" + port));
     }
 
     @BeforeEach
@@ -131,11 +130,6 @@ class DemoApplicationTest {
         this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder);
         this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder, "user", "password");
         this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder, "admin", "password");
-    }
-
-    @Test
-    void contextLoads() {
-        assertThat(port).isPositive();
     }
 
     @Test
@@ -216,7 +210,7 @@ class DemoApplicationTest {
 
     @Test
     void adminLoginFailPassword(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/admin");
+        webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
 
         String content = webDriver.findElement(By.id("login-error")).getText();
@@ -225,7 +219,7 @@ class DemoApplicationTest {
 
     @Test
     void adminLoginFailUserName(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/admin");
+        webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
 
         String content = webDriver.findElement(By.id("login-error")).getText();
@@ -234,24 +228,24 @@ class DemoApplicationTest {
 
     @Test
     void hello(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello");
+        webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
 
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
 
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello?lang=en");
+        webDriver.get(seleniumBaseUrl + "/hello?lang=en");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello");
+        webDriver.get(seleniumBaseUrl + "/hello");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello?lang=pl");
+        webDriver.get(seleniumBaseUrl + "/hello?lang=pl");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
     }
 
     @Test
     void adminLogin(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/admin");
+        webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
         String content = webDriver.findElement(By.tagName("pre")).getText();
@@ -267,7 +261,7 @@ class DemoApplicationTest {
 
     @Test
     void tableXhtml(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/table.xhtml");
+        webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
@@ -295,7 +289,7 @@ class DemoApplicationTest {
 
     @Test
     void changeLanguageInJsf(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/table.xhtml");
+        webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
 
@@ -305,31 +299,31 @@ class DemoApplicationTest {
 
     @Test
     void changeLanguageInJsfAndMvc(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello");
+        webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
 
         // locale is pl
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/table.xhtml");
+        webDriver.get(seleniumBaseUrl + "/table.xhtml");
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
 
         // change locale to en in jsf
         new ToolbarPanel(webDriver).changeLanguage(Locale.ENGLISH);
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale en");
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello");
+        webDriver.get(seleniumBaseUrl + "/hello");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("hello word");
 
         // change locale to pl in mvc
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/hello?lang=pl");
+        webDriver.get(seleniumBaseUrl + "/hello?lang=pl");
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/table.xhtml");
+        webDriver.get(seleniumBaseUrl + "/table.xhtml");
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
     }
 
     @Test
     void jsfSessionMessages(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
-        webDriver.get("http://" + HOST_FOR_SELENIUM + ":" + port + "/index.xhtml");
+        webDriver.get(seleniumBaseUrl + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
         SessionMessagesPanel sessionMessagesPanel = new SessionMessagesPanel(webDriver);
