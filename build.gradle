@@ -23,7 +23,7 @@ apply plugin: "jacoco"
 def javaVersion = JavaVersion.VERSION_11
 def springBootVersion = "2.4.5"
 def springfoxVersion = "3.0.0"
-def joinfacesVersion = "4.4.3"
+def joinfacesVersion = "4.4.5"
 ext["snippetsDir"] = "build/generated-snippets"
 
 version = gitVersion()
