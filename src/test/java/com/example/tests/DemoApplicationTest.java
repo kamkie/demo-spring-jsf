@@ -187,7 +187,6 @@ class DemoApplicationTest {
         Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<>() {
         });
         assertThat(payload)
-                .containsKey("message")
                 .containsKey("status")
                 .containsKey("timestamp")
                 .containsKey("path");
