@@ -71,5 +71,5 @@ jobs:
           path: 'build/reports/pmd/*.xml'
 
       - name: code coverage
-        uses: codecov/codecov-action@v1.5.2
+        uses: codecov/codecov-action@v2.0.1
         if: always()
