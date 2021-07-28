@@ -81,6 +81,7 @@ class DemoApplicationTest {
         System.setProperty("sel.jup.screenshot.at.the.end.of.tests", "true");// NOPMD
         System.setProperty("sel.jup.recording", "true");// NOPMD
         System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
+        System.setProperty("sel.jup.remote.webdriver.wait.timeout.sec", "40");// NOPMD
     }
 
     @Options
