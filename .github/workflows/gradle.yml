@@ -39,6 +39,7 @@ jobs:
           npm --version
           docker version
           docker info
+          ip a
 
       - name: Build with Gradle
         run: ./gradlew build
