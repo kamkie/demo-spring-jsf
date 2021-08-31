@@ -12,16 +12,15 @@ import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bonigarcia.seljup.DockerBrowser;
-import io.github.bonigarcia.seljup.Options;
-import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.seljup.SeleniumJupiter;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -43,7 +43,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -70,7 +69,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(PER_CLASS)
 @ExtendWith(DockerExtension.class)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@ExtendWith(SeleniumExtension.class)
+@ExtendWith(SeleniumJupiter.class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
@@ -84,9 +83,6 @@ class DemoApplicationTest {
         System.setProperty("sel.jup.remote.webdriver.wait.timeout.sec", "40");// NOPMD
     }
 
-    @Options
-    @SuppressWarnings({"unused", "PMD.SingularField"})
-    private final ChromeOptions chromeOptions;
     private final ObjectMapper objectMapper;
     private final String seleniumBaseUrl;
     private MockMvc mockMvc;
@@ -100,7 +96,6 @@ class DemoApplicationTest {
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.chromeOptions = initChromeOptions();
         String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null ? "host.docker.internal" : System.getenv("HOST_FOR_SELENIUM");
         this.seleniumBaseUrl = "http://" + hostForSelenium + ":" + port;
         initRestTemplate(restTemplateBuilder.rootUri("http://localhost:" + port));
@@ -114,21 +109,9 @@ class DemoApplicationTest {
                 .build();
     }
 
-    private ChromeOptions initChromeOptions() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments(
-                "--lang=pl",
-                // "--headless",
-                "--window-size=1600,900");
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("intl.accept_languages", "pl");
-        chromeOptions.setExperimentalOption("prefs", prefs);
-
-        return chromeOptions;
-    }
-
     private void initRestTemplate(RestTemplateBuilder restTemplateBuilder) {
-        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder);
+        OkHttpClient client = new OkHttpClient.Builder().followRedirects(false).build();
+        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder.requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client)));
         this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder, "user", "password");
         this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder, "admin", "password");
     }
@@ -209,7 +192,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void adminLoginFailPassword(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void adminLoginFailPassword(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
 
@@ -218,7 +201,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void adminLoginFailUserName(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void adminLoginFailUserName(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
 
@@ -227,7 +210,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void hello(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void hello(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
 
@@ -244,7 +227,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void adminLogin(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
+    void adminLogin(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) throws Exception {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
@@ -260,7 +243,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void tableXhtml(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) throws Exception {
+    void tableXhtml(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) throws Exception {
         webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
@@ -288,7 +271,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void changeLanguageInJsf(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void changeLanguageInJsf(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
@@ -298,7 +281,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void changeLanguageInJsfAndMvc(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void changeLanguageInJsfAndMvc(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
@@ -322,7 +305,7 @@ class DemoApplicationTest {
     }
 
     @Test
-    void jsfSessionMessages(@DockerBrowser(type = CHROME, version = "latest") RemoteWebDriver webDriver) {
+    void jsfSessionMessages(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
