@@ -13,6 +13,7 @@ class BootAppTest {
     @Test
     void main() {
         System.setProperty("spring.devtools.restart.enabled", "false");
+        @SuppressWarnings("PMD.CloseResource")
         PostgreSQLContainer postgres = DockerExtension.getPostgres();
         DemoApplication.main(new String[]{
                 "--server.port=-1",
