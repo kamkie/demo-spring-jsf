@@ -36,11 +36,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2.3.4
-      
+
     - name: Setup Java JDK
       uses: joschi/setup-jdk@v2.4.0
       with:
-        java-version: '11' 
+        java-version: '17'
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

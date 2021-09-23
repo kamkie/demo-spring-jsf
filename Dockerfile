@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:11 as base
+FROM azul/zulu-openjdk-alpine:17 as base
 RUN addgroup -S spring && adduser -S spring -G spring
 RUN mkdir /app
 WORKDIR /app

@@ -15,6 +15,7 @@ public class TestContainerInitializer implements ApplicationContextInitializer<C
 
     @Override
     public void initialize(@NonNull ConfigurableApplicationContext configurableApplicationContext) {
+        @SuppressWarnings("PMD.CloseResource")
         PostgreSQLContainer postgreSQLContainer = DockerExtension.getPostgres();
         LOGGER.info("------- initializing postgres config for test containers with port {} -------", postgreSQLContainer.getPortBindings());
         TestPropertyValues.of(
