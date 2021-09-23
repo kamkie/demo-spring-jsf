@@ -6,6 +6,7 @@ import com.example.repository.MessagesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,16 +42,22 @@ public class TableView implements Serializable {
         private static final long serialVersionUID = -8803578331856683793L;
 
         @Override
-        public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, FilterMeta> filters) {
+        public List<Message> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
             log.info("----------- load messages ------------------");
+            Optional<SortMeta> optionalSortMeta = sortBy.values().stream().findFirst();
+            SortOrder sortOrder = optionalSortMeta
+                    .map(SortMeta::getOrder)
+                    .orElse(SortOrder.ASCENDING);
             Sort.Direction direction = getDirection(sortOrder);
+            String sortField = optionalSortMeta.map(SortMeta::getField)
+                    .orElse(null);
             PageRequest pageRequest = getPageRequest(first, pageSize, sortField, direction);
             MessagesRepository repository = getMessagesRepository();
 
-            Map<String, Object> collect = filters.entrySet().stream()
+            Map<String, Object> filters = filterBy.entrySet().stream()
                     .filter(e -> e.getValue().getFilterValue() != null)
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getFilterValue()));
-            Page<Message> page = repository.findPageWithFilters(collect, pageRequest);
+            Page<Message> page = repository.findPageWithFilters(filters, pageRequest);
 
             setRowCount((int) page.getTotalElements());
             return page.getContent();

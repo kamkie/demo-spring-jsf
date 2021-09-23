@@ -25,25 +25,35 @@
                         <input type="hidden" name="#{_csrf.parameterName}" value="#{_csrf.token}"/>
                         <p:dataTable id="messagesTable" var="element" value="#{tableView.messages}" lazy="true"
                                      paginator="true" rows="20" paginatorPosition="bottom"
-                                     rowKey="#{element.id}" emptyMessage="#{msg['empty.model.list']}"
+                                      emptyMessage="#{msg['empty.model.list']}"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      rowsPerPageTemplate="20,50,100" resizableColumns="true" resizeMode="expand"
                                      editable="true" rowIndexVar="rowIndex" scrollable="false">
 
-                            <p:column headerText="#{msg['table.rowIndex']}" width="50">
+                            <p:column headerText="#{msg['table.rowIndex']}" width="50"
+                                      sortBy="#{element.id}">
                                 <h:outputText value="#{element.id}"/>
                             </p:column>
 
-                            <p:column id="key" headerText="#{msg['table.messages.key']}" sortBy="#{element.key}"
-                                      filterBy="#{element.key}">
+                            <p:column id="key" headerText="#{msg['table.messages.key']}"
+                                      field="key"
+                            >
+                                <!--                                      sortBy="#{element.key}"-->
+                                <!--                                      filterBy="#{element.key}">-->
                                 <h:outputText value="#{element.key}"/>
                             </p:column>
-                            <p:column id="lang" headerText="#{msg['table.messages.lang']}" sortBy="#{element.lang}"
-                                      filterBy="#{element.lang}">
+                            <p:column id="lang" headerText="#{msg['table.messages.lang']}"
+                                      field="lang"
+                            >
+                                <!--                                      sortBy="#{element.lang}"-->
+                                <!--                                      filterBy="#{element.lang}">-->
                                 <h:outputText value="#{element.lang}"/>
                             </p:column>
-                            <p:column id="text" headerText="#{msg['table.messages.text']}" sortBy="#{element.text}"
-                                      filterBy="#{element.text}">
+                            <p:column id="text" headerText="#{msg['table.messages.text']}"
+                                      field="text"
+                            >
+                                <!--                                      sortBy="#{element.text}"-->
+                                <!--                                      filterBy="#{element.text}">-->
                                 <h:outputText value="#{element.text}"/>
                             </p:column>
                         </p:dataTable>

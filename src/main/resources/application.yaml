@@ -46,11 +46,13 @@ spring:
           no-store: false
           no-cache: false
 
-jsf:
-  project-stage: development
-  facelets-skip-comments: true
+joinfaces:
   primefaces:
     theme: bootstrap
+  jsf:
+    project-stage: development
+#    state-saving-method: server
+#    serialize-server-state: true
 
 server:
   port: 8080
