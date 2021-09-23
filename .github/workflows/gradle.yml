@@ -75,5 +75,5 @@ jobs:
         uses: codecov/codecov-action@v2.1.0
         if: always()
 
-      - name: print versions
+      - name: build docker image
         run: docker build -t demo-spring-jsf .
