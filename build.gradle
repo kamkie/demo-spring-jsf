@@ -214,7 +214,7 @@ tasks.sonarqube.setDependsOn([])
 
 task h2Tcp(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    main = "org.h2.tools.Console"
+    mainClass = "org.h2.tools.Console"
     args["-tcp"]
     classpath = buildscript.configurations.classpath
     setDependsOn([])
@@ -300,6 +300,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "7.2"
+    gradleVersion = "7.3"
     distributionType = Wrapper.DistributionType.ALL
 }
