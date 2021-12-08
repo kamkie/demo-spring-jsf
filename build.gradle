@@ -59,7 +59,7 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.5.0'
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.5.1'
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
