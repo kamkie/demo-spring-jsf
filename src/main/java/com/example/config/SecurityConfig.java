@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER - 20)
@@ -19,6 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/home", "/welcome", "/favicon.ico").permitAll()
+                .antMatchers("/error").permitAll()
                 .anyRequest().hasRole("USER")
                 .and().formLogin().loginPage("/login").permitAll()
                 .and().logout().permitAll();
@@ -36,11 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/actuator/**")
                     .csrf().ignoringAntMatchers("/actuator", "/actuator/**")
-                    .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and().httpBasic()
                     .and().authorizeRequests()
                     .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
                     .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
+                    .antMatchers("/error").permitAll()
                     .anyRequest().hasRole("ADMIN");
         }
     }
