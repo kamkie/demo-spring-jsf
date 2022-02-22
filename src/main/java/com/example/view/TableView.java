@@ -17,6 +17,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class TableView implements Serializable {
             MessagesRepository repository = getMessagesRepository();
 
             Map<String, Object> filters = filterBy.entrySet().stream()
-                    .filter(e -> e.getValue().getFilterValue() != null)
+                    .filter(e -> Objects.nonNull(e.getValue().getFilterValue()))
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getFilterValue()));
             return repository.countPageWithFilters(filters);
         }
@@ -65,7 +66,7 @@ public class TableView implements Serializable {
             MessagesRepository repository = getMessagesRepository();
 
             Map<String, Object> filters = filterBy.entrySet().stream()
-                    .filter(e -> e.getValue().getFilterValue() != null)
+                    .filter(e -> Objects.nonNull(e.getValue().getFilterValue()))
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getFilterValue()));
             Page<Message> page = repository.findPageWithFilters(filters, pageRequest);
 
