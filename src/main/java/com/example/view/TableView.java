@@ -42,6 +42,16 @@ public class TableView implements Serializable {
         private static final long serialVersionUID = -8803578331856683793L;
 
         @Override
+        public int count(Map<String, FilterMeta> filterBy) {
+            MessagesRepository repository = getMessagesRepository();
+
+            Map<String, Object> filters = filterBy.entrySet().stream()
+                    .filter(e -> e.getValue().getFilterValue() != null)
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getFilterValue()));
+            return repository.countPageWithFilters(filters);
+        }
+
+        @Override
         public List<Message> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
             log.info("----------- load messages ------------------");
             Optional<SortMeta> optionalSortMeta = sortBy.values().stream().findFirst();

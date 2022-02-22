@@ -39,7 +39,7 @@ public class TableXhtmlPage {
     }
 
     public void waitForAjaxTableLoaded() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30), Duration.ofMillis(10));
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30), Duration.ofMillis(1));
         try {
             wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
         } catch (Exception e) { // NOPMD
