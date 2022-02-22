@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:px="http://primefaces.org/ui/extensions"
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view locale="#{localeModel.getLocale()}">
     <h:head>
@@ -18,7 +18,7 @@
     </h:head>
     <h:body id="body">
         <p:growl id="messages" globalOnly="true"/>
-        <p:layout fullPage="true">
+        <px:layout fullPage="true">
             <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
 
             <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
@@ -26,23 +26,23 @@
                 <p:graphicImage name="/images/javafx-loading-100x100.gif" style="width:100px"/>
             </p:dialog>
 
-            <p:layoutUnit position="north" style="min-height: 122px">
+            <px:layoutPane position="north" style="min-height: 122px">
                 <ui:include src="elements/toolbar.xhtml"/>
                 <ui:include src="elements/menu.xhtml"/>
-            </p:layoutUnit>
+            </px:layoutPane>
 
-            <p:layoutUnit position="south">
+            <px:layoutPane position="south">
                 <ui:include src="elements/footer.xhtml"/>
-            </p:layoutUnit>
+            </px:layoutPane>
 
-            <p:layoutUnit position="center">
+            <px:layoutPane position="center">
                 <h:panelGroup id="pageContent" layout="block" style="padding: 8px;">
                     <ui:insert name="content">
                         <h1>Content</h1>
                     </ui:insert>
                 </h:panelGroup>
-            </p:layoutUnit>
-        </p:layout>
+            </px:layoutPane>
+        </px:layout>
     </h:body>
 </f:view>
 </html>
