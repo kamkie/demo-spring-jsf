@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class SessionMessagesPanel {
 
     private final WebDriver webDriver;
@@ -35,7 +37,7 @@ public class SessionMessagesPanel {
     }
 
     public void waitForAjax() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 30);
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
         wait.until(JsfUtil.waitForJQueryAndPrimeFaces());
     }
 }

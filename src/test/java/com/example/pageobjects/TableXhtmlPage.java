@@ -7,6 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -32,12 +34,12 @@ public class TableXhtmlPage {
     }
 
     public void waitForTableLoaded() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 30);
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
         wait.until(visibilityOfElementLocated(By.id("deviceListForm:messagesTable")));
     }
 
     public void waitForAjaxTableLoaded() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(webDriver, 30, 1);
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30), Duration.ofMillis(10));
         try {
             wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
         } catch (Exception e) { // NOPMD

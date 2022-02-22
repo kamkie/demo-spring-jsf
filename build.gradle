@@ -87,12 +87,14 @@ dependencies {
     implementation("org.postgresql:postgresql")
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
     implementation group: "de.appelgriepsch.logback", name: "logback-gelf-appender", version: "1.5"
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation 'com.squareup.okhttp3:okhttp'
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("io.github.bonigarcia:selenium-jupiter:4.1.0")
-    testImplementation("org.seleniumhq.selenium:selenium-java")
+    testImplementation("org.seleniumhq.selenium:selenium-java:4.1.2")
     testImplementation("org.testcontainers:postgresql:1.16.3") {
         exclude group: "log4j", module: "log4j"
     }
