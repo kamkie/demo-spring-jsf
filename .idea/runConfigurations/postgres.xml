@@ -3,9 +3,7 @@
     <deployment type="docker-image">
       <settings>
         <option name="imageTag" value="postgres:12" />
-        <option name="command" value="" />
         <option name="containerName" value="spring-demo" />
-        <option name="entrypoint" value="" />
         <option name="envVars">
           <list>
             <DockerEnvVarImpl>
@@ -30,7 +28,6 @@
             </DockerPortBindingImpl>
           </list>
         </option>
-        <option name="commandLineOptions" value="" />
       </settings>
     </deployment>
     <method v="2" />
