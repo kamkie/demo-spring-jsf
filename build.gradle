@@ -83,7 +83,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:$springfoxVersion")
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
     implementation("org.primefaces:primefaces:11.0.0")
-    implementation("org.primefaces.extensions:primefaces-extensions:11.0.3")
+    implementation("org.primefaces.extensions:primefaces-extensions:11.0.4")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.3")
