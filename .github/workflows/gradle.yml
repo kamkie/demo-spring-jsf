@@ -47,7 +47,7 @@ jobs:
           HOST_FOR_SELENIUM: "172.17.0.1"
 
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.37
+        uses: EnricoMi/publish-unit-test-result-action@v1.38
         if: github.actor != 'dependabot[bot]'
         with:
           files: build/test-results/test/*.xml
