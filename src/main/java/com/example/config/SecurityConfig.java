@@ -17,15 +17,15 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers("/javax.faces.resource/**");
+        return web -> web.ignoring().mvcMatchers("/javax.faces.resource");
     }
 
     @Bean
     public SecurityFilterChain appFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .antMatchers("/", "/home", "/welcome", "/favicon.ico").permitAll()
-                        .antMatchers("/error").permitAll()
+                        .mvcMatchers("/", "/home", "/welcome", "/favicon.ico").permitAll()
+                        .mvcMatchers("/error").permitAll()
                         .anyRequest().hasRole("USER")
                 );
         http.formLogin(flc -> flc.loginPage("/login").permitAll());
