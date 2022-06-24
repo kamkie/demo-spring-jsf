@@ -15,6 +15,7 @@ import io.github.bonigarcia.seljup.DockerBrowser;
 import io.github.bonigarcia.seljup.SeleniumJupiter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,8 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -152,12 +153,15 @@ class DemoApplicationTest {
     @Test
     void managementUnauthorized() {
         ResponseEntity<String> responseEntity = this.restAnonymousTemplate.getForEntity("/actuator/metrics", String.class);
+        HttpHeaders headers = responseEntity.getHeaders();
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-        assertThat(responseEntity.hasBody()).isTrue();
-        assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(responseEntity.getHeaders().get(HttpHeaders.WWW_AUTHENTICATE)).contains("Basic realm=\"Realm\"");
-        assertThat(responseEntity.getHeaders().getCacheControl()).isEqualTo("no-cache, no-store, max-age=0, must-revalidate");
+        Assertions.assertAll(
+                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED),
+                () -> assertThat(responseEntity.hasBody()).isTrue(),
+                () -> assertThat(headers.getContentType()).isEqualTo(MediaType.APPLICATION_JSON),
+                () -> assertThat(headers.get(HttpHeaders.WWW_AUTHENTICATE)).contains("Basic realm=\"Realm\""),
+                () -> assertThat(headers.getCacheControl()).isEqualTo("no-cache, no-store, max-age=0, must-revalidate")
+        );
     }
 
     @Test

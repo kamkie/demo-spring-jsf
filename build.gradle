@@ -86,7 +86,7 @@ dependencies {
     implementation("org.primefaces.extensions:primefaces-extensions:11.0.4")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
-    implementation("de.ruedigermoeller:fst:3.0.3")
+    implementation("de.ruedigermoeller:fst:3.0.3-jdk17")
     implementation("org.postgresql:postgresql")
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
     implementation group: "de.appelgriepsch.logback", name: "logback-gelf-appender", version: "1.5"
@@ -305,6 +305,6 @@ tasks.withType(Test) {
 }
 
 wrapper {
-    gradleVersion = "7.3"
+    gradleVersion = "7.4.2"
     distributionType = Wrapper.DistributionType.ALL
 }
