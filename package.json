@@ -46,7 +46,7 @@
     "webpack": "^4.46.0",
     "webpack-dev-middleware": "^5.3.3",
     "webpack-dev-server": "^4.9.3",
-    "webpack-hot-middleware": "^2.25.1"
+    "webpack-hot-middleware": "^2.25.2"
   },
   "devDependencies": {
     "webpack-cli": "^4.10.0"
