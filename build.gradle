@@ -100,6 +100,7 @@ dependencies {
     testImplementation("org.seleniumhq.selenium:selenium-java:4.5.0")
     testImplementation("org.testcontainers:postgresql:1.17.4") {
         exclude group: "log4j", module: "log4j"
+        exclude group: "org.slf4j", module: "slf4j-api"
     }
 }
 
