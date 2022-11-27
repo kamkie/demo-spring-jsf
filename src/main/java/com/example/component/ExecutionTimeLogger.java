@@ -19,7 +19,10 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Locale;
 
 import static com.example.utils.LongStringUtils.formatLongString;
-import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
+import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
+import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 
 @Slf4j
 @Aspect

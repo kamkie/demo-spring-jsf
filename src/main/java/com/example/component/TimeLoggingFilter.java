@@ -1,5 +1,10 @@
 package com.example.component;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
@@ -8,11 +13,6 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -21,7 +21,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.example.component.ExecutionTimeLogger.formatDuration;
-import static javax.servlet.DispatcherType.*;
+import static jakarta.servlet.DispatcherType.ASYNC;
+import static jakarta.servlet.DispatcherType.ERROR;
+import static jakarta.servlet.DispatcherType.FORWARD;
+import static jakarta.servlet.DispatcherType.INCLUDE;
+import static jakarta.servlet.DispatcherType.REQUEST;
 
 @Slf4j
 @ConditionalOnProperty(name = "logging.custom.time.enable")

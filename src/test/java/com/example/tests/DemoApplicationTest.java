@@ -51,6 +51,8 @@ import static io.github.bonigarcia.seljup.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.springframework.boot.test.context.SpringBootTest.UseMainMethod.ALWAYS;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -72,7 +74,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @ExtendWith(SeleniumJupiter.class)
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, useMainMethod = ALWAYS)
 @ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
 class DemoApplicationTest {
 
@@ -84,6 +86,8 @@ class DemoApplicationTest {
         System.setProperty("sel.jup.remote.webdriver.wait.timeout.sec", "40");// NOPMD
     }
 
+    private static final TypeReference<Map<String, Object>> mapStringObjectTypeRef = new TypeReference<>() {
+    };
     private final ObjectMapper objectMapper;
     private final String seleniumBaseUrl;
     private MockMvc mockMvc;
@@ -172,8 +176,7 @@ class DemoApplicationTest {
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<>() {
-        });
+        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), mapStringObjectTypeRef);
         assertThat(payload)
                 .containsKey("status")
                 .containsKey("timestamp")
@@ -188,8 +191,7 @@ class DemoApplicationTest {
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), new TypeReference<Map<String, Object>>() {
-        });
+        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), mapStringObjectTypeRef);
         assertThat(payload)
                 .containsKey("git")
                 .containsKey("build");
@@ -236,8 +238,7 @@ class DemoApplicationTest {
         new LoginPage(webDriver).login("admin", "password");
 
         String content = webDriver.findElement(By.tagName("pre")).getText();
-        Map<String, Object> payload = objectMapper.readValue(content, new TypeReference<>() {
-        });
+        Map<String, Object> payload = objectMapper.readValue(content, mapStringObjectTypeRef);
         assertThat(payload)
                 .containsKey("principal")
                 .containsKey("userList")
