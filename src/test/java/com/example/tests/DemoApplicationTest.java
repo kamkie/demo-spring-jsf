@@ -78,14 +78,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
 class DemoApplicationTest {
 
-    static {
-        System.setProperty("sel.jup.output.folder", "./build/screenshot/");// NOPMD
-        System.setProperty("sel.jup.screenshot.at.the.end.of.tests", "true");// NOPMD
-        System.setProperty("sel.jup.recording", "true");// NOPMD
-        System.setProperty("sel.jup.screenshot.format", "png");// NOPMD
-        System.setProperty("sel.jup.remote.webdriver.wait.timeout.sec", "40");// NOPMD
-    }
-
     private static final TypeReference<Map<String, Object>> mapStringObjectTypeRef = new TypeReference<>() {
     };
     private final ObjectMapper objectMapper;
@@ -101,7 +93,9 @@ class DemoApplicationTest {
             RestTemplateBuilder restTemplateBuilder,
             ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null ? "host.docker.internal" : System.getenv("HOST_FOR_SELENIUM");
+        String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null
+                ? "host.docker.internal"
+                : System.getenv("HOST_FOR_SELENIUM");
         this.seleniumBaseUrl = "http://" + hostForSelenium + ":" + port;
         initRestTemplate(restTemplateBuilder.rootUri("http://localhost:" + port));
     }

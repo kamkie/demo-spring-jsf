@@ -7,6 +7,7 @@ import com.example.repository.UsersRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,10 @@ public class HomeController {
     }
 
     @GetMapping({"/hello"})
-    public ModelAndView hello() {
-        return new ModelAndView("hello").addObject("buildProperties", buildProperties);
+    public ModelAndView hello(HttpServletRequest request) {
+        return new ModelAndView("hello")
+                .addObject("buildProperties", buildProperties)
+                .addObject("request", request);
     }
 
     @GetMapping("/login")

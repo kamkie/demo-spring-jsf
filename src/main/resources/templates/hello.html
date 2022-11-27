@@ -4,7 +4,7 @@
     <title>Hello World!</title>
 </head>
 <body>
-<!--<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>-->
+<h1 th:inline="text">Hello <span th:text="${request.remoteUser}">name</span>!</h1>
 <p id="text" th:inline="text">[[#{hello.text}]]</p>
 <!--/*@thymesVar id="buildProperties" type="org.springframework.boot.info.BuildProperties"*/-->
 <p th:text="${buildProperties.version}">version</p>
