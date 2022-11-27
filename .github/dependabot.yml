@@ -6,11 +6,6 @@ updates:
     interval: daily
     time: "04:00"
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: de.ruedigermoeller:fst
-    versions:
-    - ">= 3.a"
-    - "< 4"
 - package-ecosystem: npm
   directory: "/"
   schedule:
