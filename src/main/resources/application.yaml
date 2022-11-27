@@ -44,8 +44,7 @@ spring:
           max-age: 365d
           no-store: false
           no-cache: false
-  thymeleaf:
-    enable-spring-el-compiler: true
+
 
 joinfaces:
   primefaces:

@@ -49,7 +49,8 @@ public class HomeController {
     public ModelAndView hello(HttpServletRequest request) {
         return new ModelAndView("hello")
                 .addObject("buildProperties", buildProperties)
-                .addObject("request", request);
+                .addObject("request", request)
+                .addObject("kamkie", usersRepository.findByLogin("kamkie").orElse(null));
     }
 
     @GetMapping("/login")

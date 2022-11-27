@@ -9,7 +9,7 @@
 <!--/*@thymesVar id="buildProperties" type="org.springframework.boot.info.BuildProperties"*/-->
 <p th:text="${buildProperties.version}">version</p>
 <p th:text="${#locale}">locale</p>
-<div th:text="${@usersRepository.findByLogin('kamkie')}">user</div>
+<div th:text="${kamkie}">user</div>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>
 </form>
