@@ -173,6 +173,7 @@ generateGitProperties.mustRunAfter processResources
 bootBuildInfo.mustRunAfter processResources
 springConfiguration.mustRunAfter compileJava
 test.finalizedBy(jacocoTestReport)
+compileJava.dependsOn spotlessCheck
 
 
 liquibase {
@@ -197,11 +198,13 @@ jacocoTestReport {
 spotbugs {
     toolVersion = "4.4.1"
     excludeFilter = layout.projectDirectory.file('spotbugs-exclude.xml')
+    ignoreFailures = true
 }
 pmd {
     toolVersion = "6.21.0"
     ruleSetFiles(new File("pmd.ruleset.xml"))
     ruleSets = []
+    ignoreFailures = true
 }
 
 sonarqube {
