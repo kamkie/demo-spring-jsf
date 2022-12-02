@@ -99,7 +99,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:selenium-jupiter:4.3.2") {
         exclude group: "org.slf4j", module: "slf4j-api"
     }
-    testImplementation("org.seleniumhq.selenium:selenium-java:4.6.0")
+    testImplementation("org.seleniumhq.selenium:selenium-java:4.7.0")
     testImplementation("org.testcontainers:postgresql:1.17.6") {
         exclude group: "log4j", module: "log4j"
         exclude group: "org.slf4j", module: "slf4j-api"
