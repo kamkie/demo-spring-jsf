@@ -22,7 +22,7 @@ apply plugin: "jacoco"
 
 def javaVersion = JavaVersion.VERSION_17
 def springBootVersion = "3.0.0"
-def joinfacesVersion = "5.0.0-m5"
+def joinfacesVersion = "5.0.0"
 ext["snippetsDir"] = "build/generated-snippets"
 
 version = gitVersion()
@@ -34,7 +34,6 @@ targetCompatibility = javaVersion
 repositories {
     mavenCentral()
     maven { url "https://repository.primefaces.org" }
-    maven { url "https://repo.spring.io/milestone" }
 }
 
 configurations {
