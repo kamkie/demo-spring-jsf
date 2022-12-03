@@ -1,26 +1,33 @@
 package com.example.view;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import org.springframework.stereotype.Component;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 
 @Component
 public class MessagesView {
 
     public void info() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks."));
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "PrimeFaces Rocks.");
+        FacesContext.getCurrentInstance()
+                .addMessage(null, message);
     }
 
     public void warn() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning!", "Watch out for PrimeFaces."));
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning!", "Watch out for PrimeFaces.");
+        FacesContext.getCurrentInstance()
+                .addMessage(null, message);
     }
 
     public void error() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin.");
+        FacesContext.getCurrentInstance()
+                .addMessage(null, message);
     }
 
     public void fatal() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Fatal!", "System Error"));
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Fatal!", "System Error");
+        FacesContext.getCurrentInstance()
+                .addMessage(null, message);
     }
 }

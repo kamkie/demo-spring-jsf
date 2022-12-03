@@ -8,7 +8,7 @@ spring:
     hibernate:
       ddl-auto: validate
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: false
     properties:
       hibernate:
@@ -33,9 +33,6 @@ spring:
     caffeine:
       spec: maximumSize=1000,expireAfterAccess=1d
 
-  session:
-    store-type: jdbc
-
   devtools:
     restart:
       exclude: static/**,public/**,META-INF/resources/**,templates/**
@@ -47,6 +44,7 @@ spring:
           max-age: 365d
           no-store: false
           no-cache: false
+
 
 joinfaces:
   primefaces:
@@ -85,18 +83,16 @@ management:
       exposure:
         include: '*'
   metrics:
-    export:
-      prometheus:
-        enabled: true
     web:
       server:
-        request:
-          autotime:
-            enabled: true
+        max-uri-tags: 100
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 info:
   name: ${spring.application.name}
-
 
 logging:
   pattern:

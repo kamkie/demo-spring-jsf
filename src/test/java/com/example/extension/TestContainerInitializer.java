@@ -18,10 +18,12 @@ public class TestContainerInitializer implements ApplicationContextInitializer<C
         @SuppressWarnings("PMD.CloseResource")
         PostgreSQLContainer postgreSQLContainer = DockerExtension.getPostgres();
         LOGGER.info("------- initializing postgres config for test containers with port {} -------", postgreSQLContainer.getPortBindings());
-        TestPropertyValues.of(
-                "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                "spring.datasource.password=" + postgreSQLContainer.getPassword())
+        TestPropertyValues
+                .of(
+                        "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
+                        "spring.datasource.username=" + postgreSQLContainer.getUsername(),
+                        "spring.datasource.password=" + postgreSQLContainer.getPassword()
+                )
                 .applyTo(configurableApplicationContext.getEnvironment(), SYSTEM_ENVIRONMENT, "testPropertySource");
     }
 }
