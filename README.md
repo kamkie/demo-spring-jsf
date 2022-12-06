@@ -10,6 +10,8 @@ Spring Boot Aplication with Docker
 ```
   ./gradlew clean build
 ```
+### selenium tests
+to run selenium test where `host.docker.internal` is not set env variable `HOST_FOR_SELENIUM` can be used
 
 ### Docker
 Install Docker.
