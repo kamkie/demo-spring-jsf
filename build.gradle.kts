@@ -1,4 +1,5 @@
 import com.github.gradle.node.task.NodeTask
+import org.asciidoctor.gradle.base.process.ProcessMode
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.util.regex.Pattern
 
@@ -13,7 +14,7 @@ plugins {
     id("com.diffplug.spotless") version "6.12.0"
     id("com.github.ben-manes.versions") version "0.44.0"
     id("com.github.spotbugs") version "5.0.13"
-    id("org.springframework.boot") version "3.0.1"
+    id("org.springframework.boot")
     id("org.liquibase.gradle") version "2.1.1"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("com.github.node-gradle.node") version "3.5.1"
@@ -27,7 +28,7 @@ group = "demo"
 
 val javaVersion = JavaVersion.VERSION_17
 val nodeVersion = "16.19.0"
-val springBootVersion = "3.0.1"
+val springBootVersion = properties["springBootVersion"]
 val joinFacesVersion = "5.0.0"
 val spotbugsToolVersion = "4.7.3"
 val jacocoToolVersion = "0.8.8"
@@ -217,13 +218,16 @@ tasks.bootRun {
 
 tasks.bootJar {
     archiveClassifier.set("boot")
-    dependsOn(tasks.asciidoctor)
     layered {
         enabled.set(true)
     }
 }
 
 tasks.jacocoTestReport {
+    inputs.dir("build/jacoco")
+    sourceDirectories.setFrom(files("${project.projectDir}/src/main"))
+    classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
+    executionData.setFrom(fileTree("build/jacoco").include("*.exec"))
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -236,6 +240,13 @@ tasks.asciidoctor {
     sourceDir("src/docs/asciidoc")
     inputs.dir(snippetsDir)
     outputs.dir("build/resources/main/static/docs")
+    inProcess = ProcessMode.JAVA_EXEC
+    forkOptions {
+        jvmArgs(
+                "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
+                "--add-opens", "java.base/java.io=ALL-UNNAMED"
+        )
+    }
     attributes(mapOf(
             "stylesheet" to "amies.css",
             "stylesdir" to "styles",
@@ -322,7 +333,8 @@ tasks {
     spotbugsMain.get().dependsOn(compileTestJava)
     classes.get().dependsOn(springConfiguration)
     bootJar.get().dependsOn(resolveMainClassName)
-    jar.get().dependsOn(spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest)
+    jar.get().dependsOn(asciidoctor, spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest)
+    bootJar.get().dependsOn(asciidoctor)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
 }
