@@ -40,7 +40,7 @@
     <rule ref="category/java/design.xml">
         <exclude name="LawOfDemeter"/>
         <exclude name="SignatureDeclareThrowsException"/>
-        <!--<exclude name="SignatureDeclareThrowsException"/>-->
+        <exclude name="LoosePackageCoupling"/>
     </rule>
     <rule ref="category/java/design.xml/UseUtilityClass">
         <properties>

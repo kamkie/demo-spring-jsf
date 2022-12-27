@@ -231,17 +231,20 @@ tasks.jacocoTestReport {
 }
 
 tasks.asciidoctor {
-    configurations("asciidoctor")
-    inputs.dir(snippetsDir)
     dependsOn(tasks.test)
+    configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
+    inputs.dir(snippetsDir)
+    outputs.dir("build/resources/main/static/docs")
     attributes(mapOf(
             "stylesheet" to "amies.css",
             "stylesdir" to "styles",
             "springbootversion" to springBootVersion,
             "projectdir" to "$projectDir"
     ))
-    outputs.dir("build/resources/main")
+    doFirst {
+        delete("build/resources/main/static/docs")
+    }
     doLast {
         copy {
             from("build/docs/asciidoc/")
@@ -318,6 +321,7 @@ tasks {
     springConfiguration.get().dependsOn(compileJava)
     spotbugsMain.get().dependsOn(compileTestJava)
     classes.get().dependsOn(springConfiguration)
+    bootJar.get().dependsOn(resolveMainClassName)
     jar.get().dependsOn(spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
