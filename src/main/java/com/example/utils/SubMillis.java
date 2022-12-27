@@ -30,12 +30,12 @@ public enum SubMillis implements TemporalField {
 
     private final TemporalUnit baseUnit;
     private final TemporalUnit rangeUnit;
-    private final ValueRange range;
+    private final ValueRange range_;
 
     SubMillis(TemporalUnit baseUnit, TemporalUnit rangeUnit, ValueRange range) {
         this.baseUnit = baseUnit;
         this.rangeUnit = rangeUnit;
-        this.range = range;
+        this.range_ = range;
     }
 
     @Override
@@ -50,7 +50,7 @@ public enum SubMillis implements TemporalField {
 
     @Override
     public ValueRange range() {
-        return range;
+        return range_;
     }
 
     @Override
@@ -70,7 +70,7 @@ public enum SubMillis implements TemporalField {
 
     @Override
     public ValueRange rangeRefinedBy(TemporalAccessor temporal) {
-        return range;
+        return range_;
     }
 
     @Override

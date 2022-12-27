@@ -6,18 +6,18 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public class DockerExtension implements AfterAllCallback {
 
-    private static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:14");
+    private static final PostgreSQLContainer POSTGRES_SQL_CONTAINER = new PostgreSQLContainer("postgres:14");
 
     public DockerExtension() {
-        postgres.start();
+        POSTGRES_SQL_CONTAINER.start();
     }
 
     public static PostgreSQLContainer getPostgres() {
-        return postgres;
+        return POSTGRES_SQL_CONTAINER;
     }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        postgres.stop();
+        POSTGRES_SQL_CONTAINER.stop();
     }
 }

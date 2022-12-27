@@ -78,7 +78,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = DemoApplication.class, initializers = TestContainerInitializer.class)
 class DemoApplicationTest {
 
-    private static final TypeReference<Map<String, Object>> mapStringObjectTypeRef = new TypeReference<>() {
+    private static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<>() {
     };
     private final ObjectMapper objectMapper;
     private final String seleniumBaseUrl;
@@ -170,7 +170,7 @@ class DemoApplicationTest {
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), mapStringObjectTypeRef);
+        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), MAP_TYPE_REFERENCE);
         assertThat(payload)
                 .containsKey("status")
                 .containsKey("timestamp")
@@ -185,7 +185,7 @@ class DemoApplicationTest {
         assertThat(responseEntity.hasBody()).isTrue();
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), mapStringObjectTypeRef);
+        Map<String, Object> payload = objectMapper.readValue(responseEntity.getBody(), MAP_TYPE_REFERENCE);
         assertThat(payload)
                 .containsKey("git")
                 .containsKey("build");
@@ -232,7 +232,7 @@ class DemoApplicationTest {
         new LoginPage(webDriver).login("admin", "password");
 
         String content = webDriver.findElement(By.tagName("pre")).getText();
-        Map<String, Object> payload = objectMapper.readValue(content, mapStringObjectTypeRef);
+        Map<String, Object> payload = objectMapper.readValue(content, MAP_TYPE_REFERENCE);
         assertThat(payload)
                 .containsKey("principal")
                 .containsKey("userList")

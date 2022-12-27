@@ -12,6 +12,7 @@ import java.time.temporal.ValueRange;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SuppressWarnings("PMD.TooManyMethods")
 class SubMillisTest {
     @Test
     void testBaseUnit() {
@@ -81,10 +82,10 @@ class SubMillisTest {
     @Test
     void testToString() {
         assertThat(SubMillis.MICROS_OF_MILLI_SECOND)
-                .hasToString("SubMillis.MICROS_OF_MILLI_SECOND(baseUnit=Micros, rangeUnit=Millis, range=0 - 999)");
+                .hasToString("SubMillis.MICROS_OF_MILLI_SECOND(baseUnit=Micros, rangeUnit=Millis, range_=0 - 999)");
 
         assertThat(SubMillis.NANOS_OF_MICRO_SECOND)
-                .hasToString("SubMillis.NANOS_OF_MICRO_SECOND(baseUnit=Nanos, rangeUnit=Micros, range=0 - 999)");
+                .hasToString("SubMillis.NANOS_OF_MICRO_SECOND(baseUnit=Nanos, rangeUnit=Micros, range_=0 - 999)");
     }
 
 }

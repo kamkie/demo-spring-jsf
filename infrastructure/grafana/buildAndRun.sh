@@ -8,4 +8,3 @@ docker run -d --name=grafana -p 3000:3000 -v /c/env/grafana:/var/lib/grafana gra
 sleep 5
 docker logs grafana
 docker ps
-

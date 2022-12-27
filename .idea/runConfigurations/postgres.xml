@@ -2,7 +2,7 @@
   <configuration default="false" name="postgres" type="docker-deploy" factoryName="docker-image" singleton="true" server-name="Docker">
     <deployment type="docker-image">
       <settings>
-        <option name="imageTag" value="postgres:12" />
+        <option name="imageTag" value="postgres:14" />
         <option name="containerName" value="spring-demo" />
         <option name="envVars">
           <list>

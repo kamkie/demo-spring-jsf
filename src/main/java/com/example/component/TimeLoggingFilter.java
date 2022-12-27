@@ -45,6 +45,7 @@ public class TimeLoggingFilter extends OncePerRequestFilter {
         }
     }
 
+    @SuppressWarnings("PMD.GuardLogStatement")
     private void logTime(HttpServletRequest request, long start) {
         long nanos = System.nanoTime() - start;
         String duration = formatDuration(nanos);
