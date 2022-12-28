@@ -213,21 +213,23 @@ tasks.compileTestJava {
 
 tasks.bootRun {
     systemProperty("spring.output.ansi.enabled", "always")
-    classpath(sourceSets.main.get().resources.srcDirs)
+//    classpath(sourceSets.main.get().resources.srcDirs)
+    jvmArgs = listOf(
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.math=ALL-UNNAMED",
+            "--add-opens=java.base/java.util=ALL-UNNAMED",
+            "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+            "--add-opens=java.base/java.net=ALL-UNNAMED",
+            "--add-opens=java.base/java.text=ALL-UNNAMED",
+            "--add-opens=java.sql/java.sql=ALL-UNNAMED"
+    )
     doFirst {
-        println(classpath)
+        println(classpath.files.toList())
     }
-}
-
-tasks.jar {
-    from("build/asciidoc", "build/generated/resources")
 }
 
 tasks.bootJar {
     archiveClassifier.set("boot")
-    bootInf {
-        from("build/asciidoc", "build/generated/resources").into("classes")
-    }
     layered {
         enabled.set(true)
     }
@@ -261,6 +263,12 @@ tasks.asciidoctor {
             "springbootversion" to springBootVersion,
             "projectdir" to "$projectDir"
     ))
+    doLast {
+        copy {
+            from("build/asciidoc")
+                    .into("build/resources/main")
+        }
+    }
 }
 
 tasks.withType<Test>() {
@@ -285,10 +293,12 @@ tasks.withType<Test>() {
 }
 
 val springConfiguration = tasks.register<Copy>("springConfiguration") {
+    uptodate { !file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json").exists() }
     inputs.files("$buildDir/classes/java/main/META-INF/")
     outputs.dir("$buildDir/generated/resources")
     from(file("$buildDir/classes/java/main/META-INF/"))
-    into(file("$buildDir/generated/resources/META-INF/"))
+            .into(file("$buildDir/generated/resources/META-INF/"))
+            .into(file("$buildDir/resources/main/META-INF/"))
     doLast {
         delete("$buildDir/classes/java/main/META-INF")
     }
@@ -327,10 +337,10 @@ tasks {
     getByName("bootBuildInfo").mustRunAfter(processResources)
     compileJava.get().dependsOn(processResources)
     springConfiguration.get().dependsOn(compileJava)
+    springConfiguration.get().mustRunAfter(test, classes)
     spotbugsMain.get().dependsOn(compileJava, compileTestJava, asciidoctor)
-    classes.get().dependsOn(springConfiguration)
-    jar.get().dependsOn(generateGitProperties, asciidoctor, test, spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest, resolveMainClassName)
-    bootJar.get().dependsOn(jar)
+    jar.get().dependsOn(springConfiguration, generateGitProperties, asciidoctor, test, resolveMainClassName)
+    bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
 }
