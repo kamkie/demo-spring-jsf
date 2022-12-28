@@ -10,7 +10,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
       </ENTRIES>
     </extension>
-    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/demo-spring-jsf-0.6-631-g5baa9e1.dirty-boot.jar" />
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/demo-spring-jsf-0.6-633-g492b360-boot.jar" />
     <option name="VM_PARAMETERS" value="--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED" />
     <option name="WORKING_DIRECTORY" value="$ContentRoot$" />
     <option name="ALTERNATIVE_JRE_PATH" value="9" />
