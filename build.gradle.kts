@@ -305,14 +305,6 @@ val springConfiguration = tasks.register<Copy>("springConfiguration") {
     }
 }
 
-val h2Tcp = tasks.register<JavaExec>("h2Tcp") {
-    classpath(sourceSets.main.get().runtimeClasspath)
-    mainClass.set("org.h2.tools.Console")
-    args("-tcp")
-    classpath = sourceSets["main"].runtimeClasspath
-    setDependsOn(listOf<Task>())
-}
-
 val webpack = tasks.register<NodeTask>("webpack") {
     dependsOn(tasks.npmInstall)
     inputs.files("src/main/resources/static/javascript")
