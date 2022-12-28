@@ -213,20 +213,29 @@ tasks.compileTestJava {
 
 tasks.bootRun {
     systemProperty("spring.output.ansi.enabled", "always")
-    classpath(sourceSets.main.get().resources.srcDirs)
+//    classpath(sourceSets.main.get().resources.srcDirs)
+    jvmArgs = listOf(
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.math=ALL-UNNAMED",
+            "--add-opens=java.base/java.util=ALL-UNNAMED",
+            "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
+            "--add-opens=java.base/java.net=ALL-UNNAMED",
+            "--add-opens=java.base/java.text=ALL-UNNAMED",
+            "--add-opens=java.sql/java.sql=ALL-UNNAMED"
+    )
     doFirst {
-        println(classpath)
+        println(classpath.files.toList())
     }
 }
 
 tasks.jar {
-    from("build/asciidoc", "build/generated/resources")
+    from("build/asciidoc")
 }
 
 tasks.bootJar {
     archiveClassifier.set("boot")
     bootInf {
-        from("build/asciidoc", "build/generated/resources").into("classes")
+        from("build/asciidoc").into("classes")
     }
     layered {
         enabled.set(true)
@@ -288,7 +297,8 @@ val springConfiguration = tasks.register<Copy>("springConfiguration") {
     inputs.files("$buildDir/classes/java/main/META-INF/")
     outputs.dir("$buildDir/generated/resources")
     from(file("$buildDir/classes/java/main/META-INF/"))
-    into(file("$buildDir/generated/resources/META-INF/"))
+            .into(file("$buildDir/generated/resources/META-INF/"))
+            .into(file("$buildDir/resources/main/META-INF/"))
     doLast {
         delete("$buildDir/classes/java/main/META-INF")
     }
