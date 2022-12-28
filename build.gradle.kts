@@ -43,11 +43,11 @@ repositories {
 val asciidoctor = configurations.create("asciidoctor")
 
 dependencies {
-    asciidoctor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    testAnnotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    liquibaseRuntime(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    asciidoctor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    implementation(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    annotationProcessor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    testAnnotationProcessor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    liquibaseRuntime(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -105,7 +105,7 @@ dependencies {
 
 sourceSets {
     main {
-        resources.srcDir("${buildDir}/generated/")
+        resources.srcDirs("${buildDir}/generated/resources", "${buildDir}/asciidoc")
     }
 }
 
@@ -213,21 +213,31 @@ tasks.compileTestJava {
 
 tasks.bootRun {
     systemProperty("spring.output.ansi.enabled", "always")
-    classpath = project.files(sourceSets.main.get().resources.srcDirs, classpath)
+    classpath(sourceSets.main.get().resources.srcDirs)
+    doFirst {
+        println(classpath)
+    }
+}
+
+tasks.jar {
+    from("build/asciidoc", "build/generated/resources")
 }
 
 tasks.bootJar {
     archiveClassifier.set("boot")
+    bootInf {
+        from("build/asciidoc", "build/generated/resources").into("classes")
+    }
     layered {
         enabled.set(true)
     }
 }
 
 tasks.jacocoTestReport {
-    inputs.dir("build/jacoco")
-    sourceDirectories.setFrom(files("${project.projectDir}/src/main"))
+    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
     executionData.setFrom(fileTree("build/jacoco").include("*.exec"))
+    dependsOn(tasks.test)
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -239,7 +249,7 @@ tasks.asciidoctor {
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
     inputs.dir(snippetsDir)
-    outputs.dir("build/resources/main/static/docs")
+    setOutputDir(file("build/asciidoc/static/docs"))
     inProcess = ProcessMode.JAVA_EXEC
     forkOptions {
         jvmArgs(
@@ -248,21 +258,9 @@ tasks.asciidoctor {
         )
     }
     attributes(mapOf(
-            "stylesheet" to "amies.css",
-            "stylesdir" to "styles",
             "springbootversion" to springBootVersion,
             "projectdir" to "$projectDir"
     ))
-    doFirst {
-        delete("build/resources/main/static/docs")
-    }
-    doLast {
-        copy {
-            from("build/docs/asciidoc/")
-            into("build/resources/main/static/docs")
-            include("index.html")
-        }
-    }
 }
 
 tasks.withType<Test>() {
@@ -278,7 +276,6 @@ tasks.withType<Test>() {
             "--add-opens=java.sql/java.sql=ALL-UNNAMED"
     )
     testLogging {
-        // set options for log level LIFECYCLE
         events("passed", "skipped", "failed", /*"standardOut",*/ "standardError")
         showExceptions = true
         exceptionFormat = TestExceptionFormat.FULL
@@ -288,10 +285,10 @@ tasks.withType<Test>() {
 }
 
 val springConfiguration = tasks.register<Copy>("springConfiguration") {
-    inputs.files("$buildDir/classes/java/main")
-    outputs.dir("$buildDir/generated")
+    inputs.files("$buildDir/classes/java/main/META-INF/")
+    outputs.dir("$buildDir/generated/resources")
     from(file("$buildDir/classes/java/main/META-INF/"))
-    into(file("$buildDir/generated/META-INF/"))
+    into(file("$buildDir/generated/resources/META-INF/"))
     doLast {
         delete("$buildDir/classes/java/main/META-INF")
     }
@@ -330,11 +327,10 @@ tasks {
     getByName("bootBuildInfo").mustRunAfter(processResources)
     compileJava.get().dependsOn(processResources)
     springConfiguration.get().dependsOn(compileJava)
-    spotbugsMain.get().dependsOn(compileTestJava)
+    spotbugsMain.get().dependsOn(compileJava, compileTestJava, asciidoctor)
     classes.get().dependsOn(springConfiguration)
-    bootJar.get().dependsOn(resolveMainClassName)
-    jar.get().dependsOn(asciidoctor, spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest)
-    bootJar.get().dependsOn(asciidoctor)
+    jar.get().dependsOn(generateGitProperties, asciidoctor, test, spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest, resolveMainClassName)
+    bootJar.get().dependsOn(jar)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
 }
