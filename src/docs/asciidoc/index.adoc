@@ -7,7 +7,7 @@ Kamil Kiewisz;
 Sample application demonstrating how to use Spring REST Docs with Spring Framework's
 WebTestClient.
 
-`DemoApplicationTest` makes a call to a very simple service. Six
+`RestIntegrationTest` makes a call to a very simple service. Six
 snippets are produced. One showing how to make a request using cURL:
 
 include::{snippets}/index/curl-request.adoc[]
