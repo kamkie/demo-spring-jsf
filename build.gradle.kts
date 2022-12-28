@@ -240,7 +240,7 @@ tasks.jacocoTestReport {
     sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
     executionData.setFrom(fileTree("build/jacoco").include("*.exec"))
-    dependsOn(tasks.test)
+    dependsOn(tasks.test, springConfiguration)
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -272,7 +272,7 @@ tasks.asciidoctor {
     }
 }
 
-tasks.withType<Test>() {
+tasks.withType<Test> {
     outputs.dir(snippetsDir)
     useJUnitPlatform()
     jvmArgs = listOf(
@@ -325,15 +325,17 @@ tasks.wrapper {
 
 tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
-    processResources.get().dependsOn(webpack)
-    generateGitProperties.get().mustRunAfter(processResources)
-    getByName("bootBuildInfo").mustRunAfter(processResources)
+    processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
-    springConfiguration.get().dependsOn(compileJava)
-    springConfiguration.get().mustRunAfter(test, classes)
-    spotbugsMain.get().dependsOn(compileJava, compileTestJava, asciidoctor)
-    jar.get().dependsOn(springConfiguration, generateGitProperties, asciidoctor, test, resolveMainClassName)
+    springConfiguration.get().dependsOn(classes, testClasses)
+    resolveMainClassName.get().dependsOn(springConfiguration)
+    spotbugsMain.get().dependsOn(springConfiguration, asciidoctor)
+    spotbugsTest.get().dependsOn(springConfiguration)
+    pmdMain.get().dependsOn(springConfiguration)
+    pmdTest.get().dependsOn(springConfiguration)
+    jar.get().dependsOn(springConfiguration, asciidoctor, test)
     bootJar.get().dependsOn(jar, resolveMainClassName)
+    test.get().dependsOn(springConfiguration)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
 }
