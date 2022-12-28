@@ -159,7 +159,7 @@ sonarqube {
         property("sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:9000")
         property("sonar.projectName", "spring jsf project")
         property("sonar.projectKey", "${project.group}:${project.name}")
-        property("sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec")
+        property("sonar.jacoco.reportPaths", "${buildDir}/jacoco/test.exec")
         property("sonar.exclusions", "")
     }
 }
@@ -187,7 +187,7 @@ spotless {
     }
     format("misc") {
         target(fileTree(".") {
-            include(".gitignore", "**/.gitignore", "build.gradle.kts", "settings.gradle.kts", "*.md", "src/**/*.md", "infrastructure/**/*.sh", "src/**/*.sh")
+            include(".gitignore", "**/.gitignore", "*.kts", "*.md", "src/**/*.md", "infrastructure/**/*.sh", "src/**/*.sh")
             exclude("node_modules/**", "out/**", "build/**")
         })
         indentWithSpaces()
@@ -232,7 +232,7 @@ tasks.bootJar {
 tasks.jacocoTestReport {
     sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
-    executionData.setFrom(fileTree("build/jacoco").include("*.exec"))
+    executionData.setFrom(fileTree("${buildDir}/jacoco").include("*.exec"))
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
@@ -244,8 +244,8 @@ tasks.asciidoctor {
     mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
-    inputs.dir("build/generated-snippets")
-    setOutputDir(file("build/asciidoc/static/docs"))
+    inputs.dir("${buildDir}/generated-snippets")
+    setOutputDir(file("${buildDir}/asciidoc/static/docs"))
     inProcess = ProcessMode.JAVA_EXEC
     forkOptions {
         jvmArgs(
@@ -259,14 +259,14 @@ tasks.asciidoctor {
     ))
     doLast {
         copy {
-            from("build/asciidoc")
-                    .into("build/resources/main")
+            from("${buildDir}/asciidoc")
+                    .into("${buildDir}/resources/main")
         }
     }
 }
 
 tasks.withType<Test> {
-    outputs.dir("build/generated-snippets")
+    outputs.dir("${buildDir}/generated-snippets")
     useJUnitPlatform()
     jvmArgs = listOf(
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
@@ -289,7 +289,7 @@ tasks.withType<Test> {
 val webpack = tasks.register<NodeTask>("webpack") {
     dependsOn(tasks.npmInstall)
     inputs.files("src/main/resources/static/javascript")
-    outputs.dir("build/resources/main/static/javascript")
+    outputs.dir("${buildDir}/resources/main/static/javascript")
     script.set(project.file("node_modules/webpack/bin/webpack.js"))
 }
 
@@ -309,7 +309,7 @@ tasks {
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
     spotbugsMain.get().dependsOn(asciidoctor)
-    jar.get().dependsOn( asciidoctor, test)
+    jar.get().dependsOn(asciidoctor, test)
     bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
