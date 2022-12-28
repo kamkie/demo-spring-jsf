@@ -28,9 +28,10 @@ public abstract class BaseRestIntegrationTest extends BaseIntegrationTest {
     public BaseRestIntegrationTest(int localServerPort, ObjectMapper objectMapper, RestTemplateBuilder restTemplateBuilder) {
         super(localServerPort, objectMapper);
         OkHttpClient client = new OkHttpClient.Builder().followRedirects(false).build();
-        this.restAnonymousTemplate = new TestRestTemplate(restTemplateBuilder.requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client)));
-        this.restUserAuthTemplate = new TestRestTemplate(restTemplateBuilder, "user", "password");
-        this.restAdminAuthTemplate = new TestRestTemplate(restTemplateBuilder, "admin", "password");
+        RestTemplateBuilder testRestTemplateBuilder1 = restTemplateBuilder.rootUri("http://localhost:" + localServerPort);
+        this.restAnonymousTemplate = new TestRestTemplate(testRestTemplateBuilder1.requestFactory(() -> new OkHttp3ClientHttpRequestFactory(client)));
+        this.restUserAuthTemplate = new TestRestTemplate(testRestTemplateBuilder1, "user", "password");
+        this.restAdminAuthTemplate = new TestRestTemplate(testRestTemplateBuilder1, "admin", "password");
     }
 
     @BeforeEach
