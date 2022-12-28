@@ -29,8 +29,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     @Autowired
     public SeleniumIntegrationTest(
             @LocalServerPort int localServerPort,
-            ObjectMapper objectMapper
-    ) {
+            ObjectMapper objectMapper) {
         super(localServerPort, objectMapper);
     }
 

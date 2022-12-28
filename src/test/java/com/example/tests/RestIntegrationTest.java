@@ -38,8 +38,7 @@ class RestIntegrationTest extends BaseRestIntegrationTest {
     public RestIntegrationTest(
             @LocalServerPort int localServerPort,
             ObjectMapper objectMapper,
-            RestTemplateBuilder restTemplateBuilder
-    ) {
+            RestTemplateBuilder restTemplateBuilder) {
         super(localServerPort, objectMapper, restTemplateBuilder);
     }
 
