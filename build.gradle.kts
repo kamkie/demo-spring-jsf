@@ -228,15 +228,8 @@ tasks.bootRun {
     }
 }
 
-tasks.jar {
-    from("build/asciidoc")
-}
-
 tasks.bootJar {
     archiveClassifier.set("boot")
-    bootInf {
-        from("build/asciidoc").into("classes")
-    }
     layered {
         enabled.set(true)
     }
@@ -270,6 +263,12 @@ tasks.asciidoctor {
             "springbootversion" to springBootVersion,
             "projectdir" to "$projectDir"
     ))
+    doLast {
+        copy {
+            from("build/asciidoc")
+                    .into("build/resources/main")
+        }
+    }
 }
 
 tasks.withType<Test>() {
@@ -294,6 +293,7 @@ tasks.withType<Test>() {
 }
 
 val springConfiguration = tasks.register<Copy>("springConfiguration") {
+    uptodate { !file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json").exists() }
     inputs.files("$buildDir/classes/java/main/META-INF/")
     outputs.dir("$buildDir/generated/resources")
     from(file("$buildDir/classes/java/main/META-INF/"))
@@ -337,10 +337,10 @@ tasks {
     getByName("bootBuildInfo").mustRunAfter(processResources)
     compileJava.get().dependsOn(processResources)
     springConfiguration.get().dependsOn(compileJava)
+    springConfiguration.get().mustRunAfter(test, classes)
     spotbugsMain.get().dependsOn(compileJava, compileTestJava, asciidoctor)
-    classes.get().dependsOn(springConfiguration)
-    jar.get().dependsOn(generateGitProperties, asciidoctor, test, spotlessCheck, spotbugsMain, spotbugsTest, pmdMain, pmdTest, resolveMainClassName)
-    bootJar.get().dependsOn(jar)
+    jar.get().dependsOn(springConfiguration, generateGitProperties, asciidoctor, test, resolveMainClassName)
+    bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
 }
