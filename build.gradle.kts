@@ -58,6 +58,7 @@ dependencies {
 
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core")
+    liquibaseRuntime("info.picocli:picocli:4.7.0")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
     implementation("com.github.spotbugs:spotbugs-annotations:4.7.3")
@@ -132,9 +133,10 @@ springBoot {
 
 liquibase {
     activities {
-        activities.register("main") {
+        register("main") {
             arguments = mapOf(
-                    "changeLogFile" to "src/main/resources/db/changelog/db.changelog-master.xml",
+                    "searchPath" to "$projectDir/src/main/resources",
+                    "changeLogFile" to "db/changelog/db.changelog-master.xml",
                     "url" to "jdbc:postgresql://localhost:5432/spring-demo",
                     "username" to "dev",
                     "password" to "dev",
@@ -213,7 +215,6 @@ tasks.compileTestJava {
 
 tasks.bootRun {
     systemProperty("spring.output.ansi.enabled", "always")
-//    classpath(sourceSets.main.get().resources.srcDirs)
     jvmArgs = listOf(
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--add-opens=java.base/java.math=ALL-UNNAMED",
@@ -247,7 +248,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.asciidoctor {
-    dependsOn(tasks.test)
+    mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
     inputs.dir(snippetsDir)
