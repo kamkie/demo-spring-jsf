@@ -8,6 +8,7 @@
     <rule ref="category/java/bestpractices.xml">
         <exclude name="JUnitTestsShouldIncludeAssert"/>
         <exclude name="JUnitTestContainsTooManyAsserts"/>
+        <exclude name="AbstractClassWithoutAbstractMethod"/>
     </rule>
     <rule ref="category/java/codestyle.xml">
         <exclude name="CallSuperInConstructor"/>

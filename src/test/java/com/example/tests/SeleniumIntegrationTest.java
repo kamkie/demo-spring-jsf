@@ -21,7 +21,10 @@ import static io.github.bonigarcia.seljup.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-public class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
+@SuppressWarnings({
+        "PMD.AvoidDuplicateLiterals"
+})
+class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
 
     @Autowired
     public SeleniumIntegrationTest(

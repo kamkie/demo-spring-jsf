@@ -305,7 +305,6 @@ tasks.wrapper {
 }
 
 tasks {
-    getByName("spotlessMisc").dependsOn(npmSetup)
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
     spotbugsMain.get().dependsOn(asciidoctor)

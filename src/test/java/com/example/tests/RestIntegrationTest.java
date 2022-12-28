@@ -29,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
+@SuppressWarnings({
+        "PMD.TooManyStaticImports"
+})
 class RestIntegrationTest extends BaseRestIntegrationTest {
 
     @Autowired
