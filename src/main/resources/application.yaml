@@ -33,7 +33,7 @@ spring:
 
   devtools:
     restart:
-      exclude: static/**,public/**,META-INF/resources/**,templates/**
+      exclude: static/**,public/**,META-INF/**,templates/**,git.properties
   web:
     resources:
       cache:

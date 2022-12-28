@@ -13,13 +13,15 @@
     <ui:define name="content">
         <p:tooltip/>
 
-        <p>Hello #{request.userPrincipal.name}</p>
-        <p>session #{session.id}</p>
-        <p>user #{usersRepository.findAll()}</p>
-        <p>msg #{msg['hello.text']}</p>
-        <p>msg #{msg['hello.foo']}</p>
-        <p>locale #{localeModel.getLocale()}</p>
-        <p>property #{environment.getProperty('spring.application.name')}</p>
+        <h:panelGrid columns="1" cellpadding="5">
+            <p>Hello #{request.userPrincipal.name}</p>
+            <p>session #{session.id}</p>
+            <p>user #{usersRepository.findAll()}</p>
+            <p>msg #{msg['hello.text']}</p>
+            <p>msg #{msg['hello.foo']}</p>
+            <p>locale #{localeModel.getLocale()}</p>
+            <p>property #{environment.getProperty('spring.application.name')}</p>
+        </h:panelGrid>
 
         <h:form id="messages-form">
             <p:messages id="messages" showDetail="true" closable="true">
