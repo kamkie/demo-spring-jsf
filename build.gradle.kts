@@ -141,7 +141,7 @@ liquibase {
 
 spotbugs {
     toolVersion.set(spotbugsToolVersion)
-    excludeFilter.set(layout.projectDirectory.file("spotbugs-exclude.xml"))
+    excludeFilter.set(file("spotbugs-exclude.xml"))
 }
 
 pmd {
@@ -249,8 +249,8 @@ tasks.asciidoctor {
     inProcess = ProcessMode.JAVA_EXEC
     forkOptions {
         jvmArgs(
-                "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
-                "--add-opens", "java.base/java.io=ALL-UNNAMED"
+                "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+                "--add-opens=java.base/java.io=ALL-UNNAMED"
         )
     }
     attributes(mapOf(
@@ -260,7 +260,7 @@ tasks.asciidoctor {
     doLast {
         copy {
             from("${buildDir}/asciidoc")
-                    .into("${buildDir}/resources/main")
+            into("${buildDir}/resources/main")
         }
     }
 }

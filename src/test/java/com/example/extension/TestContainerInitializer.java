@@ -1,7 +1,6 @@
 package com.example.extension;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -10,16 +9,16 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.springframework.boot.test.util.TestPropertyValues.Type.SYSTEM_ENVIRONMENT;
 
+@Slf4j
 @SuppressWarnings("PMD.TestClassWithoutTestCases")
 public class TestContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestContainerInitializer.class);
 
     @Override
     @SuppressWarnings("PMD.GuardLogStatement")
     public void initialize(@NonNull ConfigurableApplicationContext configurableApplicationContext) {
         @SuppressWarnings("PMD.CloseResource")
         PostgreSQLContainer postgreSQLContainer = DockerExtension.getPostgres();
-        LOGGER.info("------- initializing postgres config for test containers with port {} -------", postgreSQLContainer.getPortBindings());
+        log.info("------- initializing postgres config for test containers with port {} -------", postgreSQLContainer.getPortBindings());
         TestPropertyValues
                 .of(
                         "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
