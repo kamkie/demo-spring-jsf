@@ -8,6 +8,8 @@
 <p id="text" th:inline="text">[[#{hello.text}]]</p>
 <!--/*@thymesVar id="buildProperties" type="org.springframework.boot.info.BuildProperties"*/-->
 <p th:text="${buildProperties.version}">version</p>
+<p th:text="${buildProperties.getTime()}">time</p>
+<p th:text="${buildProperties.getArtifact()}">artefact</p>
 <p th:text="${#locale}">locale</p>
 <div th:text="${kamkie}">user</div>
 <form th:action="@{/logout}" method="post">
