@@ -33,7 +33,6 @@ val joinFacesVersion = "5.0.0"
 val spotbugsToolVersion = "4.7.3"
 val jacocoToolVersion = "0.8.8"
 val pmdToolVersion = "6.52.0"
-val snippetsDir = "build/generated-snippets"
 
 repositories {
     mavenCentral()
@@ -52,7 +51,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-//    annotationProcessor("org.springframework:spring-context-indexer")
+    //annotationProcessor("org.springframework:spring-context-indexer")
 
     asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
 
@@ -101,12 +100,6 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:1.17.6") {
         exclude(group = "log4j", module = "log4j")
         exclude(group = "org.slf4j", module = "slf4j-api")
-    }
-}
-
-sourceSets {
-    main {
-        resources.srcDirs("${buildDir}/generated/resources", "${buildDir}/asciidoc")
     }
 }
 
@@ -240,7 +233,7 @@ tasks.jacocoTestReport {
     sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
     executionData.setFrom(fileTree("build/jacoco").include("*.exec"))
-    dependsOn(tasks.test, springConfiguration)
+    dependsOn(tasks.test)
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -251,7 +244,7 @@ tasks.asciidoctor {
     mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
-    inputs.dir(snippetsDir)
+    inputs.dir("build/generated-snippets")
     setOutputDir(file("build/asciidoc/static/docs"))
     inProcess = ProcessMode.JAVA_EXEC
     forkOptions {
@@ -273,7 +266,7 @@ tasks.asciidoctor {
 }
 
 tasks.withType<Test> {
-    outputs.dir(snippetsDir)
+    outputs.dir("build/generated-snippets")
     useJUnitPlatform()
     jvmArgs = listOf(
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
@@ -290,18 +283,6 @@ tasks.withType<Test> {
         exceptionFormat = TestExceptionFormat.FULL
         showCauses = true
         showStackTraces = true
-    }
-}
-
-val springConfiguration = tasks.register<Copy>("springConfiguration") {
-    uptodate { !file("$buildDir/classes/java/main/META-INF/spring-configuration-metadata.json").exists() }
-    inputs.files("$buildDir/classes/java/main/META-INF/")
-    outputs.dir("$buildDir/generated/resources")
-    from(file("$buildDir/classes/java/main/META-INF/"))
-            .into(file("$buildDir/generated/resources/META-INF/"))
-            .into(file("$buildDir/resources/main/META-INF/"))
-    doLast {
-        delete("$buildDir/classes/java/main/META-INF")
     }
 }
 
@@ -327,15 +308,9 @@ tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
-    springConfiguration.get().dependsOn(classes, testClasses)
-    resolveMainClassName.get().dependsOn(springConfiguration)
-    spotbugsMain.get().dependsOn(springConfiguration, asciidoctor)
-    spotbugsTest.get().dependsOn(springConfiguration)
-    pmdMain.get().dependsOn(springConfiguration)
-    pmdTest.get().dependsOn(springConfiguration)
-    jar.get().dependsOn(springConfiguration, asciidoctor, test)
+    spotbugsMain.get().dependsOn(asciidoctor)
+    jar.get().dependsOn( asciidoctor, test)
     bootJar.get().dependsOn(jar, resolveMainClassName)
-    test.get().dependsOn(springConfiguration)
     test.get().finalizedBy(jacocoTestReport)
     sonarqube.get().setDependsOn(listOf<Task>())
 }
