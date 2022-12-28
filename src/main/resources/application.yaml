@@ -1,9 +1,7 @@
 spring:
   application:
     name: demo
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -49,9 +47,8 @@ spring:
 joinfaces:
   primefaces:
     theme: bootstrap
-  jsf:
+  faces:
     project-stage: development
-#    state-saving-method: server
     serialize-server-state: true
 
 server:

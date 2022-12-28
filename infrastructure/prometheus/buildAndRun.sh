@@ -8,4 +8,3 @@ docker run -d --name=prometheus -p 9090:9090 -v //data/prometheus://prometheus p
 sleep 5
 docker logs prometheus
 docker ps
-

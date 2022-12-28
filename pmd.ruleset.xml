@@ -21,12 +21,34 @@
         <exclude name="DefaultPackage"/>
         <exclude name="CommentDefaultAccessModifier"/>
     </rule>
+    <rule ref="category/java/codestyle.xml/FieldNamingConventions">
+        <properties>
+            <property name="publicConstantPattern" value="[A-Z][A-Z_0-9]*" />
+            <property name="constantPattern" value="[A-Z][A-Z_0-9]*" />
+            <property name="enumConstantPattern" value="[A-Z][A-Z_0-9]*" />
+            <property name="finalFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}" />
+            <property name="staticFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}" />
+            <property name="defaultFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}" />
+            <property name="exclusions" value="serialVersionUID|serialPersistentFields" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/TooManyStaticImports">
+        <properties>
+            <property name="maximumStaticImports" value="6" />
+        </properties>
+    </rule>
     <rule ref="category/java/design.xml">
         <exclude name="LawOfDemeter"/>
-        <!--<exclude name="SignatureDeclareThrowsException"/>-->
+        <exclude name="SignatureDeclareThrowsException"/>
+        <exclude name="LoosePackageCoupling"/>
+    </rule>
+    <rule ref="category/java/design.xml/UseUtilityClass">
+        <properties>
+            <property name="ignoredAnnotations" value="lombok.experimental.UtilityClass" />
+            <property name="ignoredAnnotations" value="org.springframework.boot.autoconfigure.SpringBootApplication" />
+        </properties>
     </rule>
     <rule ref="category/java/errorprone.xml">
-        <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="DataflowAnomalyAnalysis"/>
         <!--<exclude name="AvoidDuplicateLiterals"/>-->
     </rule>

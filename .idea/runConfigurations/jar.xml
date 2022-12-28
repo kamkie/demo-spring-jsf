@@ -1,9 +1,19 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="jar" type="JarApplication" factoryName="JAR Application" singleton="true">
-    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/demo-spring-jsf-0.5-26-gf472bc1-boot.jar" />
-    <option name="WORKING_DIRECTORY" value="D:\Projekty\demo-spring-jsf" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+  <configuration default="false" name="jar" type="JarApplication" singleton="true">
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+      </ENTRIES>
+    </extension>
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/demo-spring-jsf-0.6-631-g2bd71f4.dirty-boot.jar" />
+    <option name="VM_PARAMETERS" value="--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED" />
+    <option name="WORKING_DIRECTORY" value="$ContentRoot$" />
     <option name="ALTERNATIVE_JRE_PATH" value="9" />
-    <method />
+    <method v="2" />
   </configuration>
 </component>

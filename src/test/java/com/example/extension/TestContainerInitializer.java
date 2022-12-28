@@ -10,10 +10,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.springframework.boot.test.util.TestPropertyValues.Type.SYSTEM_ENVIRONMENT;
 
+@SuppressWarnings("PMD.TestClassWithoutTestCases")
 public class TestContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestContainerInitializer.class);
 
     @Override
+    @SuppressWarnings("PMD.GuardLogStatement")
     public void initialize(@NonNull ConfigurableApplicationContext configurableApplicationContext) {
         @SuppressWarnings("PMD.CloseResource")
         PostgreSQLContainer postgreSQLContainer = DockerExtension.getPostgres();
