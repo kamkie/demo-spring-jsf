@@ -33,6 +33,7 @@ val joinFacesVersion = "5.0.0"
 val spotbugsToolVersion = "4.7.3"
 val jacocoToolVersion = "0.8.8"
 val pmdToolVersion = "6.52.0"
+val testContainersVersion = "1.17.6"
 
 repositories {
     mavenCentral()
@@ -93,14 +94,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.github.bonigarcia:selenium-jupiter:4.3.2") {
-        exclude(group = "org.slf4j", module = "slf4j-api")
-    }
-    testImplementation("org.seleniumhq.selenium:selenium-java:4.7.2")
-    testImplementation("org.testcontainers:postgresql:1.17.6") {
-        exclude(group = "log4j", module = "log4j")
-        exclude(group = "org.slf4j", module = "slf4j-api")
-    }
+    testImplementation("org.seleniumhq.selenium:selenium-java")
+    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:selenium:$testContainersVersion")
 }
 
 java {
@@ -305,6 +302,7 @@ tasks.wrapper {
 }
 
 tasks {
+    getByName("spotlessMisc").dependsOn(npmSetup)
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
     spotbugsMain.get().dependsOn(asciidoctor)

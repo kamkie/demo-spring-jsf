@@ -5,7 +5,6 @@ import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bonigarcia.seljup.DockerBrowser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.util.Locale;
 import java.util.Map;
 
-import static io.github.bonigarcia.seljup.BrowserType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -34,7 +32,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void adminLoginFailPassword(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
+    void adminLoginFailPassword(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
 
@@ -43,7 +41,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void adminLoginFailUserName(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
+    void adminLoginFailUserName(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
 
@@ -52,7 +50,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void hello(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
+    void hello(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
 
@@ -69,7 +67,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void adminLogin(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) throws Exception {
+    void adminLogin(RemoteWebDriver webDriver) throws Exception {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
@@ -84,7 +82,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void tableXhtml(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) throws Exception {
+    void tableXhtml(RemoteWebDriver webDriver) throws Exception {
         webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
 
@@ -112,7 +110,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void changeLanguageInJsf(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
+    void changeLanguageInJsf(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale pl");
@@ -122,7 +120,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void changeLanguageInJsfAndMvc(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
+    void changeLanguageInJsfAndMvc(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
         TableXhtmlPage tableXhtmlPage = new TableXhtmlPage(webDriver);
@@ -146,7 +144,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
     }
 
     @Test
-    void jsfSessionMessages(@DockerBrowser(type = CHROME, lang = "PL", version = "latest") RemoteWebDriver webDriver) {
+    void jsfSessionMessages(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");
 

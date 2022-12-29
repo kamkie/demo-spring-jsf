@@ -1,12 +1,12 @@
 package com.example.tests;
 
+import com.example.extension.SeleniumExtension;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bonigarcia.seljup.SeleniumJupiter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @Slf4j
-@ExtendWith(SeleniumJupiter.class)
+@ExtendWith(SeleniumExtension.class)
 public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
 
     protected final String seleniumBaseUrl;
