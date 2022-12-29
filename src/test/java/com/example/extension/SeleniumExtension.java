@@ -31,6 +31,7 @@ import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFo
 @Slf4j
 @SuppressWarnings({
         "PMD.DoNotUseThreads",
+        "PMD.TooManyMethods",
         "PMD.AvoidUncheckedExceptionsInSignatures"
 })
 public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
