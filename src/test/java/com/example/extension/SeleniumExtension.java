@@ -1,6 +1,7 @@
 package com.example.extension;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -12,6 +13,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.containers.DefaultRecordingFileFactory;
+import org.testcontainers.lifecycle.TestDescription;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,13 +33,14 @@ import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFo
         "PMD.DoNotUseThreads",
         "PMD.AvoidUncheckedExceptionsInSignatures"
 })
-public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
+public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
 
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
     private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer<>()
             .withCapabilities(initChromeOptions())
-            .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4);
+            .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
+            .withRecordingFileFactory(new DefaultRecordingFileFactory());
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -94,6 +98,11 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     }
 
     @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        WEB_DRIVER_CONTAINER.afterTest(toTestDescription(context), context.getExecutionException());
+    }
+
+    @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterContext.getParameter().getType().isAssignableFrom(RemoteWebDriver.class);
     }
@@ -103,4 +112,18 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         return getWebDriver();
     }
 
+    private static TestDescription toTestDescription(ExtensionContext context) {
+        return new TestDescription() {
+            @Override
+            public String getTestId() {
+                return context.getDisplayName();
+            }
+
+            @Override
+            public String getFilesystemFriendlyName() {
+                String timestamp = DATE_TIME_FILE_NAME_FORMATTER.format(LocalDateTime.now());
+                return context.getRequiredTestClass().getSimpleName() + "-" + timestamp;
+            }
+        };
+    }
 }
