@@ -38,7 +38,7 @@ public class TableXhtmlPage {
         wait.until(visibilityOfElementLocated(By.id("deviceListForm:messagesTable")));
     }
 
-    public void waitForAjaxTableLoaded() throws InterruptedException {
+    public void waitForAjaxTableLoaded() {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30), Duration.ofMillis(1));
         try {
             wait.until(visibilityOfElementLocated(By.cssSelector(".ui-dialog")));
