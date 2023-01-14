@@ -9,8 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +27,7 @@ import java.util.Map;
 @Slf4j
 @Timed
 @TimedMethod
+@RequiredArgsConstructor
 @Controller
 public class HomeController {
 
@@ -35,15 +36,6 @@ public class HomeController {
     private final ResourceBundleBean msg;
     private final BuildProperties buildProperties;
     private final GitProperties gitProperties;
-
-    @Autowired
-    public HomeController(UsersRepository usersRepository, ObjectMapper objectMapper, ResourceBundleBean bundleBean, BuildProperties buildProperties, GitProperties gitProperties) {
-        this.usersRepository = usersRepository;
-        this.objectMapper = objectMapper;
-        this.msg = bundleBean;
-        this.buildProperties = buildProperties;
-        this.gitProperties = gitProperties;
-    }
 
     @GetMapping({"/hello"})
     public ModelAndView hello(HttpServletRequest request) {
@@ -59,17 +51,18 @@ public class HomeController {
     }
 
     @GetMapping({"/", "/home"})
-    public ResponseEntity home(Principal principal, HttpSession session) throws JsonProcessingException {
+    public ResponseEntity<?> home(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping({"/admin"})
-    public ResponseEntity admin(Principal principal, HttpSession session) throws JsonProcessingException {
+    public ResponseEntity<?> admin(Principal principal, HttpSession session) throws JsonProcessingException {
         return getResponseEntity(principal, session);
     }
 
-    private ResponseEntity getResponseEntity(Principal principal, HttpSession session) throws JsonProcessingException {
+    private ResponseEntity<?> getResponseEntity(Principal principal, HttpSession session)
+            throws JsonProcessingException {
         log.info("home controller called principal: {}", principal);
 
         var userList = usersRepository.findAll();
