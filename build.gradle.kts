@@ -8,7 +8,7 @@ plugins {
     jacoco
     idea
     pmd
-    id("com.palantir.git-version") version "0.15.0"
+    id("com.palantir.git-version") version "1.0.0"
     id("org.sonarqube") version "3.5.0.2730"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
     id("com.diffplug.spotless") version "6.14.1"
