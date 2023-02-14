@@ -43,14 +43,10 @@ jobs:
           docker info
           ip a
 
-      - name: Initialize CodeQL for Java
+      - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: 'java'
-      - name: Initialize CodeQL for JavaScript
-        uses: github/codeql-action/init@v2
-        with:
-          languages: 'javascript'
+          languages: java, javascript
 
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
