@@ -43,6 +43,15 @@ jobs:
           docker info
           ip a
 
+      - name: Initialize CodeQL for Java
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'java'
+      - name: Initialize CodeQL for JavaScript
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'javascript'
+
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
         env:
@@ -79,3 +88,6 @@ jobs:
 
       - name: build docker image
         run: docker build -t demo-spring-jsf .
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
