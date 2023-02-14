@@ -43,8 +43,13 @@ jobs:
           docker info
           ip a
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: java, javascript
+
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
         env:
           HOST_FOR_SELENIUM: "172.17.0.1"
 
@@ -79,3 +84,6 @@ jobs:
 
       - name: build docker image
         run: docker build -t demo-spring-jsf .
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
