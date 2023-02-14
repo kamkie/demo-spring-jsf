@@ -44,7 +44,7 @@ jobs:
           ip a
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
         env:
           HOST_FOR_SELENIUM: "172.17.0.1"
 
