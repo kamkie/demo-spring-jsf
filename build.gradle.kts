@@ -1,4 +1,5 @@
 import com.github.gradle.node.task.NodeTask
+import com.github.spotbugs.snom.SpotBugsTask
 import org.asciidoctor.gradle.base.process.ProcessMode
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.util.regex.Pattern
@@ -139,6 +140,13 @@ liquibase {
 spotbugs {
     toolVersion.set(spotbugsToolVersion)
     excludeFilter.set(file("spotbugs-exclude.xml"))
+}
+
+tasks.withType<SpotBugsTask> {
+    reports {
+        create("html").required.set(true)
+        create("xml").required.set(true)
+    }
 }
 
 pmd {
