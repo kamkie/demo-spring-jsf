@@ -297,7 +297,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "7.6"
+    gradleVersion = "8.0"
     distributionType = Wrapper.DistributionType.ALL
 }
 
