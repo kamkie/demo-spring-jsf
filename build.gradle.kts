@@ -10,7 +10,7 @@ plugins {
     idea
     pmd
     id("com.palantir.git-version") version "1.0.0"
-    id("org.sonarqube") version "3.5.0.2730"
+    id("org.sonarqube") version "4.0.0.2929"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
     id("com.diffplug.spotless") version "6.15.0"
     id("com.github.ben-manes.versions") version "0.45.0"
