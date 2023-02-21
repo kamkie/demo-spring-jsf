@@ -13,7 +13,7 @@ plugins {
     id("org.sonarqube") version "4.0.0.2929"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
     id("com.diffplug.spotless") version "6.15.0"
-    id("com.github.ben-manes.versions") version "0.45.0"
+    id("com.github.ben-manes.versions") version "0.46.0"
     id("com.github.spotbugs") version "5.0.13"
     id("org.springframework.boot")
     id("org.liquibase.gradle") version "2.1.1"
