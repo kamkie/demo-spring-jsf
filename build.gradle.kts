@@ -82,7 +82,7 @@ dependencies {
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinFacesVersion")
     implementation("org.primefaces:primefaces:12.0.0:jakarta")
-    implementation("org.primefaces.extensions:primefaces-extensions:12.0.3:jakarta")
+    implementation("org.primefaces.extensions:primefaces-extensions:12.0.4:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
