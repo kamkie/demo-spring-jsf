@@ -22,4 +22,4 @@ jobs:
           cache: 'gradle'
 
       - name: Run snapshot action
-        uses: mikepenz/gradle-dependency-submission@v0.8.5
+        uses: mikepenz/gradle-dependency-submission@v0.8.6
