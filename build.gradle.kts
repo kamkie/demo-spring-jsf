@@ -9,7 +9,7 @@ plugins {
     jacoco
     idea
     pmd
-    id("com.palantir.git-version") version "2.0.0"
+    id("com.palantir.git-version") version "3.0.0"
     id("org.sonarqube") version "4.0.0.2929"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
     id("com.diffplug.spotless") version "6.17.0"
