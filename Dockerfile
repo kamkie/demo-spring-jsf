@@ -8,7 +8,7 @@ ARG JAR_FILE=build/libs/demo-spring-jsf-*-boot.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract && ls -lah
 
-FROM base
+FROM base as runnable
 
 COPY --from=builder /app/spring-boot-loader/ ./
 COPY --from=builder /app/dependencies/ ./
