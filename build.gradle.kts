@@ -2,6 +2,7 @@ import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import org.asciidoctor.gradle.base.process.ProcessMode
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.util.regex.Pattern
 
 plugins {
@@ -41,7 +42,7 @@ repositories {
     maven { url = uri("https://repository.primefaces.org") }
 }
 
-val asciidoctor = configurations.create("asciidoctor")
+val asciidoctor: Configuration = configurations.create("asciidoctor")
 
 dependencies {
     asciidoctor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
@@ -201,12 +202,7 @@ spotless {
     }
 }
 
-tasks.compileJava {
-    options.encoding = "UTF-8"
-    options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation", "-parameters"))
-}
-
-tasks.compileTestJava {
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation", "-parameters"))
 }
@@ -283,7 +279,7 @@ tasks.withType<Test> {
             "--add-opens=java.sql/java.sql=ALL-UNNAMED"
     )
     testLogging {
-        events("passed", "skipped", "failed", /*"standardOut",*/ "standardError")
+        events = mutableSetOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED, /*TestLogEvent.STANDARD_OUT,*/ TestLogEvent.STANDARD_ERROR)
         showExceptions = true
         exceptionFormat = TestExceptionFormat.FULL
         showCauses = true
