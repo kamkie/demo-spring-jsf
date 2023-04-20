@@ -43,19 +43,23 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
             .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
 
-    static {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            log.info("stopping selenium docker container");
-            WEB_DRIVER_CONTAINER.stop();
-        }));
-    }
+    private static RemoteWebDriver webDriver;
 
     private static RemoteWebDriver getWebDriver() {
         if (!WEB_DRIVER_CONTAINER.isRunning()) {
-            log.info("starting selenium docker container");
-            WEB_DRIVER_CONTAINER.start();
+            synchronized (WEB_DRIVER_CONTAINER) {
+                if (!WEB_DRIVER_CONTAINER.isRunning()) {
+                    log.info("starting selenium docker container");
+                    WEB_DRIVER_CONTAINER.start();
+                    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                        log.info("stopping selenium docker container");
+                        WEB_DRIVER_CONTAINER.stop();
+                    }));
+                    webDriver = new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions());
+                }
+            }
         }
-        return WEB_DRIVER_CONTAINER.getWebDriver();
+        return webDriver;
     }
 
     private static void createDirForScreenshots() throws IOException {
