@@ -35,7 +35,7 @@ val joinFacesVersion = "5.0.6"
 val spotbugsToolVersion = "4.7.3"
 val jacocoToolVersion = "0.8.8"
 val pmdToolVersion = "6.52.0"
-val testContainersVersion = "1.18.0"
+val testContainersVersion = "1.18.1"
 
 repositories {
     mavenCentral()
