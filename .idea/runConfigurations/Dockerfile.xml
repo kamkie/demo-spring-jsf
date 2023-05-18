@@ -2,9 +2,9 @@
   <configuration default="false" name="Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
-        <option name="imageTag" value="demo-spring-jsf:latest" />
+        <option name="imageTag" value="demo-spring-jsf" />
         <option name="attachToContainerNeeded" value="true" />
-        <option name="buildCliOptions" value=" --target runnable" />
+        <option name="buildKitEnabled" value="true" />
         <option name="containerName" value="demo-spring-jsf" />
         <option name="portBindings">
           <list>
