@@ -39,7 +39,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain managementFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/actuator/**");
-        http.httpBasic();
+        http.httpBasic(httpBasic -> httpBasic.realmName("demo-spring-jsf"));
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
