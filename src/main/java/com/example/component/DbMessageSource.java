@@ -3,7 +3,7 @@ package com.example.component;
 import com.example.annotation.TimedMethod;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.annotation.Primary;
@@ -17,15 +17,11 @@ import java.util.Optional;
 
 @Primary
 @TimedMethod
+@RequiredArgsConstructor
 @Component("messageSource")
 public class DbMessageSource implements MessageSource {
 
     private final MessagesRepository messagesRepository;
-
-    @Autowired
-    public DbMessageSource(MessagesRepository messagesRepository) {
-        this.messagesRepository = messagesRepository;
-    }
 
     @Override
     public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
