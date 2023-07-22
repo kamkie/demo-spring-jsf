@@ -31,7 +31,7 @@ group = "demo"
 val javaVersion = JavaVersion.VERSION_17
 val nodeVersion = "16.19.0"
 val springBootVersion = properties["springBootVersion"]
-val joinFacesVersion = "5.1.1"
+val joinFacesVersion = "5.1.2"
 val spotbugsToolVersion = "4.7.3"
 val jacocoToolVersion = "0.8.8"
 val pmdToolVersion = "6.52.0"
@@ -81,8 +81,8 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinFacesVersion")
-    implementation("org.primefaces:primefaces:12.0.0:jakarta")
-    implementation("org.primefaces.extensions:primefaces-extensions:12.0.9:jakarta")
+    implementation("org.primefaces:primefaces:13.0.0:jakarta")
+    implementation("org.primefaces.extensions:primefaces-extensions:13.0.0:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
@@ -300,7 +300,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.2"
+    gradleVersion = "8.2.1"
     distributionType = Wrapper.DistributionType.ALL
 }
 
