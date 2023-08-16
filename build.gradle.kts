@@ -19,7 +19,7 @@ plugins {
     id("org.springframework.boot")
     id("org.liquibase.gradle") version "2.2.0"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("com.github.node-gradle.node") version "5.0.0"
+    id("com.github.node-gradle.node") version "6.0.0"
     id("com.ofg.uptodate") version "1.6.3"
     id("com.adarshr.test-logger") version "3.2.0"
 }
