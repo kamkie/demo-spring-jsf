@@ -114,7 +114,7 @@ node {
 idea {
     module {
         inheritOutputDirs = false
-        outputDir = file("${buildDir}/resources/main/")
+        outputDir = file(layout.buildDirectory.dir("resources/main/"))
     }
 }
 
@@ -164,7 +164,7 @@ sonarqube {
         property("sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:9000")
         property("sonar.projectName", "spring jsf project")
         property("sonar.projectKey", "${project.group}:${project.name}")
-        property("sonar.jacoco.reportPaths", "${buildDir}/jacoco/test.exec")
+        property("sonar.jacoco.reportPaths", layout.buildDirectory.file("jacoco/test.exec"))
         property("sonar.exclusions", "")
     }
 }
@@ -232,7 +232,7 @@ tasks.bootJar {
 tasks.jacocoTestReport {
     sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
-    executionData.setFrom(fileTree("${buildDir}/jacoco").include("*.exec"))
+    executionData.setFrom(fileTree(layout.buildDirectory.dir("jacoco")).include("*.exec"))
     dependsOn(tasks.test)
     reports {
         xml.required.set(true)
@@ -244,8 +244,8 @@ tasks.asciidoctor {
     mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
-    inputs.dir("${buildDir}/generated-snippets")
-    setOutputDir(file("${buildDir}/asciidoc/static/docs"))
+    inputs.dir(layout.buildDirectory.dir("generated-snippets"))
+    setOutputDir(layout.buildDirectory.dir("asciidoc/static/docs"))
     inProcess = ProcessMode.JAVA_EXEC
     forkOptions {
         jvmArgs(
@@ -259,14 +259,14 @@ tasks.asciidoctor {
     ))
     doLast {
         copy {
-            from("${buildDir}/asciidoc")
-            into("${buildDir}/resources/main")
+            from(layout.buildDirectory.dir("asciidoc"))
+            into(layout.buildDirectory.dir("resources/main"))
         }
     }
 }
 
 tasks.withType<Test> {
-    outputs.dir("${buildDir}/generated-snippets")
+    outputs.dir(layout.buildDirectory.dir("generated-snippets"))
     useJUnitPlatform()
     jvmArgs = listOf(
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
@@ -289,7 +289,7 @@ tasks.withType<Test> {
 val webpack = tasks.register<NodeTask>("webpack") {
     dependsOn(tasks.npmInstall)
     inputs.files("src/main/resources/static/javascript")
-    outputs.dir("${buildDir}/resources/main/static/javascript")
+    outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
     script.set(project.file("node_modules/webpack/bin/webpack.js"))
 }
 
