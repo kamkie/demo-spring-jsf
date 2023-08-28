@@ -59,7 +59,7 @@ dependencies {
 
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core")
-    liquibaseRuntime("info.picocli:picocli:4.7.4")
+    liquibaseRuntime("info.picocli:picocli:4.7.5")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
     implementation("com.github.spotbugs:spotbugs-annotations:4.7.3")
