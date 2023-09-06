@@ -40,7 +40,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
     private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer<>()
             .withCapabilities(initChromeOptions())
-            .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
+            //.withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
 
     private static RemoteWebDriver webDriver;
