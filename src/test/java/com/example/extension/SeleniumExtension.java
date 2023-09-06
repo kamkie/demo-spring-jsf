@@ -13,6 +13,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.containers.DefaultRecordingFileFactory;
 import org.testcontainers.lifecycle.TestDescription;
 
 import java.io.File;
@@ -36,9 +37,10 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
     private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer<>()
-            .withCapabilities(initChromeOptions());
-            //.withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
-            //.withRecordingFileFactory(new DefaultRecordingFileFactory());
+            .withCapabilities(initChromeOptions())
+            .withAccessToHost(true)
+            .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.SKIP, new File(SCREENSHOT_PATH))
+            .withRecordingFileFactory(new DefaultRecordingFileFactory());
 
     private static RemoteWebDriver webDriver;
 
@@ -93,7 +95,8 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     public void beforeEach(ExtensionContext context) throws Exception {
         getWebDriver().manage().deleteAllCookies();
         getWebDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(2));
-        getWebDriver().wait(100);
+        getWebDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+        Thread.sleep(100);
     }
 
     @Override
