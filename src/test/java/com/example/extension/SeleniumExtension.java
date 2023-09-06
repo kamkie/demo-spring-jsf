@@ -13,7 +13,6 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
-import org.testcontainers.containers.DefaultRecordingFileFactory;
 import org.testcontainers.lifecycle.TestDescription;
 
 import java.io.File;
@@ -21,12 +20,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-
-import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
-import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
 
 @Slf4j
 @SuppressWarnings({
@@ -95,6 +92,8 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         getWebDriver().manage().deleteAllCookies();
+        getWebDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(2));
+        getWebDriver().wait(100);
     }
 
     @Override
