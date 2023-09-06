@@ -39,9 +39,9 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
     private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer<>()
-            .withCapabilities(initChromeOptions())
+            .withCapabilities(initChromeOptions());
             //.withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
-            .withRecordingFileFactory(new DefaultRecordingFileFactory());
+            //.withRecordingFileFactory(new DefaultRecordingFileFactory());
 
     private static RemoteWebDriver webDriver;
 
