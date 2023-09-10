@@ -31,9 +31,9 @@ node('maven-docker') {
                 step([$class: 'JacocoPublisher'])
                 archiveArtifacts(artifacts: 'build/screenshot/*')
 
-                recordIssues enabledForFailure: true, tool: spotBugs(pattern: 'build/reports/spotbugs/*.xml')
-                recordIssues enabledForFailure: true, tool: pmdParser(pattern: 'build/reports/pmd/*.xml')
-                recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+                recordIssues enabledForFailure: true, tools: [spotBugs(pattern: 'build/reports/spotbugs/*.xml'),
+                                                              pmdParser(pattern: 'build/reports/pmd/*.xml'),
+                                                              mavenConsole(), java(), javaDoc()]
             }
 
         }
