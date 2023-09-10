@@ -46,14 +46,14 @@ node('maven-docker') {
     stage("push docker image") {
         sh """
         docker login image-registry.openshift-image-registry.svc:5000 -p \$(cat /run/secrets/kubernetes.io/serviceaccount/token) -u unused
-        docker tag demo-spring-jsf image-registry.openshift-image-registry.svc:5000/jenkins2/demo-spring-jsf:latest
-        docker push image-registry.openshift-image-registry.svc:5000/jenkins2/demo-spring-jsf:latest
+        docker tag demo-spring-jsf image-registry.openshift-image-registry.svc:5000/jenkins-dev/demo-spring-jsf:latest
+        docker push image-registry.openshift-image-registry.svc:5000/jenkins-dev/demo-spring-jsf:latest
         """
     }
     stage("rollout") {
         sh """
         oc login --help https://172.30.0.1:443 --token=\$(cat /run/secrets/kubernetes.io/serviceaccount/token)
-        oc project jenkins2
+        oc project jenkins-dev
         oc rollout status dc/demo-spring-jsf -w
         """
     }
