@@ -51,7 +51,7 @@ node('maven-docker') {
     }
     stage("rollout") {
         sh """
-        oc login --help https://172.30.0.1:443 --token=\$(cat /run/secrets/kubernetes.io/serviceaccount/token)
+        oc login --help https://\${OPENSHIFT_API_URL} --token=\$(cat /run/secrets/kubernetes.io/serviceaccount/token)
         oc project jenkins-dev
         oc rollout status dc/demo-spring-jsf -w
         """
