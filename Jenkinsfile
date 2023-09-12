@@ -28,7 +28,12 @@ node('maven-docker') {
                 }
             } finally {
                 junit 'build/test-results/*/*.xml'
-                step([$class: 'JacocoPublisher'])
+                jacoco(
+                     execPattern: 'build/jacoco/*.exec',
+                     classPattern: 'build/classes/java/main',
+                     sourcePattern: 'src/main/java',
+                     exclusionPattern: 'src/test*'
+                )
                 archiveArtifacts(artifacts: 'build/screenshot/*')
 
                 recordIssues enabledForFailure: true, tools: [spotBugs(pattern: 'build/reports/spotbugs/*.xml'),
