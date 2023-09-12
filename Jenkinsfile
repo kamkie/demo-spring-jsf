@@ -45,7 +45,6 @@ node('maven-docker') {
     }
     stage("push docker image") {
         sh """
-        docker login image-registry.openshift-image-registry.svc:5000 -p \$(cat /run/secrets/kubernetes.io/serviceaccount/token) -u unused
         docker tag demo-spring-jsf image-registry.openshift-image-registry.svc:5000/jenkins-dev/demo-spring-jsf:latest
         docker push image-registry.openshift-image-registry.svc:5000/jenkins-dev/demo-spring-jsf:latest
         """
