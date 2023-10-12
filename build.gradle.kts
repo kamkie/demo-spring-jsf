@@ -32,9 +32,9 @@ val javaVersion = JavaVersion.VERSION_17
 val nodeVersion = "16.19.0"
 val springBootVersion = properties["springBootVersion"]
 val joinFacesVersion = "5.1.4"
-val spotbugsToolVersion = "4.7.3"
-val jacocoToolVersion = "0.8.8"
-val pmdToolVersion = "6.52.0"
+val spotbugsToolVersion = "4.8.0"
+val jacocoToolVersion = "0.8.9"
+val pmdToolVersion = "6.54.0"
 
 repositories {
     mavenCentral()
@@ -81,8 +81,8 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinFacesVersion")
-    implementation("org.primefaces:primefaces:13.0.1:jakarta")
-    implementation("org.primefaces.extensions:primefaces-extensions:13.0.1:jakarta")
+    implementation("org.primefaces:primefaces:13.0.2:jakarta")
+    implementation("org.primefaces.extensions:primefaces-extensions:13.0.2:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
@@ -161,6 +161,7 @@ jacoco {
 
 sonarqube {
     properties {
+        property("sonar.gradle.skipCompile", "true")
         property("sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:9000")
         property("sonar.projectName", "spring jsf project")
         property("sonar.projectKey", "${project.group}:${project.name}")

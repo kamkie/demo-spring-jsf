@@ -2,7 +2,7 @@
   <configuration default="false" name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <option name="INCLUDE_PROVIDED_SCOPE" value="false" />
-    <module name="Projects.demo.demo-spring-jsf.main~1" />
+    <module name="Projects.demo.demo-spring-jsf.main" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.DemoApplication" />
     <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateTriggerFile" />

@@ -10,7 +10,7 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.time.temporal.ValueRange;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("PMD.TooManyMethods")
 class SubMillisTest {
@@ -69,14 +69,14 @@ class SubMillisTest {
 
     @Test
     void adjustIntoFail1() {
-        assertThrows(UnsupportedTemporalTypeException.class,
-                () -> SubMillis.MICROS_OF_MILLI_SECOND.adjustInto(LocalDate.now(), 100));
+        assertThatThrownBy(() -> SubMillis.MICROS_OF_MILLI_SECOND.adjustInto(LocalDate.now(), 100))
+                .isInstanceOf(UnsupportedTemporalTypeException.class);
     }
 
     @Test
     void adjustIntoFail2() {
-        assertThrows(UnsupportedTemporalTypeException.class,
-                () -> SubMillis.NANOS_OF_MICRO_SECOND.adjustInto(LocalDate.now(), 100));
+        assertThatThrownBy(() -> SubMillis.NANOS_OF_MICRO_SECOND.adjustInto(LocalDate.now(), 100))
+                .isInstanceOf(UnsupportedTemporalTypeException.class);
     }
 
     @Test
