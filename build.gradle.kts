@@ -62,7 +62,7 @@ dependencies {
     liquibaseRuntime("info.picocli:picocli:4.7.5")
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    implementation("com.github.spotbugs:spotbugs-annotations:4.8.0")
+    implementation("com.github.spotbugs:spotbugs-annotations:4.8.1")
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
