@@ -29,8 +29,7 @@ version = gitVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_21
-//val nodeVersion = "16.19.0"
-val nodeVersion = "18.17.0"
+val nodeVersion = "20.9.0"
 val springBootVersion = properties["springBootVersion"]
 val joinFacesVersion = "5.2.0"
 val spotbugsToolVersion = "4.8.0"
