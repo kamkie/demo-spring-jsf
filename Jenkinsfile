@@ -1,9 +1,9 @@
 node('maven-docker') {
     def gitProps = checkout scm
-    def jdk = tool 'jdk17'
+    def jdk = tool 'jdk21'
     stage("show tool versions") {
         echo "GIT_BRANCH=${gitProps.GIT_BRANCH}, GIT_COMMIT=${gitProps.GIT_COMMIT}"
-        nodejs(nodeJSInstallationName: 'node16') {
+        nodejs(nodeJSInstallationName: 'node18') {
             withEnv(["JAVA_HOME=$jdk", "PATH=$jdk/bin:${env.PATH}"]) {
                 sh """
                 npm --version
@@ -21,7 +21,7 @@ node('maven-docker') {
     stage('Build jar') {
         ansiColor('xterm') {
             try {
-                nodejs(nodeJSInstallationName: 'node16') {
+                nodejs(nodeJSInstallationName: 'node18') {
                     withEnv(["JAVA_HOME=$jdk", "PATH=$jdk/bin:${env.PATH}", "HOST_FOR_SELENIUM=172.17.0.1"]) {
                         sh "./gradlew build"
                     }

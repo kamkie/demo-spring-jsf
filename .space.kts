@@ -5,7 +5,7 @@
 */
 
 job("build") {
-    container(image = "gradle:7.5-jdk17", displayName = "gradle") {
+    container(image = "gradle:8.4-jdk21", displayName = "gradle") {
         kotlinScript { api ->
             api.gradlew("build")
 

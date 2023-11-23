@@ -28,8 +28,9 @@ val gitVersion: groovy.lang.Closure<String> by extra
 version = gitVersion()
 group = "demo"
 
-val javaVersion = JavaVersion.VERSION_17
-val nodeVersion = "16.19.0"
+val javaVersion = JavaVersion.VERSION_21
+//val nodeVersion = "16.19.0"
+val nodeVersion = "18.17.0"
 val springBootVersion = properties["springBootVersion"]
 val joinFacesVersion = "5.1.5"
 val spotbugsToolVersion = "4.8.0"
@@ -292,6 +293,7 @@ val webpack = tasks.register<NodeTask>("webpack") {
     inputs.files("src/main/resources/static/javascript")
     outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
     script.set(project.file("node_modules/webpack/bin/webpack.js"))
+    environment.put("NODE_OPTIONS", "--openssl-legacy-provider")
 }
 
 val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
@@ -301,7 +303,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.4"
+    gradleVersion = "8.5-rc-3"
     distributionType = Wrapper.DistributionType.ALL
 }
 
