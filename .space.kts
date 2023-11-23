@@ -7,7 +7,7 @@
 job("build") {
     container(image = "gradle:8.4-jdk21", displayName = "gradle") {
         kotlinScript { api ->
-            api.gradlew("build")
+            api.gradlew("--no-daemon", "build")
 
             // run publish task for release branches
             if (api.gitBranch().contains("release")) {

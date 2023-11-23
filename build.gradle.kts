@@ -269,6 +269,7 @@ tasks.withType<Test> {
     outputs.dir(layout.buildDirectory.dir("generated-snippets"))
     useJUnitPlatform()
     jvmArgs = listOf(
+            "-XX:+EnableDynamicAgentLoading",
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--add-opens=java.base/java.math=ALL-UNNAMED",
             "--add-opens=java.base/java.util=ALL-UNNAMED",
