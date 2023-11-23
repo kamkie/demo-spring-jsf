@@ -32,7 +32,7 @@ val javaVersion = JavaVersion.VERSION_21
 //val nodeVersion = "16.19.0"
 val nodeVersion = "18.17.0"
 val springBootVersion = properties["springBootVersion"]
-val joinFacesVersion = "5.1.5"
+val joinFacesVersion = "5.2.0"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
 val pmdToolVersion = "6.54.0"
@@ -90,8 +90,6 @@ dependencies {
     implementation("org.postgresql:postgresql")
     // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
     implementation("de.appelgriepsch.logback:logback-gelf-appender:1.5")
-    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-    implementation("com.squareup.okhttp3:okhttp")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
