@@ -53,7 +53,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    //annotationProcessor("org.springframework:spring-context-indexer")
+    annotationProcessor("org.springframework:spring-context-indexer")
 
     asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
 
@@ -300,7 +300,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.5-rc-3"
+    gradleVersion = "8.5"
     distributionType = Wrapper.DistributionType.ALL
 }
 
