@@ -13,7 +13,7 @@ plugins {
     id("com.palantir.git-version") version "3.0.0"
     id("org.sonarqube") version "4.4.1.3373"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
-    id("com.diffplug.spotless") version "6.23.2"
+    id("com.diffplug.spotless") version "6.23.3"
     id("com.github.ben-manes.versions") version "0.50.0"
     id("com.github.spotbugs") version "6.0.1"
     id("org.springframework.boot")
