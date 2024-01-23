@@ -10,7 +10,6 @@ plugins {
     idea
     pmd
     id("com.palantir.git-version") version "3.0.0"
-    id("org.sonarqube") version "4.4.1.3373"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.51.0"
@@ -153,17 +152,6 @@ pmd {
 
 jacoco {
     toolVersion = jacocoToolVersion
-}
-
-sonarqube {
-    properties {
-        property("sonar.gradle.skipCompile", "true")
-        property("sonar.host.url", System.getenv("SONAR_URL") ?: "http://127.0.0.1:9000")
-        property("sonar.projectName", "spring jsf project")
-        property("sonar.projectKey", "${project.group}:${project.name}")
-        property("sonar.jacoco.reportPaths", layout.buildDirectory.file("jacoco/test.exec"))
-        property("sonar.exclusions", "")
-    }
 }
 
 spotless {
@@ -310,5 +298,4 @@ tasks {
     jar.get().dependsOn(asciidoctor, test)
     bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
-    sonarqube.get().setDependsOn(listOf<Task>())
 }
