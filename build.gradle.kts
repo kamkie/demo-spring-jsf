@@ -12,7 +12,7 @@ plugins {
     id("com.palantir.git-version") version "3.0.0"
     id("org.sonarqube") version "4.4.1.3373"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
-    id("com.diffplug.spotless") version "6.24.0"
+    id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("com.github.spotbugs") version "6.0.6"
     id("org.springframework.boot")
@@ -79,8 +79,8 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinFacesVersion")
-    implementation("org.primefaces:primefaces:13.0.4:jakarta")
-    implementation("org.primefaces.extensions:primefaces-extensions:13.0.4:jakarta")
+    implementation("org.primefaces:primefaces:13.0.5:jakarta")
+    implementation("org.primefaces.extensions:primefaces-extensions:13.0.5:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
