@@ -16,7 +16,7 @@ plugins {
     id("com.github.spotbugs") version "6.0.7"
     id("org.springframework.boot")
     id("org.liquibase.gradle") version "2.2.1"
-    id("org.asciidoctor.jvm.convert") version "4.0.1"
+    id("org.asciidoctor.jvm.convert") version "4.0.2"
     id("com.github.node-gradle.node") version "7.0.1"
     id("com.ofg.uptodate") version "1.6.3"
     id("com.adarshr.test-logger") version "4.0.0"
