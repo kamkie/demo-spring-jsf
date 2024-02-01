@@ -79,7 +79,7 @@ jobs:
           path: 'build/reports/pmd/*.xml'
 
       - name: code coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: always()
 
       - name: build docker image
