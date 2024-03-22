@@ -78,8 +78,8 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinFacesVersion")
-    implementation("org.primefaces:primefaces:13.0.5:jakarta")
-    implementation("org.primefaces.extensions:primefaces-extensions:13.0.5:jakarta")
+    implementation("org.primefaces:primefaces:13.0.7:jakarta")
+    implementation("org.primefaces.extensions:primefaces-extensions:13.0.7:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
@@ -286,7 +286,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.5"
+    gradleVersion = "8.7"
     distributionType = Wrapper.DistributionType.ALL
 }
 
