@@ -6,7 +6,7 @@ WORKDIR /app
 FROM base as builder
 ARG JAR_FILE=build/libs/demo-spring-jsf-*-boot.jar
 COPY ${JAR_FILE} app.jar
-RUN java -Djarmode=layertools -jar app.jar extract && ls -lah
+RUN java -Djarmode=tools -jar app.jar extract && ls -lah
 
 FROM base as runnable
 
