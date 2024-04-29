@@ -15,7 +15,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.51.0"
     id("com.github.spotbugs") version "6.0.12"
     id("org.springframework.boot")
-    id("org.liquibase.gradle") version "2.2.1"
+    id("org.liquibase.gradle") version "2.2.2"
     id("org.asciidoctor.jvm.convert") version "4.0.2"
     id("com.github.node-gradle.node") version "7.0.2"
     id("com.ofg.uptodate") version "1.6.3"
