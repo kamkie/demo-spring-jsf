@@ -2,6 +2,8 @@ import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import org.springframework.boot.gradle.util.VersionExtractor
 import java.util.regex.Pattern
 
 plugins {
@@ -14,7 +16,7 @@ plugins {
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("com.github.spotbugs") version "6.0.12"
-    id("org.springframework.boot")
+    id("org.springframework.boot") version "3.2.4"
     id("org.liquibase.gradle") version "2.2.2"
     id("org.asciidoctor.jvm.convert") version "4.0.2"
     id("com.github.node-gradle.node") version "7.0.2"
@@ -28,7 +30,6 @@ group = "demo"
 
 val javaVersion = JavaVersion.VERSION_21
 val nodeVersion = "20.9.0"
-val springBootVersion = properties["springBootVersion"]
 val joinFacesVersion = "5.2.5"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
@@ -42,11 +43,11 @@ repositories {
 val asciidoctor: Configuration = configurations.create("asciidoctor")
 
 dependencies {
-    asciidoctor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    implementation(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    annotationProcessor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    testAnnotationProcessor(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
-    liquibaseRuntime(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    asciidoctor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+    implementation(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+    annotationProcessor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+    testAnnotationProcessor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+    liquibaseRuntime(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -238,7 +239,7 @@ tasks.asciidoctor {
         )
     }
     attributes(mapOf(
-            "springbootversion" to springBootVersion,
+            "springbootversion" to VersionExtractor.forClass(SpringBootPlugin::class.java),
             "projectdir" to "$projectDir"
     ))
     doLast {
