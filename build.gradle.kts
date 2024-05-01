@@ -30,7 +30,6 @@ group = "demo"
 
 val javaVersion = JavaVersion.VERSION_21
 val nodeVersion = "20.9.0"
-val joinFacesVersion = "5.2.5"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
 val pmdToolVersion = "6.54.0"
@@ -78,7 +77,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("io.micrometer:micrometer-registry-prometheus")
 
-    implementation("org.joinfaces:primefaces-spring-boot-starter:$joinFacesVersion")
+    implementation("org.joinfaces:primefaces-spring-boot-starter:5.2.5")
     implementation("org.primefaces:primefaces:13.0.8:jakarta")
     implementation("org.primefaces.extensions:primefaces-extensions:13.0.8:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
