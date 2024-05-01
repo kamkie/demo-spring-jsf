@@ -63,6 +63,7 @@ dependencies {
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -76,6 +77,7 @@ dependencies {
     implementation("org.liquibase:liquibase-core")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:5.2.5")
     implementation("org.primefaces:primefaces:13.0.8:jakarta")
@@ -84,13 +86,12 @@ dependencies {
     implementation("com.google.code.gson:gson")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
     implementation("org.postgresql:postgresql")
-    // https://mvnrepository.com/artifact/de.appelgriepsch.logback/logback-gelf-appender
-    implementation("de.appelgriepsch.logback:logback-gelf-appender:1.5")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.seleniumhq.selenium:selenium-java")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:selenium")
