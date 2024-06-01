@@ -80,7 +80,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("com.google.code.gson:gson")
 
-    implementation("org.joinfaces:primefaces-spring-boot-starter:5.2.5")
+    implementation("org.joinfaces:primefaces-spring-boot-starter:5.3.0")
     implementation("org.primefaces:primefaces:14.0.0:jakarta")
     implementation("org.primefaces.extensions:primefaces-extensions:14.0.0:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
