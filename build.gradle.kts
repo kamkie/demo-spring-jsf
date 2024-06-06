@@ -11,7 +11,7 @@ plugins {
     jacoco
     idea
     pmd
-    id("com.palantir.git-version") version "3.0.0"
+    id("com.palantir.git-version") version "3.1.0"
     id("com.gorylenko.gradle-git-properties") version "2.4.2"
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.51.0"
