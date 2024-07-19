@@ -16,7 +16,7 @@ plugins {
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("com.github.spotbugs") version "6.0.19"
-    id("org.springframework.boot") version "3.3.1"
+    id("org.springframework.boot") version "3.3.2"
     id("org.liquibase.gradle") version "2.2.2"
     id("org.asciidoctor.jvm.convert") version "4.0.2"
     id("com.github.node-gradle.node") version "7.0.2"
@@ -33,6 +33,7 @@ val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
 val pmdToolVersion = "6.54.0"
+val primefacesVersion = "14.0.2"
 
 repositories {
     mavenCentral()
@@ -81,8 +82,8 @@ dependencies {
     implementation("com.google.code.gson:gson")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:5.3.1")
-    implementation("org.primefaces:primefaces:14.0.1:jakarta")
-    implementation("org.primefaces.extensions:primefaces-extensions:14.0.1:jakarta")
+    implementation("org.primefaces:primefaces:$primefacesVersion:jakarta")
+    implementation("org.primefaces.extensions:primefaces-extensions:$primefacesVersion:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.0.10")
 
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
@@ -288,7 +289,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.8"
+    gradleVersion = "8.9"
     distributionType = Wrapper.DistributionType.ALL
 }
 
