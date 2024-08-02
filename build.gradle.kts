@@ -83,7 +83,7 @@ dependencies {
     implementation("org.joinfaces:primefaces-spring-boot-starter:5.3.2")
     implementation("org.primefaces:primefaces:$primefacesVersion:jakarta")
     implementation("org.primefaces.extensions:primefaces-extensions:$primefacesVersion:jakarta")
-    implementation("org.primefaces.themes:bootstrap:1.0.10")
+    implementation("org.primefaces.themes:bootstrap:1.0.11")
 
     implementation("net.logstash.logback:logstash-logback-encoder:8.0")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
