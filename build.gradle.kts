@@ -32,7 +32,7 @@ val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
 val pmdToolVersion = "6.54.0"
-val primefacesVersion = "14.0.2"
+val primefacesVersion = "14.0.7"
 
 repositories {
     mavenCentral()
@@ -288,7 +288,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.10"
+    gradleVersion = "8.11.1"
     distributionType = Wrapper.DistributionType.ALL
 }
 
