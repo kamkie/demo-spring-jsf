@@ -32,7 +32,7 @@ val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
 val pmdToolVersion = "6.54.0"
-val primefacesVersion = "14.0.7"
+val primefacesVersion = "14.0.8"
 
 repositories {
     mavenCentral()
@@ -80,7 +80,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("com.google.code.gson:gson")
 
-    implementation("org.joinfaces:primefaces-spring-boot-starter:5.3.5")
+    implementation("org.joinfaces:primefaces-spring-boot-starter:5.4.0")
     implementation("org.primefaces:primefaces:$primefacesVersion:jakarta")
     implementation("org.primefaces.extensions:primefaces-extensions:$primefacesVersion:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.1.0")
