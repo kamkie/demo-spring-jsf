@@ -16,7 +16,7 @@ plugins {
     id("com.diffplug.spotless") version "6.25.0"
     id("com.github.ben-manes.versions") version "0.52.0"
     id("com.github.spotbugs") version "6.1.2"
-    id("org.springframework.boot") version "3.4.1"
+    id("org.springframework.boot") version "3.4.2"
     id("org.liquibase.gradle") version "2.2.2"
     id("org.asciidoctor.jvm.convert") version "4.0.4"
     id("com.github.node-gradle.node") version "7.1.0"
