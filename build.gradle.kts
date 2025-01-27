@@ -8,6 +8,15 @@ import org.springframework.boot.gradle.util.VersionExtractor
 import java.io.Serializable
 import java.util.regex.Pattern
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.liquibase:liquibase-core:4.29.2")
+    }
+}
+
 plugins {
     java
     jacoco
@@ -126,7 +135,7 @@ liquibase {
         register("main") {
             arguments = mapOf(
                     "searchPath" to "$projectDir/src/main/resources",
-                    "changeLogFile" to "db/changelog/db.changelog-master.xml",
+                    "changelogFile" to "db/changelog/db.changelog-master.xml",
                     "url" to "jdbc:postgresql://localhost:5432/spring-demo",
                     "username" to "dev",
                     "password" to "dev",
@@ -189,7 +198,7 @@ spotless {
             include(".gitignore", "**/.gitignore", "*.kts", "*.md", "src/**/*.md", "infrastructure/**/*.sh", "src/**/*.sh")
             exclude("node_modules/**", "out/**", "build/**")
         })
-        indentWithSpaces()
+        leadingTabsToSpaces()
         trimTrailingWhitespace()
         endWithNewline()
     }
