@@ -1,9 +1,11 @@
+import com.diffplug.spotless.FormatterFunc
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import org.springframework.boot.gradle.util.VersionExtractor
+import java.io.Serializable
 import java.util.regex.Pattern
 
 plugins {
@@ -159,23 +161,28 @@ jacoco {
 spotless {
     java {
         eclipse().configFile("spotless.eclipseformat.xml")    // XML file dumped out by the Eclipse formatter
-        indentWithSpaces()
+        leadingTabsToSpaces()
         trimTrailingWhitespace()
         endWithNewline()
 
         // Eclipse formatter puts excess whitespace after lambda blocks
         //    funcThatTakesLambdas(x -> {} , y -> {} )	// what Eclipse does
         //    funcThatTakesLambdas(x -> {}, y -> {})	// what I wish Eclipse did
-        custom("Lambda fix") {
-            it.replace("} )", "})").replace("} ,", "},")
-        }
+        custom("Lambda fix", object : Serializable, FormatterFunc {
+            override fun apply(text: String): String {
+                return text.replace("} )", "})").replace("} ,", "},")
+            }
+        })
+
 
         // Eclipse formatter screws up long literals with underscores inside of annotations (see issue #14)
         //    @Max(value = 9_999_999 L) // what Eclipse does
         //    @Max(value = 9_999_999L)  // what I wish Eclipse did
-        custom("Long literal fix") {
-            Pattern.compile("([0-9_]+) [Ll]").matcher(it).replaceAll("\$1L")
-        }
+        custom("Long literal fix", object : Serializable, FormatterFunc {
+            override fun apply(text: String): String {
+                return Pattern.compile("([0-9_]+) [Ll]").matcher(text).replaceAll("\$1L")
+            }
+        })
     }
     format("misc") {
         target(fileTree(".") {
