@@ -233,7 +233,7 @@ tasks.bootJar {
 }
 
 tasks.jacocoTestReport {
-    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
+    sourceDirectories.setFrom(files("${projectDir}/src/main/java"))
     classDirectories.setFrom(sourceSets.main.get().output.asFileTree)
     executionData.setFrom(fileTree(layout.buildDirectory.dir("jacoco")).include("*.exec"))
     dependsOn(tasks.test)
@@ -293,13 +293,13 @@ val webpack = tasks.register<NodeTask>("webpack") {
     dependsOn(tasks.npmInstall)
     inputs.files("src/main/resources/static/javascript")
     outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
-    script.set(project.file("node_modules/webpack/bin/webpack.js"))
+    script.set(File("$projectDir/node_modules/webpack/bin/webpack.js"))
     environment.put("NODE_OPTIONS", "--openssl-legacy-provider")
 }
 
 val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
     dependsOn(tasks.npmInstall)
-    script.set(project.file("node_modules/webpack/bin/webpack.js"))
+    script.set(File("$projectDir/node_modules/webpack/bin/webpack.js"))
     args.set(listOf("--watch", "--display-error-details"))
 }
 
