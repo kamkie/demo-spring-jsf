@@ -96,7 +96,7 @@ dependencies {
     implementation("org.primefaces.extensions:primefaces-extensions:$primefacesVersion:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.1.0")
 
-    implementation("net.logstash.logback:logstash-logback-encoder:8.0")
+    implementation("net.logstash.logback:logstash-logback-encoder:8.1")
     implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
