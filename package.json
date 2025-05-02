@@ -35,7 +35,7 @@
     "html-webpack-plugin": "^4.5.2",
     "http-proxy-middleware": "^3.0.5",
     "less": "^4.3.0",
-    "less-loader": "^7.3.0",
+    "less-loader": "^12.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-redux": "^9.2.0",
