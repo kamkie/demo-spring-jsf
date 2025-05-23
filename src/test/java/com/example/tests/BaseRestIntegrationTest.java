@@ -6,13 +6,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.boot.http.client.ClientHttpRequestFactorySettings.Redirects.DONT_FOLLOW;
+import static org.springframework.boot.http.client.ClientHttpRequestFactorySettings.Redirects.FOLLOW;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @Slf4j
@@ -26,10 +27,10 @@ public abstract class BaseRestIntegrationTest extends BaseIntegrationTest {
 
     public BaseRestIntegrationTest(int localServerPort, ObjectMapper objectMapper, RestTemplateBuilder restTemplateBuilder) {
         super(localServerPort, objectMapper);
-        RestTemplateBuilder testRestTemplateBuilder1 = restTemplateBuilder.rootUri("http://localhost:" + localServerPort);
-        this.restAnonymousTemplate = new TestRestTemplate(testRestTemplateBuilder1.requestFactory(() -> new JdkClientHttpRequestFactory()));
-        this.restUserAuthTemplate = new TestRestTemplate(testRestTemplateBuilder1, "user", "password");
-        this.restAdminAuthTemplate = new TestRestTemplate(testRestTemplateBuilder1, "admin", "password");
+        RestTemplateBuilder testRestTemplateBuilder = restTemplateBuilder.rootUri("http://localhost:" + localServerPort);
+        this.restAdminAuthTemplate = new TestRestTemplate(testRestTemplateBuilder, "admin", "password").withRedirects(DONT_FOLLOW);
+        this.restUserAuthTemplate = new TestRestTemplate(testRestTemplateBuilder, "user", "password").withRedirects(FOLLOW);
+        this.restAnonymousTemplate = new TestRestTemplate(testRestTemplateBuilder).withRedirects(DONT_FOLLOW);
     }
 
     @BeforeEach
