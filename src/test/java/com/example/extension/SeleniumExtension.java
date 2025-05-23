@@ -80,6 +80,8 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     private static ChromeOptions initChromeOptions() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
+                "--guest",
+                "--disable-infobars",
                 "--lang=pl",
                 "--start-maximized");
         Map<String, String> props = Map.ofEntries(
