@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+import static java.util.Map.entry;
 import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
 import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
 
@@ -81,7 +82,12 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         chromeOptions.addArguments(
                 "--lang=pl",
                 "--window-size=1600,900");
-        Map<String, String> props = Map.of("intl.accept_languages", "pl");
+        Map<String, String> props = Map.ofEntries(
+                entry("intl.accept_languages", "pl"),
+                entry("credentials_enable_service", "false"),
+                entry("profile.password_manager_enabled", "false"),
+                entry("profile.password_manager_leak_detection", "false")
+        );
         chromeOptions.setExperimentalOption("prefs", props);
 
         return chromeOptions;
