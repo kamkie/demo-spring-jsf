@@ -81,7 +81,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
                 "--lang=pl",
-                "--window-size=1600,900");
+                "--start-maximized");
         Map<String, String> props = Map.ofEntries(
                 entry("intl.accept_languages", "pl"),
                 entry("credentials_enable_service", "false"),
