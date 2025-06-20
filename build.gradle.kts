@@ -143,7 +143,7 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")
     testImplementation("org.testcontainers:testcontainers-postgresql")
-    testImplementation("org.testcontainers:testcontainers-selenium")
+    testImplementation("software.xdev:testcontainers-selenium:2.0.1")
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumVersion")
     testImplementation("net.java.dev.jna:jna-platform:$jnaVersion")
     testImplementation("io.github.artsok:rerunner-jupiter:$rerunnerJupiterVersion")
