@@ -13,7 +13,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.liquibase:liquibase-core:4.32.0")
+        classpath("org.liquibase:liquibase-core:4.33.0")
     }
 }
 
