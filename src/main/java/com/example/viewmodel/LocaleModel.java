@@ -1,4 +1,4 @@
-package com.example.view;
+package com.example.viewmodel;
 
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;

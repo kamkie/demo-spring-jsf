@@ -1,7 +1,7 @@
 package com.example.tests;
 
 import com.example.component.ResourceBundleBean;
-import com.example.view.LocaleModel;
+import com.example.viewmodel.LocaleModel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.jupiter.api.Test;
 

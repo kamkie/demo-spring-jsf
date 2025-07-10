@@ -38,13 +38,12 @@ public class SecurityConfig {
     public SecurityFilterChain managementFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/actuator/**");
         http.httpBasic(httpBasic -> httpBasic.realmName("demo-spring-jsf"));
-        http
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
-                        .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
-                        .requestMatchers("/error").permitAll()
-                        .anyRequest().hasRole("ADMIN")
-                );
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers(EndpointRequest.to("health", "info")).permitAll()
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
+                .requestMatchers("/error").permitAll()
+                .anyRequest().hasRole("ADMIN")
+        );
         http.sessionManagement(smc -> smc.sessionCreationPolicy(STATELESS));
         return http.build();
     }

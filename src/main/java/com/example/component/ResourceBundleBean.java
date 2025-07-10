@@ -1,6 +1,6 @@
 package com.example.component;
 
-import com.example.view.LocaleModel;
+import com.example.viewmodel.LocaleModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;

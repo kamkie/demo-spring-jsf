@@ -1,4 +1,4 @@
-package com.example.view;
+package com.example.viewmodel;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
