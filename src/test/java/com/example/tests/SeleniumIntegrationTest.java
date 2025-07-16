@@ -10,13 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import java.time.Duration;
 import java.util.Locale;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 @Slf4j
 @SuppressWarnings({
@@ -71,7 +74,9 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "password");
 
-        String content = webDriver.findElement(By.tagName("pre")).getText();
+        By preElementSelector = By.tagName("pre");
+        String content = new WebDriverWait(webDriver, Duration.ofSeconds(10))
+                .until(visibilityOfElementLocated(preElementSelector)).getText();
         Map<String, Object> payload = objectMapper.readValue(content, MAP_TYPE_REFERENCE);
         assertThat(payload)
                 .containsKey("principal")
