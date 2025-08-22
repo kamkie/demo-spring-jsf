@@ -24,8 +24,10 @@ public class DbMessageSource implements MessageSource {
     private final MessagesRepository messagesRepository;
 
     @Override
-    public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale) {
-        return messagesRepository.findByKeyAndLang(code, locale.getISO3Language())
+    @Nullable
+    public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, @Nullable Locale locale) {
+        String iso3Language = Optional.ofNullable(locale).orElse(Locale.ENGLISH).getISO3Language();
+        return messagesRepository.findByKeyAndLang(code, iso3Language)
                 .map(Message::getText)
                 .or(() -> Optional.ofNullable(defaultMessage))
                 .map(msg -> String.format(msg, args))
@@ -33,13 +35,13 @@ public class DbMessageSource implements MessageSource {
     }
 
     @Override
-    public String getMessage(String code, @Nullable Object[] args, Locale locale) {
+    public String getMessage(String code, @Nullable Object[] args, @Nullable Locale locale) {
         return Optional.ofNullable(getMessage(code, args, null, locale))
                 .orElse(code);
     }
 
     @Override
-    public String getMessage(MessageSourceResolvable resolvable, Locale locale) {
+    public String getMessage(MessageSourceResolvable resolvable, @Nullable Locale locale) {
         var codes = resolvable.getCodes();
         var arguments = resolvable.getArguments();
         var defaultMessage = resolvable.getDefaultMessage();
