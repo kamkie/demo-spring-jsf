@@ -44,7 +44,7 @@ jobs:
           ip a
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: java, javascript
 
@@ -86,4 +86,4 @@ jobs:
         run: docker build -t demo-spring-jsf .
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
