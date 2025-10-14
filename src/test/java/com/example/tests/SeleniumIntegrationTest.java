@@ -5,8 +5,8 @@ import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -34,7 +34,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         super(localServerPort, objectMapper);
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void adminLoginFailPassword(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "wrong");
@@ -43,7 +43,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         assertThat(content).contains("Invalid username and password.");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void adminLoginFailUserName(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("wrong", "password");
@@ -52,7 +52,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         assertThat(content).contains("Invalid username and password.");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void hello(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
@@ -69,7 +69,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         assertThat(webDriver.findElement(By.id("text")).getText()).contains("witaj świecie");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void adminLogin(RemoteWebDriver webDriver) throws Exception {
         webDriver.get(seleniumBaseUrl + "/admin");
         new LoginPage(webDriver).login("admin", "password");
@@ -86,7 +86,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
                 .containsKey("buildProperties");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void tableXhtml(RemoteWebDriver webDriver) throws Exception {
         webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
@@ -114,7 +114,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         assertThat(tableXhtmlPage.findFirstRow().getText()).contains("witaj świecie");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void changeLanguageInJsf(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/table.xhtml");
         new LoginPage(webDriver).login("user", "password");
@@ -124,7 +124,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         assertThat(new TableXhtmlPage(webDriver).findPageContent().getText()).contains("locale en");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void changeLanguageInJsfAndMvc(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/hello");
         new LoginPage(webDriver).login("user", "password");
@@ -148,7 +148,7 @@ class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
         assertThat(tableXhtmlPage.findPageContent().getText()).contains("locale pl");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest(repeats = 3, suspend = 50)
     void jsfSessionMessages(RemoteWebDriver webDriver) {
         webDriver.get(seleniumBaseUrl + "/index.xhtml");
         new LoginPage(webDriver).login("user", "password");

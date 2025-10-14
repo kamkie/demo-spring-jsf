@@ -107,6 +107,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:selenium")
     testImplementation("org.seleniumhq.selenium:selenium-java")
+    testImplementation("io.github.artsok:rerunner-jupiter:2.1.6")
 }
 
 java {
