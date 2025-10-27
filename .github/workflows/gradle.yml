@@ -60,7 +60,7 @@ jobs:
           files: build/test-results/test/*.xml
 
       - name: publish screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: screenshots
