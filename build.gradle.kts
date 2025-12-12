@@ -26,7 +26,7 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.5.4"
     id("com.diffplug.spotless") version "8.1.0"
     id("com.github.ben-manes.versions") version "0.53.0"
-    id("com.github.spotbugs") version "6.4.7"
+    id("com.github.spotbugs") version "6.4.8"
     id("org.springframework.boot") version "3.5.7"
     id("org.liquibase.gradle") version "3.1.0"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
