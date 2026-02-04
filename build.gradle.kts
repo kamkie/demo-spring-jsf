@@ -7,6 +7,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import org.springframework.boot.gradle.util.VersionExtractor
 import java.io.Serializable
+import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
 buildscript {
@@ -202,9 +203,9 @@ spotless {
         })
 
 
-        // Eclipse formatter screws up long literals with underscores inside of annotations (see issue #14)
+        // Eclipse formatter screws up long literals with underscores inside annotations (see issue #14)
         //    @Max(value = 9_999_999 L) // what Eclipse does
-        //    @Max(value = 9_999_999L)  // what I wish Eclipse did
+        //    @Max(value = 9_999_999L) // what I wish Eclipse did
         custom("Long literal fix", object : Serializable, FormatterFunc {
             override fun apply(text: String): String {
                 return Pattern.compile("([0-9_]+) [Ll]").matcher(text).replaceAll("\$1L")
@@ -223,7 +224,7 @@ spotless {
 }
 
 tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
+    options.encoding = StandardCharsets.UTF_8.name()
     options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation", "-parameters"))
 }
 
