@@ -3,6 +3,19 @@
 This document provides project-specific guidelines and instructions for developers working on the `demo-spring-jsf`
 project.
 
+## Project Overview
+
+This is a Spring Boot application using JSF (JavaServer Faces) for the frontend, running with Docker and a PostgreSQL
+database.
+
+## Key Technologies
+
+- **Backend:** Spring Boot, Spring Data JPA, Java
+- **Frontend:** JSF (PrimeFaces), Webpack for asset bundling
+- **Database:** PostgreSQL
+- **Build Tool:** Gradle (Kotlin DSL)
+- **Containerization:** Docker, Docker Compose
+
 ## 1. Build and Configuration Instructions
 
 ### Prerequisites
@@ -13,7 +26,7 @@ project.
 
 ### Build Commands
 
-- **Full Build**: Run `set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2 && ./gradlew clean build`.
+- **Full Build**: Run `set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2&& gradlew clean build`.
     - *Note*: You might need to set `JAVA_HOME` to point to a Java 25 installation.
 - **Frontend Assets**: Managed via npm and Webpack. While Gradle handles this during the build, you can use
   `npm install` and `npm run build` manually if needed.

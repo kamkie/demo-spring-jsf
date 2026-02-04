@@ -23,12 +23,13 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 
 @Slf4j
 @SuppressWarnings({
-        "PMD.AvoidDuplicateLiterals"
+        "PMD.AvoidDuplicateLiterals",
+        "PMD.TestClassWithoutTestCases"
 })
 class SeleniumIntegrationTest extends BaseSeleniumIntegrationTest {
 
     @Autowired
-    public SeleniumIntegrationTest(
+    SeleniumIntegrationTest(
             @LocalServerPort int localServerPort,
             ObjectMapper objectMapper) {
         super(localServerPort, objectMapper);

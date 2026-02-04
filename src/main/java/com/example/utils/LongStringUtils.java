@@ -1,5 +1,7 @@
 package com.example.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 public interface LongStringUtils {
 
     int MAX_CHARS = 60;
@@ -10,7 +12,7 @@ public interface LongStringUtils {
             return "{null}";
         }
         String string = input.toString();
-        if ("".equals(string)) {
+        if (StringUtils.isEmpty(string)) {
             return "{empty}";
         }
 

@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RestIntegrationTest extends BaseRestIntegrationTest {
 
     @Autowired
-    public RestIntegrationTest(
+    RestIntegrationTest(
             @LocalServerPort int localServerPort,
             ObjectMapper objectMapper,
             RestTemplateBuilder restTemplateBuilder) {

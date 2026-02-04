@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
+@SuppressWarnings("PMD.UnitTestShouldIncludeAssert")
 class ExecutionTimeLoggerTest {
     @Test
     void beanAnnotatedWithTimed() {
@@ -39,7 +40,6 @@ class ExecutionTimeLoggerTest {
     }
 
     @Test
-    @SuppressWarnings("PMD.NcssCount")
     void noLogging() throws Throwable {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.setLevel(Level.OFF);

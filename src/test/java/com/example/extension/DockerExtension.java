@@ -6,7 +6,6 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @Slf4j
 @SuppressWarnings({
-        "PMD.UseUtilityClass",
         "PMD.DoNotUseThreads"
 })
 public class DockerExtension implements Extension {

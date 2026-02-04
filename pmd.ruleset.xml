@@ -1,14 +1,18 @@
 <?xml version="1.0"?>
-<ruleset name="myruleset"
+<ruleset name="Custom Rules"
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>All codestyle rules, but with just the braces rules I like</description>
 
     <rule ref="category/java/bestpractices.xml">
-        <exclude name="JUnitTestsShouldIncludeAssert"/>
-        <exclude name="JUnitTestContainsTooManyAsserts"/>
         <exclude name="AbstractClassWithoutAbstractMethod"/>
+        <exclude name="UnitTestContainsTooManyAsserts"/>
+    </rule>
+    <rule ref="category/java/bestpractices.xml/UnitTestShouldIncludeAssert">
+        <properties>
+            <property name="extraAssertMethodNames" value="andExpect"/>
+        </properties>
     </rule>
     <rule ref="category/java/codestyle.xml">
         <exclude name="CallSuperInConstructor"/>
@@ -19,46 +23,42 @@
         <exclude name="ShortVariable"/>
         <exclude name="LongVariable"/>
         <exclude name="OnlyOneReturn"/>
-        <exclude name="DefaultPackage"/>
         <exclude name="CommentDefaultAccessModifier"/>
+        <exclude name="UseExplicitTypes"/>
     </rule>
     <rule ref="category/java/codestyle.xml/FieldNamingConventions">
         <properties>
-            <property name="publicConstantPattern" value="[A-Z][A-Z_0-9]*" />
-            <property name="constantPattern" value="[A-Z][A-Z_0-9]*" />
-            <property name="enumConstantPattern" value="[A-Z][A-Z_0-9]*" />
-            <property name="finalFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}" />
-            <property name="staticFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}" />
-            <property name="defaultFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}" />
-            <property name="exclusions" value="serialVersionUID|serialPersistentFields" />
+            <property name="publicConstantPattern" value="[A-Z][A-Z_0-9]*"/>
+            <property name="constantPattern" value="[A-Z][A-Z_0-9]*"/>
+            <property name="enumConstantPattern" value="[A-Z][A-Z_0-9]*"/>
+            <property name="finalFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}"/>
+            <property name="staticFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}"/>
+            <property name="defaultFieldPattern" value="[a-z][a-zA-Z0-9]*_{0,1}"/>
+            <property name="exclusions" value="serialVersionUID,serialPersistentFields"/>
         </properties>
     </rule>
     <rule ref="category/java/codestyle.xml/TooManyStaticImports">
         <properties>
-            <property name="maximumStaticImports" value="6" />
+            <property name="maximumStaticImports" value="6"/>
         </properties>
     </rule>
     <rule ref="category/java/design.xml">
         <exclude name="LawOfDemeter"/>
         <exclude name="SignatureDeclareThrowsException"/>
         <exclude name="LoosePackageCoupling"/>
+        <exclude name="ImmutableField"/>
     </rule>
     <rule ref="category/java/design.xml/UseUtilityClass">
         <properties>
-            <property name="ignoredAnnotations" value="lombok.experimental.UtilityClass" />
-            <property name="ignoredAnnotations" value="org.springframework.boot.autoconfigure.SpringBootApplication" />
+            <property name="violationSuppressXPath"
+                      value="//ClassOrInterfaceDeclaration/preceding-sibling::Annotation/MarkerAnnotation/Name[@Image='SpringBootApplication']"/>
         </properties>
     </rule>
-    <rule ref="category/java/errorprone.xml">
-        <exclude name="DataflowAnomalyAnalysis"/>
-        <!--<exclude name="AvoidDuplicateLiterals"/>-->
-    </rule>
+    <rule ref="category/java/errorprone.xml"/>
     <rule ref="category/java/documentation.xml">
         <exclude name="CommentRequired"/>
     </rule>
-    <rule ref="category/java/multithreading.xml">
-        <!--<exclude name="UseConcurrentHashMap"/>-->
-    </rule>
+    <rule ref="category/java/multithreading.xml"/>
     <rule ref="category/java/performance.xml"/>
     <rule ref="category/java/security.xml"/>
 </ruleset>

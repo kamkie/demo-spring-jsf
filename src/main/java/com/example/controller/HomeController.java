@@ -32,6 +32,7 @@ public class HomeController {
 
     private final UsersRepository usersRepository;
     private final ObjectMapper objectMapper;
+    @SuppressWarnings("PMD.LooseCoupling")
     private final ResourceBundleBean msg;
     private final BuildProperties buildProperties;
     private final GitProperties gitProperties;

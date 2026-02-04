@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("PMD.LooseCoupling")
 class ResourceBundleBeanTest {
 
     @Test

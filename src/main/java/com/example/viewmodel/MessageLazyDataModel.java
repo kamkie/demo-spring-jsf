@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class MessageLazyDataModel extends LazyDataModel<Message> {
-    @SuppressWarnings("PMD.FieldNamingConventions")
+
     private static final long serialVersionUID = -8803578331856683793L;
 
     @Override

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @ToString(exclude = {"password", "authorities"})
 @Table(name = "users")
 public class User implements Principal, UserDetails {
-    @SuppressWarnings("PMD.FieldNamingConventions")
+
     private static final long serialVersionUID = 6720661546911326516L;
 
     @Id

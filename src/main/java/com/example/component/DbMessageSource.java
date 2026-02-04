@@ -25,7 +25,8 @@ public class DbMessageSource implements MessageSource {
 
     @Override
     @Nullable
-    public String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, @Nullable Locale locale) {
+    @SuppressWarnings("NullableProblems")
+    public String getMessage(@Nullable String code, @Nullable Object[] args, @Nullable String defaultMessage, @Nullable Locale locale) {
         String iso3Language = Optional.ofNullable(locale).orElse(Locale.ENGLISH).getISO3Language();
         return messagesRepository.findByKeyAndLang(code, iso3Language)
                 .map(Message::getText)
@@ -35,12 +36,14 @@ public class DbMessageSource implements MessageSource {
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public String getMessage(String code, @Nullable Object[] args, @Nullable Locale locale) {
         return Optional.ofNullable(getMessage(code, args, null, locale))
                 .orElse(code);
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public String getMessage(MessageSourceResolvable resolvable, @Nullable Locale locale) {
         var codes = resolvable.getCodes();
         var arguments = resolvable.getArguments();
@@ -57,7 +60,7 @@ public class DbMessageSource implements MessageSource {
                 .orElseGet(() -> Arrays.toString(codes));
     }
 
-    private Optional<String> tryFormatMessage(@Nullable Object[] args, String[] codes, Locale locale) {
+    private Optional<String> tryFormatMessage(@Nullable Object[] args, @Nullable String[] codes, @Nullable Locale locale) {
         return Arrays.stream(codes)
                 .map(code -> getMessage(code, args, null, locale))
                 .filter(Objects::nonNull)

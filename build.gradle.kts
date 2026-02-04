@@ -43,7 +43,7 @@ val javaVersion = JavaVersion.VERSION_25
 val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
-val pmdToolVersion = "6.54.0"
+val pmdToolVersion = "7.21.0"
 val primefacesVersion = "15.0.12"
 
 repositories {

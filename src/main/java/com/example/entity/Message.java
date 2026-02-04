@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
@@ -20,7 +19,6 @@ import java.io.Serializable;
 @Table(name = "messages")
 public class Message implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 6720661546911326511L;
 
     @Id

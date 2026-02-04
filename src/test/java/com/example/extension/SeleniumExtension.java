@@ -25,6 +25,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.util.Map.entry;
 import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
@@ -43,12 +45,14 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     private static final BrowserWebDriverContainer WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer(DockerImageName.parse("selenium/standalone-chrome"))
             .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
+    private static final Lock LOCK = new ReentrantLock();
 
     private static RemoteWebDriver webDriver;
 
     private static RemoteWebDriver getWebDriver() {
         if (!WEB_DRIVER_CONTAINER.isRunning()) {
-            synchronized (WEB_DRIVER_CONTAINER) {
+            LOCK.lock();
+            try {
                 if (!WEB_DRIVER_CONTAINER.isRunning()) {
                     log.info("starting selenium docker container");
                     WEB_DRIVER_CONTAINER.start();
@@ -58,6 +62,8 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
                     }));
                     webDriver = new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions());
                 }
+            } finally {
+                LOCK.unlock();
             }
         }
         return webDriver;
