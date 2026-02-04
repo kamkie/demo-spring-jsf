@@ -39,10 +39,10 @@ val gitVersion: groovy.lang.Closure<String> by extra
 version = gitVersion()
 group = "demo"
 
-val javaVersion = JavaVersion.VERSION_21
+val javaVersion = JavaVersion.VERSION_25
 val nodeVersion = "20.9.0"
-val spotbugsToolVersion = "4.8.0"
-val jacocoToolVersion = "0.8.9"
+val spotbugsToolVersion = "4.9.8"
+val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "6.54.0"
 val primefacesVersion = "15.0.12"
 

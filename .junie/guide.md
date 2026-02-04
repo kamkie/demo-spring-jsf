@@ -18,7 +18,7 @@ database.
 
 ## Development Setup
 
-- **Build:** `JAVA_HOME=/C/Users/kamki/.jdks/azul-21.0.10 ./gradlew clean build`
+- **Build:** `set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2 && ./gradlew clean build`
 - **Database:** A PostgreSQL container is required. See `README.md` for the `docker run` command.
 - **Frontend Assets:** Managed via npm/webpack. See `package.json` for scripts.
 

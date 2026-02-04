@@ -7,14 +7,14 @@ project.
 
 ### Prerequisites
 
-- **Java 21**: The project is configured to use Java 21 (`JavaVersion.VERSION_21` in `build.gradle.kts`).
+- **Java 25**: The project is configured to use Java 25 (`JavaVersion.VERSION_25` in `build.gradle.kts`).
 - **Docker**: Required for running the PostgreSQL database and Selenium tests.
 - **Node.js**: Version 20.9.0 is managed via the Gradle Node plugin.
 
 ### Build Commands
 
-- **Full Build**: Run `./gradlew clean build`.
-    - *Note*: You might need to set `JAVA_HOME` to point to a Java 21 installation.
+- **Full Build**: Run `set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2 && ./gradlew clean build`.
+    - *Note*: You might need to set `JAVA_HOME` to point to a Java 25 installation.
 - **Frontend Assets**: Managed via npm and Webpack. While Gradle handles this during the build, you can use
   `npm install` and `npm run build` manually if needed.
 

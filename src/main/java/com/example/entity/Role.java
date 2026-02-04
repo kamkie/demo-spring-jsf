@@ -1,6 +1,5 @@
 package com.example.entity;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +19,6 @@ import java.io.Serializable;
 @ToString
 @Entity
 @Table(name = "roles")
-@SuppressFBWarnings("PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES")
 public class Role implements Serializable {
     @SuppressWarnings("PMD.FieldNamingConventions")
     private static final long serialVersionUID = -8703578331855685793L;
