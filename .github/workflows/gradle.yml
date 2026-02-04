@@ -114,5 +114,11 @@ jobs:
           exit-code: 1
           ignore-unfixed: true
 
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
