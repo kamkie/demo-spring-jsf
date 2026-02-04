@@ -266,7 +266,8 @@ tasks.asciidoctor {
     jvm {
         jvmArgs(
                 "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
-                "--add-opens=java.base/java.io=ALL-UNNAMED"
+                "--add-opens=java.base/java.io=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED"
         )
     }
     attributes(mapOf(
