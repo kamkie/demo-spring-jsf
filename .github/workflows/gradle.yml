@@ -48,8 +48,11 @@ jobs:
         with:
           languages: java, javascript
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build
         env:
           HOST_FOR_SELENIUM: "172.17.0.1"
 
