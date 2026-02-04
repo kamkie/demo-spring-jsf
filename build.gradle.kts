@@ -45,6 +45,7 @@ val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.21.0"
 val primefacesVersion = "15.0.12"
+val asciidoctorjVersion = "3.0.0"
 
 repositories {
     mavenCentral()
@@ -254,7 +255,7 @@ tasks.jacocoTestReport {
 }
 
 asciidoctorj {
-    setVersion("3.0.0")
+    setVersion(asciidoctorjVersion)
 }
 
 tasks.asciidoctor {
