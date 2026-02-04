@@ -113,6 +113,12 @@ jobs:
           output: 'trivy-results.sarif'
           exit-code: 0
 
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
       - name: Scan image with Trivy table
         uses: aquasecurity/trivy-action@0.33.1
         with:
@@ -120,12 +126,7 @@ jobs:
           format: 'table'
           exit-code: 1
           ignore-unfixed: true
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
