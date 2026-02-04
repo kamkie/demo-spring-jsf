@@ -1,4 +1,5 @@
 import com.diffplug.spotless.FormatterFunc
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -27,7 +28,7 @@ plugins {
     id("com.diffplug.spotless") version "8.2.1"
     id("com.github.ben-manes.versions") version "0.53.0"
     id("com.github.spotbugs") version "6.4.8"
-    id("org.springframework.boot") version "3.5.7"
+    id("org.springframework.boot") version "3.5.10"
     id("org.liquibase.gradle") version "3.1.0"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.node-gradle.node") version "7.1.0"
@@ -43,7 +44,7 @@ val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.8.0"
 val jacocoToolVersion = "0.8.9"
 val pmdToolVersion = "6.54.0"
-val primefacesVersion = "15.0.5"
+val primefacesVersion = "15.0.12"
 
 repositories {
     mavenCentral()
@@ -288,6 +289,18 @@ tasks.withType<Test> {
         showCauses = true
         showStackTraces = true
     }
+}
+
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf { (candidate.group == "org.jacoco") && (candidate.version != currentVersion) }
+    rejectVersionIf { isNonStable(candidate.version) && !isNonStable(currentVersion) }
+}
+
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
 }
 
 val webpack = tasks.register<NodeTask>("webpack") {
