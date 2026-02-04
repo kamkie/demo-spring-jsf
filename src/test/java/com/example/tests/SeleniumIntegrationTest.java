@@ -4,7 +4,6 @@ import com.example.pageobjects.LoginPage;
 import com.example.pageobjects.SessionMessagesPanel;
 import com.example.pageobjects.TableXhtmlPage;
 import com.example.pageobjects.ToolbarPanel;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -13,6 +12,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.util.Locale;

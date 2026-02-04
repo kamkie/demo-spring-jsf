@@ -4,10 +4,10 @@ import com.example.annotation.TimedMethod;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.annotation.Primary;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

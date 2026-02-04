@@ -2,7 +2,7 @@ package com.example.extension;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.Extension;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @Slf4j
 @SuppressWarnings({

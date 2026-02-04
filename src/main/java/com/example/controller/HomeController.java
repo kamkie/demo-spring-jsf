@@ -4,8 +4,6 @@ import com.example.annotation.TimedMethod;
 import com.example.component.ResourceBundleBean;
 import com.example.entity.User;
 import com.example.repository.UsersRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import tools.jackson.databind.ObjectMapper;
 
 import java.security.Principal;
 import java.util.LinkedHashMap;
@@ -51,18 +50,17 @@ public class HomeController {
     }
 
     @GetMapping({"/", "/home"})
-    public ResponseEntity<?> home(Principal principal, HttpSession session) throws JsonProcessingException {
+    public ResponseEntity<?> home(Principal principal, HttpSession session) {
         return getResponseEntity(principal, session);
     }
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping({"/admin"})
-    public ResponseEntity<?> admin(Principal principal, HttpSession session) throws JsonProcessingException {
+    public ResponseEntity<?> admin(Principal principal, HttpSession session) {
         return getResponseEntity(principal, session);
     }
 
-    private ResponseEntity<?> getResponseEntity(Principal principal, HttpSession session)
-            throws JsonProcessingException {
+    private ResponseEntity<?> getResponseEntity(Principal principal, HttpSession session) {
         log.info("home controller called principal: {}", principal);
 
         var userList = usersRepository.findAll();

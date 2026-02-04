@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +25,7 @@ import static jakarta.servlet.DispatcherType.REQUEST;
 
 @Slf4j
 @ConditionalOnProperty(name = "logging.custom.session.enable")
-@Order(SecurityProperties.DEFAULT_FILTER_ORDER + 102)
+@Order(Ordered.LOWEST_PRECEDENCE - 102)
 @Component
 @WebFilter(urlPatterns = {"/", "/*"}, asyncSupported = true, dispatcherTypes = {REQUEST, ASYNC, ERROR, FORWARD, INCLUDE})
 public class SessionIdFilter extends OncePerRequestFilter {

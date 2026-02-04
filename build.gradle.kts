@@ -28,7 +28,7 @@ plugins {
     id("com.diffplug.spotless") version "8.2.1"
     id("com.github.ben-manes.versions") version "0.53.0"
     id("com.github.spotbugs") version "6.4.8"
-    id("org.springframework.boot") version "3.5.10"
+    id("org.springframework.boot") version "4.0.2"
     id("org.liquibase.gradle") version "3.1.0"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.node-gradle.node") version "7.1.0"
@@ -71,18 +71,19 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core")
     liquibaseRuntime("info.picocli:picocli:4.7.7")
 
-    implementation("com.github.spotbugs:spotbugs-annotations")
+    implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-restclient")
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
@@ -91,22 +92,25 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.postgresql:postgresql")
     implementation("com.google.code.gson:gson")
+    implementation("net.logstash.logback:logstash-logback-encoder:9.0")
 
-    implementation("org.joinfaces:primefaces-spring-boot-starter:5.5.7")
+    implementation("org.joinfaces:primefaces-spring-boot-starter:6.0.2")
     implementation("org.primefaces:primefaces:$primefacesVersion:jakarta")
     implementation("org.primefaces.extensions:primefaces-extensions:$primefacesVersion:jakarta")
     implementation("org.primefaces.themes:bootstrap:1.1.0")
 
-    implementation("net.logstash.logback:logstash-logback-encoder:9.0")
-    implementation("de.ruedigermoeller:fst:3.0.4-jdk17")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-resttestclient")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-session-jdbc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-liquibase-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:selenium")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers-postgresql")
+    testImplementation("org.testcontainers:testcontainers-selenium")
     testImplementation("org.seleniumhq.selenium:selenium-java")
     testImplementation("io.github.artsok:rerunner-jupiter:2.1.6")
 }
@@ -220,6 +224,7 @@ tasks.bootRun {
             "--add-opens=java.base/java.util.concurrent=ALL-UNNAMED",
             "--add-opens=java.base/java.net=ALL-UNNAMED",
             "--add-opens=java.base/java.text=ALL-UNNAMED",
+            "--add-opens=java.base/java.time=ALL-UNNAMED",
             "--add-opens=java.sql/java.sql=ALL-UNNAMED"
     )
     doFirst {
@@ -243,6 +248,10 @@ tasks.jacocoTestReport {
         xml.required.set(true)
         html.required.set(true)
     }
+}
+
+asciidoctorj {
+    setVersion("3.0.0")
 }
 
 tasks.asciidoctor {

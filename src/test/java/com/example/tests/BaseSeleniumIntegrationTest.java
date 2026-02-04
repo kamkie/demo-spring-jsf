@@ -1,9 +1,9 @@
 package com.example.tests;
 
 import com.example.extension.SeleniumExtension;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtendWith;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @ExtendWith(SeleniumExtension.class)

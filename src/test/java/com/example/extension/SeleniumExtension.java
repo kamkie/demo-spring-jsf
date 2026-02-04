@@ -12,9 +12,10 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.testcontainers.containers.DefaultRecordingFileFactory;
 import org.testcontainers.lifecycle.TestDescription;
+import org.testcontainers.selenium.BrowserWebDriverContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +27,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import static java.util.Map.entry;
-import static org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
 import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
+import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
 
 @Slf4j
 @SuppressWarnings({
@@ -39,8 +40,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
 
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
-    private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer<>()
-            .withCapabilities(initChromeOptions())
+    private static final BrowserWebDriverContainer WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer(DockerImageName.parse("selenium/standalone-chrome"))
             .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
 
