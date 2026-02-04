@@ -55,6 +55,7 @@ val asciidoctor: Configuration = configurations.create("asciidoctor")
 
 dependencies {
     asciidoctor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+    developmentOnly(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
     implementation(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
     annotationProcessor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
     testAnnotationProcessor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
@@ -71,10 +72,11 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core")
     liquibaseRuntime("info.picocli:picocli:4.7.7")
 
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")
     implementation("org.projectlombok:lombok")
 
-    implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
@@ -84,6 +86,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-restclient")
+    implementation("org.springframework.boot:spring-boot-session")
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 

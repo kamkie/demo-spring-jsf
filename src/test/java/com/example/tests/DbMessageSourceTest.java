@@ -3,6 +3,7 @@ package com.example.tests;
 import com.example.component.DbMessageSource;
 import com.example.entity.Message;
 import com.example.repository.MessagesRepository;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -76,7 +77,7 @@ class DbMessageSourceTest {
     }
 
     @Test
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
+    @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     void testMessage4() {
         MessagesRepository repository = mock(MessagesRepository.class);
         String key = "key";

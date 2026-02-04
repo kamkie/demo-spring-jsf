@@ -4,7 +4,8 @@
       <settings>
         <option name="imageTag" value="demo-spring-jsf" />
         <option name="attachToContainerNeeded" value="true" />
-        <option name="buildKitEnabled" value="true" />
+        <option name="buildCliOptions" value="--progress plain" />
+        <option name="buildOnly" value="true" />
         <option name="containerName" value="demo-spring-jsf" />
         <option name="portBindings">
           <list>
