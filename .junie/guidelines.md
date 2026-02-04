@@ -55,8 +55,9 @@ block, and changelogs are located in `src/main/resources/db/changelog/`.
 
 ### Running Tests
 
-- **All Tests**: `./gradlew test`
-- **Specific Test**: `./gradlew test --tests com.example.tests.LongStringUtilsTest`
+- **All Tests**: `.set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2&& gradlew test`
+- **Specific Test**:
+  `set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2&& gradlew test --tests com.example.tests.LongStringUtilsTest`
 
 ### Test Configuration
 
@@ -103,13 +104,14 @@ class SimpleDemoTest {
 
 ### Code Style and Formatting
 
-- **Spotless**: The project uses Spotless to enforce code formatting. Run `./gradlew spotlessApply` to format your code.
+- **Spotless**: The project uses Spotless to enforce code formatting. Run
+  `set JAVA_HOME=%USERPROFILE%\.jdks\azul-25.0.2&& gradlew spotlessApply` to format your code.
 - **Eclipse Formatter**: The formatting rules are defined in `spotless.eclipseformat.xml`.
 - **PMD**: Static analysis is performed using PMD with rules defined in `pmd.ruleset.xml`.
 
 ### Architecture
 
-- The project follows a layered architecture: **Web (JSF/PrimeFaces) -> Services -> Repositories -> JPA Entities**.
+- The project follows a layered architecture: **Web (JSF/PrimeFaces) → Services → Repositories → JPA Entities**.
 - Frontend resources are located in `src/main/webapp`.
 
 ### Task Management

@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class VersionModel {
 
-    @Value("${spring.application.name}")
-    private String name;
-    private String version;
+    private final String name;
+    private final String version;
 
-    public VersionModel(BuildProperties buildProperties) {
+    public VersionModel(@Value("${spring.application.name}") String name,
+                        BuildProperties buildProperties) {
+        this.name = name;
         this.version = buildProperties.getVersion();
     }
 }

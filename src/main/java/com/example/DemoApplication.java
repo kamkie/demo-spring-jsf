@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SuppressWarnings("PMD.UseUtilityClass")
 public class DemoApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
 
