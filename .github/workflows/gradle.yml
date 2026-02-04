@@ -51,6 +51,7 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: java, javascript
+          build-mode: none
 
       - name: Build with Gradle
         run: ./gradlew build
@@ -98,8 +99,20 @@ jobs:
           report_type: test_results
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v4
+
       - name: build docker image
         run: docker build -t demo-spring-jsf .
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: 'demo-spring-jsf:latest'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: 1
+          ignore-unfixed: true
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
