@@ -28,7 +28,7 @@ public abstract class BaseRestIntegrationTest extends BaseIntegrationTest {
     protected MockMvc mockMvc;
 
     public BaseRestIntegrationTest(int localServerPort, ObjectMapper objectMapper, RestTemplateBuilder restTemplateBuilder) {
-        super(localServerPort, objectMapper);
+        super(objectMapper);
         RestTemplateBuilder testRestTemplateBuilder = restTemplateBuilder.rootUri("http://localhost:" + localServerPort);
         this.restAdminAuthTemplate = new TestRestTemplate(testRestTemplateBuilder, "admin", "password").withRedirects(DONT_FOLLOW);
         this.restUserAuthTemplate = new TestRestTemplate(testRestTemplateBuilder, "user", "password").withRedirects(FOLLOW);

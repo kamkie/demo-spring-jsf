@@ -12,10 +12,11 @@ public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
     protected final String seleniumBaseUrl;
 
     public BaseSeleniumIntegrationTest(int localServerPort, ObjectMapper objectMapper) {
-        super(localServerPort, objectMapper);
+        super(objectMapper);
         String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null
                 ? "host.docker.internal"
                 : System.getenv("HOST_FOR_SELENIUM");
+        // noinspection HttpUrlsUsage local url for tests
         this.seleniumBaseUrl = "http://" + hostForSelenium + ":" + localServerPort;
     }
 }

@@ -12,8 +12,9 @@ public class VersionModel {
     private final String name;
     private final String version;
 
-    public VersionModel(@Value("${spring.application.name}") String name,
-                        BuildProperties buildProperties) {
+    public VersionModel(
+            @Value("${spring.application.name}") String name,
+            BuildProperties buildProperties) {
         this.name = name;
         this.version = buildProperties.getVersion();
     }

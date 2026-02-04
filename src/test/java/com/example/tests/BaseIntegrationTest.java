@@ -29,11 +29,9 @@ public abstract class BaseIntegrationTest {
     protected static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<>() {
     };
 
-    protected final int localServerPort;
     protected final ObjectMapper objectMapper;
 
-    public BaseIntegrationTest(int localServerPort, ObjectMapper objectMapper) {
-        this.localServerPort = localServerPort;
+    public BaseIntegrationTest(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
