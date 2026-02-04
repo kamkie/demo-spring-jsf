@@ -208,7 +208,7 @@ spotless {
         //    @Max(value = 9_999_999L) // what I wish Eclipse did
         custom("Long literal fix", object : Serializable, FormatterFunc {
             override fun apply(text: String): String {
-                return Pattern.compile("([0-9_]+) [Ll]").matcher(text).replaceAll("\$1L")
+                return Pattern.compile("([0-9_]+) [Ll]").matcher(text).replaceAll($$"$1L")
             }
         })
     }
