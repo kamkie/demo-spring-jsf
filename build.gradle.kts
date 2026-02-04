@@ -274,7 +274,8 @@ tasks.asciidoctor {
     inputs.dir(layout.buildDirectory.dir("generated-snippets"))
     setOutputDir(layout.buildDirectory.dir("asciidoc/static/docs"))
     jvm {
-        jvmArgs(
+        jvmArgs = listOf(
+                "--sun-misc-unsafe-memory-access=allow",
                 "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
                 "--add-opens=java.base/java.io=ALL-UNNAMED",
                 "--enable-native-access=ALL-UNNAMED"
