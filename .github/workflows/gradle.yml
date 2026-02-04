@@ -78,10 +78,20 @@ jobs:
         with:
           path: 'build/reports/pmd/*.xml'
 
-      - name: Upload test results to Codecov
+      - name: Upload code coverage to codecov
+        uses: codecov/codecov-action@v5
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
         with:
+          fail_ci_if_error: true
+          report-type: coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload Test Results to codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          report-type: test_results
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: build docker image
