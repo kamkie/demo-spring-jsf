@@ -45,7 +45,15 @@ val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.21.0"
 val primefacesVersion = "15.0.12"
-val asciidoctorjVersion = "3.0.0"
+val asciiDoctorJVersion = "3.0.0"
+val picocliVersion = "4.7.7"
+val spotbugsAnnotationsVersion = "4.9.8"
+val logstashLogbackEncoderVersion = "9.0"
+val joinfacesVersion = "6.0.2"
+val primefacesThemesVersion = "1.1.0"
+val rerunnerJupiterVersion = "2.1.6"
+val gradleWrapperVersion = "9.3.1"
+
 
 repositories {
     mavenCentral()
@@ -71,11 +79,11 @@ dependencies {
 
     liquibaseRuntime("org.postgresql:postgresql")
     liquibaseRuntime("org.liquibase:liquibase-core")
-    liquibaseRuntime("info.picocli:picocli:4.7.7")
+    liquibaseRuntime("info.picocli:picocli:$picocliVersion")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")
+    implementation("com.github.spotbugs:spotbugs-annotations:$spotbugsAnnotationsVersion")
     implementation("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-configuration-processor")
@@ -96,12 +104,12 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.postgresql:postgresql")
     implementation("com.google.code.gson:gson")
-    implementation("net.logstash.logback:logstash-logback-encoder:9.0")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
 
-    implementation("org.joinfaces:primefaces-spring-boot-starter:6.0.2")
+    implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
     implementation("org.primefaces:primefaces:$primefacesVersion:jakarta")
     implementation("org.primefaces.extensions:primefaces-extensions:$primefacesVersion:jakarta")
-    implementation("org.primefaces.themes:bootstrap:1.1.0")
+    implementation("org.primefaces.themes:bootstrap:$primefacesThemesVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
@@ -116,7 +124,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("org.testcontainers:testcontainers-selenium")
     testImplementation("org.seleniumhq.selenium:selenium-java")
-    testImplementation("io.github.artsok:rerunner-jupiter:2.1.6")
+    testImplementation("io.github.artsok:rerunner-jupiter:$rerunnerJupiterVersion")
 }
 
 java {
@@ -255,7 +263,7 @@ tasks.jacocoTestReport {
 }
 
 asciidoctorj {
-    setVersion(asciidoctorjVersion)
+    setVersion(asciiDoctorJVersion)
 }
 
 tasks.asciidoctor {
@@ -332,7 +340,7 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 }
 
 tasks.wrapper {
-    gradleVersion = "9.3.1"
+    gradleVersion = gradleWrapperVersion
     distributionType = Wrapper.DistributionType.ALL
 }
 
