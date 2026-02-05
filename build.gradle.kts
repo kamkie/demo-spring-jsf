@@ -25,7 +25,7 @@ plugins {
     idea
     pmd
     id("com.palantir.git-version") version "4.3.0"
-    id("com.gorylenko.gradle-git-properties") version "2.5.4"
+    id("com.gorylenko.gradle-git-properties") version "2.5.5"
     id("com.diffplug.spotless") version "8.2.1"
     id("com.github.ben-manes.versions") version "0.53.0"
     id("com.github.spotbugs") version "6.4.8"
