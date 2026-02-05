@@ -85,14 +85,14 @@ jobs:
 
       - name: Upload code coverage to codecov
         uses: codecov/codecov-action@v5
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
         with:
           fail_ci_if_error: true
           report_type: coverage
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload Test Results to codecov
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
@@ -100,7 +100,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@v4
+        if: github.actor != 'dependabot[bot]'
+        uses: gradle/actions/dependency-submission@v5
 
       - name: build docker image
         run: docker build -t demo-spring-jsf .
@@ -115,7 +116,7 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: github.actor != 'dependabot[bot]'
         with:
           sarif_file: 'trivy-results.sarif'
 
