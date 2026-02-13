@@ -107,7 +107,7 @@ jobs:
         run: docker build -t demo-spring-jsf .
 
       - name: Scan image with Trivy sarif
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.34.0
         with:
           image-ref: 'demo-spring-jsf:latest'
           format: 'sarif'
@@ -121,7 +121,7 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 
       - name: Scan image with Trivy table
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.34.0
         with:
           image-ref: 'demo-spring-jsf:latest'
           format: 'table'
