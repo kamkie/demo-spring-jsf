@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.liquibase:liquibase-core:5.0.1")
+        classpath("org.liquibase:liquibase-core:5.0.2")
     }
 }
 
@@ -26,7 +26,7 @@ plugins {
     pmd
     id("com.palantir.git-version") version "5.0.0"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
-    id("com.diffplug.spotless") version "8.2.1"
+    id("com.diffplug.spotless") version "8.3.0"
     id("com.github.ben-manes.versions") version "0.53.0"
     id("com.github.spotbugs") version "6.4.8"
     id("org.springframework.boot") version "4.0.3"
@@ -53,7 +53,7 @@ val logstashLogbackEncoderVersion = "9.0"
 val joinfacesVersion = "6.0.3"
 val primefacesThemesVersion = "1.1.0"
 val rerunnerJupiterVersion = "2.1.6"
-val gradleWrapperVersion = "9.3.1"
+val gradleWrapperVersion = "9.4.0"
 
 
 repositories {
