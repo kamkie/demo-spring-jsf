@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.liquibase:liquibase-core:5.0.1")
+        classpath("org.liquibase:liquibase-core:5.0.2")
     }
 }
 
