@@ -24,7 +24,7 @@ jobs:
           java-version: '25'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v6.3.0
@@ -101,7 +101,7 @@ jobs:
 
       - name: Generate and submit dependency graph
         if: github.actor != 'dependabot[bot]'
-        uses: gradle/actions/dependency-submission@v5
+        uses: gradle/actions/dependency-submission@v6
 
       - name: build docker image
         run: docker build -t demo-spring-jsf .
