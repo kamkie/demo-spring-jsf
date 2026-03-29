@@ -44,16 +44,16 @@ val javaVersion = JavaVersion.VERSION_25
 val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
-val pmdToolVersion = "7.21.0"
+val pmdToolVersion = "7.23.0"
 val primefacesVersion = "15.0.13"
 val asciiDoctorJVersion = "3.0.0"
 val picocliVersion = "4.7.7"
 val spotbugsAnnotationsVersion = "4.9.8"
 val logstashLogbackEncoderVersion = "9.0"
-val joinfacesVersion = "6.0.4"
+val joinfacesVersion = "6.0.5"
 val primefacesThemesVersion = "1.1.0"
 val rerunnerJupiterVersion = "2.1.6"
-val gradleWrapperVersion = "9.4.0"
+val gradleWrapperVersion = "9.4.1"
 
 
 repositories {
