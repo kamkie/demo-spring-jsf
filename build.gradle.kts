@@ -45,7 +45,9 @@ val nodeVersion = "20.9.0"
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
-val primefacesVersion = "15.0.13"
+val primefacesVersion = "15.0.14"
+val gsonVersion = "2.14.0"
+val seleniumVersion = "4.43.0"
 val asciiDoctorJVersion = "3.0.0"
 val picocliVersion = "4.7.7"
 val spotbugsAnnotationsVersion = "4.9.8"
@@ -104,7 +106,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.postgresql:postgresql")
-    implementation("com.google.code.gson:gson")
+    implementation("com.google.code.gson:gson:$gsonVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
 
     implementation("org.joinfaces:primefaces-spring-boot-starter:$joinfacesVersion")
@@ -124,7 +126,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")
     testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("org.testcontainers:testcontainers-selenium")
-    testImplementation("org.seleniumhq.selenium:selenium-java")
+    testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumVersion")
     testImplementation("io.github.artsok:rerunner-jupiter:$rerunnerJupiterVersion")
 }
 
