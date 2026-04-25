@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import { Component } from "react";
 import Seat from "./seat.jsx";
 
 const seatNumbers = [1, 2, 3, 4];

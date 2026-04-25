@@ -10,6 +10,14 @@ Spring Boot Aplication with Docker
 ```
   ./gradlew clean build
 ```
+The Gradle build runs the frontend bundle step automatically.
+
+### frontend assets
+```
+npm run build
+npm run watch
+```
+
 ### selenium tests
 to run selenium test where `host.docker.internal` is not set env variable `HOST_FOR_SELENIUM` can be used
 

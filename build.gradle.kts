@@ -331,16 +331,33 @@ fun isNonStable(version: String): Boolean {
 
 val webpack = tasks.register<NodeTask>("webpack") {
     dependsOn(tasks.npmInstall)
-    inputs.files("src/main/resources/static/javascript")
+    inputs.files(
+            "package.json",
+            "package-lock.json",
+            "scripts/build.mjs"
+    )
+    inputs.files(fileTree("src/main/resources/static") {
+        include("javascript/**", "css/**")
+    })
     outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
-    script.set(File("$projectDir/node_modules/webpack/bin/webpack.js"))
-    environment.put("NODE_OPTIONS", "--openssl-legacy-provider")
+    script.set(File("$projectDir/scripts/build.mjs"))
+    environment.put("NODE_ENV", "production")
 }
 
 val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
     dependsOn(tasks.npmInstall)
-    script.set(File("$projectDir/node_modules/webpack/bin/webpack.js"))
-    args.set(listOf("--watch", "--display-error-details"))
+    inputs.files(
+            "package.json",
+            "package-lock.json",
+            "scripts/build.mjs"
+    )
+    inputs.files(fileTree("src/main/resources/static") {
+        include("javascript/**", "css/**")
+    })
+    outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
+    script.set(File("$projectDir/scripts/build.mjs"))
+    args.set(listOf("--watch"))
+    environment.put("NODE_ENV", "development")
 }
 
 tasks.wrapper {

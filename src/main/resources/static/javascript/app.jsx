@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import { Component } from "react";
 import Table from "./table";
 import "../css/general.css";
 // import { connect } from 'react-redux';
