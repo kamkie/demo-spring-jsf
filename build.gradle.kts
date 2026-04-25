@@ -102,7 +102,7 @@ dependencies {
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
-    implementation("org.liquibase:liquibase-core")
+    implementation("org.springframework.boot:spring-boot-starter-liquibase")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.postgresql:postgresql")
