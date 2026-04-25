@@ -1,7 +1,7 @@
 node('maven-docker') {
     def gitProps = checkout scm
     def jdk = tool 'jdk25'
-    def nodeVersion = 'node20'
+    def nodeVersion = 'node24'
     stages {
         stage("show tool versions") {
             echo "GIT_BRANCH=${gitProps.GIT_BRANCH}, GIT_COMMIT=${gitProps.GIT_COMMIT}"

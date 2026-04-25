@@ -41,7 +41,7 @@ version = gitVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_25
-val nodeVersion = "20.9.0"
+val nodeVersion = "24.14.1"
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"

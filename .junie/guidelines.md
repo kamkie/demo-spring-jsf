@@ -22,7 +22,7 @@ database.
 
 - **Java 25**: The project is configured to use Java 25 (`JavaVersion.VERSION_25` in `build.gradle.kts`).
 - **Docker**: Required for running the PostgreSQL database and Selenium tests.
-- **Node.js**: Version 20.9.0 is managed via the Gradle Node plugin.
+- **Node.js**: Version 24.14.1 is managed via the Gradle Node plugin.
 
 ### Build Commands
 
