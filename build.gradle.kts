@@ -56,6 +56,7 @@ val joinfacesVersion = "6.0.5"
 val primefacesThemesVersion = "1.1.0"
 val rerunnerJupiterVersion = "2.1.6"
 val gradleWrapperVersion = "9.4.1"
+val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
 
 
 repositories {
@@ -273,7 +274,7 @@ tasks.asciidoctor {
     mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
-    inputs.dir(layout.buildDirectory.dir("generated-snippets"))
+    inputs.dir(generatedSnippetsDir)
     setOutputDir(layout.buildDirectory.dir("asciidoc/static/docs"))
     jvm {
         jvmArgs = listOf(
@@ -296,7 +297,7 @@ tasks.asciidoctor {
 }
 
 tasks.withType<Test> {
-    outputs.dir(layout.buildDirectory.dir("generated-snippets"))
+    outputs.dir(generatedSnippetsDir)
     useJUnitPlatform()
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",

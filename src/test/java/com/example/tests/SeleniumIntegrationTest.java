@@ -7,6 +7,8 @@ import com.example.pageobjects.ToolbarPanel;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -24,6 +26,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 
 @Slf4j
 @Tag("selenium")
+@Execution(ExecutionMode.SAME_THREAD)
 @SuppressWarnings({
         "PMD.AvoidDuplicateLiterals",
         "PMD.TestClassWithoutTestCases"
