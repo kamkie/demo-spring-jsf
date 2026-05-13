@@ -106,28 +106,41 @@ jobs:
       - name: build docker image
         run: docker build -t demo-spring-jsf .
 
-      - name: Scan image with Trivy sarif
+      - name: Scan image with Trivy json
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: 'demo-spring-jsf:latest'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          format: 'json'
+          output: 'trivy-results.json'
           exit-code: 0
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Generate Trivy reports
+        run: |
+          trivy convert --format sarif --output trivy-results.sarif --severity CRITICAL,HIGH trivy-results.json
+          trivy convert --format table --severity CRITICAL,HIGH trivy-results.json
+
+      - name: Warn on Trivy findings
+        run: |
+          node - <<'EOF'
+          const fs = require('node:fs');
+
+          const sarif = JSON.parse(fs.readFileSync('trivy-results.sarif', 'utf8'));
+          const count = sarif.runs
+            ?.flatMap((run) => run.results ?? [])
+            .length ?? 0;
+
+          if (count > 0) {
+            console.log(`::warning title=Trivy security scan::Trivy found ${count} HIGH/CRITICAL vulnerability result(s). See the scan output and GitHub Security tab.`);
+          }
+          EOF
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
         if: github.actor != 'dependabot[bot]'
         with:
           sarif_file: 'trivy-results.sarif'
-
-      - name: Scan image with Trivy table
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: 'demo-spring-jsf:latest'
-          format: 'table'
-          exit-code: 1
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

@@ -93,6 +93,7 @@ npm run watch
 
 - Java formatting is controlled by Spotless using `spotless.eclipseformat.xml`.
 - Markdown, Gradle Kotlin DSL, shell scripts, and gitignore files are also covered by the `spotlessMisc` configuration.
+- Format Markdown files using IntelliJ IDEA's default Markdown style before committing documentation changes.
 - PMD uses `pmd.ruleset.xml`.
 - SpotBugs uses `spotbugs-exclude.xml`.
 - Keep comments brief and useful. Avoid broad refactors unless required for the task.
