@@ -45,7 +45,7 @@ val nodeVersion = "24.14.1"
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
-val primefacesVersion = "15.0.14"
+val primefacesVersion = "15.0.15"
 val gsonVersion = "2.14.0"
 val seleniumVersion = "4.44.0"
 val asciiDoctorJVersion = "3.0.0"
@@ -55,7 +55,9 @@ val logstashLogbackEncoderVersion = "9.0"
 val joinfacesVersion = "6.0.6.1"
 val primefacesThemesVersion = "1.1.0"
 val rerunnerJupiterVersion = "2.1.6"
-val gradleWrapperVersion = "9.4.1"
+val caffeineVersion = "3.2.4"
+val postgresqlVersion = "42.7.11"
+val gradleWrapperVersion = "9.5.1"
 val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
 
 
@@ -67,12 +69,12 @@ repositories {
 val asciidoctor: Configuration = configurations.create("asciidoctor")
 
 dependencies {
-    asciidoctor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
-    developmentOnly(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
-    implementation(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
-    annotationProcessor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
-    testAnnotationProcessor(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
-    liquibaseRuntime(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+    asciidoctor(platform(SpringBootPlugin.BOM_COORDINATES))
+    developmentOnly(platform(SpringBootPlugin.BOM_COORDINATES))
+    implementation(platform(SpringBootPlugin.BOM_COORDINATES))
+    annotationProcessor(platform(SpringBootPlugin.BOM_COORDINATES))
+    testAnnotationProcessor(platform(SpringBootPlugin.BOM_COORDINATES))
+    liquibaseRuntime(platform(SpringBootPlugin.BOM_COORDINATES))
 
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -81,7 +83,7 @@ dependencies {
 
     asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
 
-    liquibaseRuntime("org.postgresql:postgresql")
+    liquibaseRuntime("org.postgresql:postgresql:$postgresqlVersion")
     liquibaseRuntime("org.liquibase:liquibase-core")
     liquibaseRuntime("info.picocli:picocli:$picocliVersion")
 
@@ -104,9 +106,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     implementation("org.springframework.boot:spring-boot-starter-liquibase")
-    implementation("com.github.ben-manes.caffeine:caffeine")
+    implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("com.google.code.gson:gson:$gsonVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
 
