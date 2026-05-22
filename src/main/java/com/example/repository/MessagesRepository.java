@@ -25,16 +25,19 @@ public interface MessagesRepository extends JpaRepository<Message, Long> {
     Page<Message> findPageByKeyContainingAndLangContainingAndTextContaining(String key, String lang, String text, Pageable pageable);
 
     @Query("""
-            select m from Message m where (:lang is null OR (LOWER(m.lang) like LOWER(CONCAT('%', :lang, '%'))))\s
+            select m
+            from Message m
+            where (:lang is null OR (LOWER(m.lang) like LOWER(CONCAT('%', :lang, '%'))))
             and (:key is null OR (LOWER(m.key) like LOWER(CONCAT('%', :key, '%'))))
             """)
     List<Message> findPage(@Param("key") Object key, @Param("lang") Object lang);
 
     @Query("""
-            select m from Message m\s
-            where (:#{#filters['lang']} is null OR (LOWER(m.lang) like LOWER(CONCAT('%', :#{#filters['lang']}, '%'))))\s
-            and (:#{#filters['key']} is null OR (LOWER(m.key) like LOWER(CONCAT('%', :#{#filters['key']}, '%'))))\s
-            and (:#{#filters['text']} is null OR (LOWER(m.text) like LOWER(CONCAT('%', :#{#filters['text']}, '%'))))\s
+            select m
+            from Message m
+            where (:#{#filters['lang']} is null OR (LOWER(m.lang) like LOWER(CONCAT('%', :#{#filters['lang']}, '%'))))
+            and (:#{#filters['key']} is null OR (LOWER(m.key) like LOWER(CONCAT('%', :#{#filters['key']}, '%'))))
+            and (:#{#filters['text']} is null OR (LOWER(m.text) like LOWER(CONCAT('%', :#{#filters['text']}, '%'))))
             """)
     Page<Message> findPage(@Param("filters") Map<String, Object> filters, Pageable pageable);
 
