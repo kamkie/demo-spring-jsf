@@ -86,7 +86,9 @@ class RestIntegrationTest extends BaseRestIntegrationTest {
                 () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED),
                 () -> assertThat(responseEntity.hasBody()).isTrue(),
                 () -> assertThat(headers.getContentType()).isEqualTo(MediaType.APPLICATION_JSON),
-                () -> assertThat(headers.get(HttpHeaders.WWW_AUTHENTICATE)).contains("Basic realm=\"demo-spring-jsf\""),
+                () -> assertThat(headers.get(HttpHeaders.WWW_AUTHENTICATE))
+                        .anySatisfy(wwwAuthenticate -> assertThat(wwwAuthenticate)
+                                .startsWith("Basic realm=\"demo-spring-jsf\"")),
                 () -> assertThat(headers.getCacheControl()).isEqualTo("no-cache, no-store, max-age=0, must-revalidate")
         );
     }
