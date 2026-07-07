@@ -56,7 +56,7 @@ val joinfacesVersion = "6.1.0"
 val primefacesThemesVersion = "1.1.0"
 val rerunnerJupiterVersion = "2.1.6"
 val caffeineVersion = "3.2.4"
-val postgresqlVersion = "42.7.12"
+val postgresqlVersion = "42.7.13"
 val gradleWrapperVersion = "9.5.1"
 val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
 
