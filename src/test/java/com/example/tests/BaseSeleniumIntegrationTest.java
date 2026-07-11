@@ -3,6 +3,7 @@ package com.example.tests;
 import com.example.extension.SeleniumExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.testcontainers.Testcontainers;
 import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
@@ -13,8 +14,9 @@ public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
 
     public BaseSeleniumIntegrationTest(int localServerPort, ObjectMapper objectMapper) {
         super(objectMapper);
+        Testcontainers.exposeHostPorts(localServerPort);
         String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null
-                ? "host.docker.internal"
+                ? "host.testcontainers.internal"
                 : System.getenv("HOST_FOR_SELENIUM");
         // noinspection HttpUrlsUsage local url for tests
         this.seleniumBaseUrl = "http://" + hostForSelenium + ":" + localServerPort;
