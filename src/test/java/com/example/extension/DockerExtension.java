@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @SuppressWarnings("PMD.DoNotUseThreads")
 public class DockerExtension implements Extension {
 
-    private static final PostgreSQLContainer POSTGRES_SQL_CONTAINER = new PostgreSQLContainer("postgres:14");
+    private static final PostgreSQLContainer POSTGRES_SQL_CONTAINER = new PostgreSQLContainer("postgres:17.10");
     private static final Lock LOCK = new ReentrantLock();
 
     public static PostgreSQLContainer getPostgres() {
