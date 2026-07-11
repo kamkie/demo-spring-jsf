@@ -41,11 +41,11 @@ version = gitVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_25
-val nodeVersion = "24.14.1"
+val nodeVersion = "24.18.0"
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
-val primefacesVersion = "15.0.15"
+val primefacesVersion = "15.0.17"
 val gsonVersion = "2.14.0"
 val seleniumVersion = "4.45.0"
 val asciiDoctorJVersion = "3.0.0"
@@ -57,7 +57,7 @@ val primefacesThemesVersion = "1.1.0"
 val rerunnerJupiterVersion = "2.1.6"
 val caffeineVersion = "3.2.4"
 val postgresqlVersion = "42.7.13"
-val gradleWrapperVersion = "9.5.1"
+val gradleWrapperVersion = "9.6.1"
 val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
 
 
