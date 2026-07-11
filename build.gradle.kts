@@ -284,6 +284,12 @@ asciidoctorj {
 }
 
 tasks.asciidoctor {
+    // asciidoctor-gradle holds live Project/Configuration/TaskContainer references and is not
+    // configuration-cache safe — currently the only CC blocker in this build. Marking it
+    // incompatible lets CC degrade gracefully (a `build` that runs docs skips CC instead of
+    // failing) while the inner-loop tasks (test/testClasses/compileJava/spotbugsMain) still use it.
+    // TODO: remove this once the asciidoctor plugin supports the configuration cache.
+    notCompatibleWithConfigurationCache("asciidoctor-gradle plugin is not configuration-cache safe")
     mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
