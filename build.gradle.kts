@@ -151,7 +151,18 @@ idea {
 }
 
 springBoot {
-    buildInfo()
+    buildInfo {
+        // On local builds, exclude the volatile build timestamp so build-info.properties is
+        // byte-identical across runs of the same commit. Otherwise bootBuildInfo's
+        // `timeIfNotExcluded` input changes every invocation, invalidating processResources and
+        // cascading a full test + asciidoctor + jar rebuild on every `build`/`test` even when
+        // nothing changed. (Setting `time = null` is not enough — the plugin falls back to "now".)
+        // On CI (fresh clean builds, nothing to cache) keep a real build.time so the published
+        // artifact and actuator /info carry an accurate timestamp.
+        if (!providers.environmentVariable("CI").isPresent) {
+            excludes.add("time")
+        }
+    }
 }
 
 liquibase {
@@ -372,7 +383,6 @@ tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
-    spotbugsMain.get().dependsOn(asciidoctor)
     jar.get().dependsOn(asciidoctor, test)
     bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
