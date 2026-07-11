@@ -2,6 +2,7 @@ import com.diffplug.spotless.FormatterFunc
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
+import com.palantir.gradle.gitversion.CommonGitOperations
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
@@ -36,8 +37,17 @@ plugins {
     id("com.adarshr.test-logger") version "4.0.0"
 }
 
-val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion()
+// Use palantir git-version's configuration-cache-safe provider API instead of the legacy
+// `gitVersion()` extra-closure. version() is the Provider<String> equivalent of
+// `git describe --tags --always --first-parent` (+ ".dirty").
+val commonGitOperations = objects.newInstance(CommonGitOperations.Default::class.java)
+fun getProjectVersion(): String = try {
+    commonGitOperations.version().get()
+} catch (e: Exception) {
+    "0.0.0-SNAPSHOT"
+}
+
+version = getProjectVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_25
@@ -151,7 +161,18 @@ idea {
 }
 
 springBoot {
-    buildInfo()
+    buildInfo {
+        // On local builds, exclude the volatile build timestamp so build-info.properties is
+        // byte-identical across runs of the same commit. Otherwise bootBuildInfo's
+        // `timeIfNotExcluded` input changes every invocation, invalidating processResources and
+        // cascading a full test + asciidoctor + jar rebuild on every `build`/`test` even when
+        // nothing changed. (Setting `time = null` is not enough — the plugin falls back to "now".)
+        // On CI (fresh clean builds, nothing to cache) keep a real build.time so the published
+        // artifact and actuator /info carry an accurate timestamp.
+        if (!providers.environmentVariable("CI").isPresent) {
+            excludes.add("time")
+        }
+    }
 }
 
 liquibase {
@@ -273,6 +294,12 @@ asciidoctorj {
 }
 
 tasks.asciidoctor {
+    // asciidoctor-gradle holds live Project/Configuration/TaskContainer references and is not
+    // configuration-cache safe — currently the only CC blocker in this build. Marking it
+    // incompatible lets CC degrade gracefully (a `build` that runs docs skips CC instead of
+    // failing) while the inner-loop tasks (test/testClasses/compileJava/spotbugsMain) still use it.
+    // TODO: remove this once the asciidoctor plugin supports the configuration cache.
+    notCompatibleWithConfigurationCache("asciidoctor-gradle plugin is not configuration-cache safe")
     mustRunAfter(tasks.test)
     configurations("asciidoctor")
     sourceDir("src/docs/asciidoc")
@@ -372,7 +399,6 @@ tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
-    spotbugsMain.get().dependsOn(asciidoctor)
     jar.get().dependsOn(asciidoctor, test)
     bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
