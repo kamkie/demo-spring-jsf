@@ -2,6 +2,7 @@ import com.diffplug.spotless.FormatterFunc
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
+import com.palantir.gradle.gitversion.CommonGitOperations
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
@@ -36,8 +37,17 @@ plugins {
     id("com.adarshr.test-logger") version "4.0.0"
 }
 
-val gitVersion: groovy.lang.Closure<String> by extra
-version = gitVersion()
+// Use palantir git-version's configuration-cache-safe provider API instead of the legacy
+// `gitVersion()` extra-closure. version() is the Provider<String> equivalent of
+// `git describe --tags --always --first-parent` (+ ".dirty").
+val commonGitOperations = objects.newInstance(CommonGitOperations.Default::class.java)
+fun getProjectVersion(): String = try {
+    commonGitOperations.version().get()
+} catch (e: Exception) {
+    "0.0.0-SNAPSHOT"
+}
+
+version = getProjectVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_25
