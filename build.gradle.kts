@@ -62,7 +62,6 @@ val jnaVersion = "5.19.1"
 val seleniumVersion = "4.46.0"
 val asciiDoctorJVersion = "3.0.1"
 val picocliVersion = "4.7.7"
-val spotbugsAnnotationsVersion = "4.10.3"
 val logstashLogbackEncoderVersion = "9.0"
 val joinfacesVersion = "6.1.0"
 val primefacesThemesVersion = "1.1.0"
@@ -94,6 +93,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework:spring-context-indexer")
 
+    compileOnly("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+
     asciidoctorRuntime("org.asciidoctor:asciidoctorj:$asciiDoctorJVersion")
     asciidoctorRuntime("org.asciidoctor:asciidoctorj-cli:$asciiDoctorJVersion")
     asciidoctorRuntime("org.springframework.restdocs:spring-restdocs-asciidoctor")
@@ -104,10 +106,6 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation("com.github.spotbugs:spotbugs-annotations:$spotbugsAnnotationsVersion")
-    implementation("org.projectlombok:lombok")
-
-    implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -115,7 +113,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-restclient")
     implementation("org.springframework.boot:spring-boot-session")
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -134,6 +131,7 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-restclient")
     testImplementation("org.springframework.boot:spring-boot-resttestclient")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-session-jdbc-test")
