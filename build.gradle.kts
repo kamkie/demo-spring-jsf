@@ -3,6 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import com.palantir.gradle.gitversion.CommonGitOperations
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
@@ -327,7 +328,6 @@ tasks.asciidoctor {
 }
 
 tasks.withType<Test> {
-    outputs.dir(generatedSnippetsDir)
     useJUnitPlatform()
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",
@@ -345,6 +345,19 @@ tasks.withType<Test> {
         exceptionFormat = TestExceptionFormat.FULL
         showCauses = true
         showStackTraces = true
+    }
+}
+
+val unitTest = tasks.register<Test>("unitTest") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Runs unit tests without integration or Selenium tests."
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform {
+        excludeTags("integration", "selenium")
+    }
+    extensions.configure<JacocoTaskExtension> {
+        isEnabled = false
     }
 }
 
@@ -413,5 +426,8 @@ tasks {
         }
     }
     bootJar.get().dependsOn(jar, resolveMainClassName)
+    test {
+        outputs.dir(generatedSnippetsDir)
+    }
     test.get().finalizedBy(jacocoTestReport)
 }

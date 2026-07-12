@@ -12,6 +12,12 @@ Spring Boot Aplication with Docker
 ```
 The Gradle build runs the frontend bundle step automatically.
 
+Run the fast unit-only test loop without integration or Selenium tests:
+
+```
+./gradlew unitTest
+```
+
 ### frontend assets
 ```
 npm run build
