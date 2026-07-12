@@ -6,7 +6,10 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-const outputFile = path.join(projectRoot, "build/resources/main/static/javascript/bundle.js");
+const outputDirectory = process.env.FRONTEND_RESOURCES_DIR
+    ? path.resolve(projectRoot, process.env.FRONTEND_RESOURCES_DIR)
+    : path.join(projectRoot, "build/resources/main");
+const outputFile = path.join(outputDirectory, "static/javascript/bundle.js");
 const watchMode = process.argv.includes("--watch");
 const mode = process.env.NODE_ENV ?? (watchMode ? "development" : "production");
 
