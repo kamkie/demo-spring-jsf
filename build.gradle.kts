@@ -271,8 +271,13 @@ tasks.bootRun {
     }
 }
 
+val asciidoctorTask = tasks.asciidoctor
+
 tasks.bootJar {
     archiveClassifier.set("boot")
+    from(asciidoctorTask) {
+        into("BOOT-INF/classes/static/docs")
+    }
     layered {
         enabled.set(true)
     }
@@ -317,12 +322,6 @@ tasks.asciidoctor {
             "springbootversion" to VersionExtractor.forClass(SpringBootPlugin::class.java),
             "projectdir" to "$projectDir"
     ))
-    doLast {
-        copy {
-            from(layout.buildDirectory.dir("asciidoc"))
-            into(layout.buildDirectory.dir("resources/main"))
-        }
-    }
 }
 
 tasks.withType<Test> {
@@ -399,7 +398,12 @@ tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
     processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
     compileJava.get().dependsOn(processResources)
-    jar.get().dependsOn(asciidoctor, test)
+    jar {
+        dependsOn(asciidoctor, test)
+        from(asciidoctorTask) {
+            into("static/docs")
+        }
+    }
     bootJar.get().dependsOn(jar, resolveMainClassName)
     test.get().finalizedBy(jacocoTestReport)
 }
