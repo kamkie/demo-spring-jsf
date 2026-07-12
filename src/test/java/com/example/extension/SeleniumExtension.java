@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.DefaultRecordingFileFactory;
@@ -25,7 +26,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.util.Map.entry;
@@ -36,37 +36,44 @@ import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecording
 @SuppressWarnings({
         "PMD.DoNotUseThreads",
         "PMD.TooManyMethods",
-        "PMD.AvoidUncheckedExceptionsInSignatures"
+        "PMD.AvoidUncheckedExceptionsInSignatures",
+        "PMD.NonThreadSafeSingleton"
 })
 public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
 
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
+    private static final SeleniumMode SELENIUM_MODE = SeleniumMode.current();
     private static final BrowserWebDriverContainer WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer(DockerImageName.parse("selenium/standalone-chrome:4.45.0"))
             .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
-    private static final Lock LOCK = new ReentrantLock();
-
+    private static final ReentrantLock LOCK = new ReentrantLock();
     private static RemoteWebDriver webDriver;
 
     private static RemoteWebDriver getWebDriver() {
-        if (!WEB_DRIVER_CONTAINER.isRunning()) {
-            LOCK.lock();
-            try {
-                if (!WEB_DRIVER_CONTAINER.isRunning()) {
-                    log.info("starting selenium docker container");
-                    WEB_DRIVER_CONTAINER.start();
-                    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                        log.info("stopping selenium docker container");
-                        WEB_DRIVER_CONTAINER.stop();
-                    }));
-                    webDriver = new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions());
-                }
-            } finally {
-                LOCK.unlock();
+        LOCK.lock();
+        try {
+            if (webDriver == null) {
+                webDriver = startWebDriver();
             }
+            return webDriver;
+        } finally {
+            LOCK.unlock();
         }
-        return webDriver;
+    }
+
+    private static RemoteWebDriver startWebDriver() {
+        if (SELENIUM_MODE == SeleniumMode.HOST) {
+            log.info("starting host Chrome through Selenium Manager");
+            return new ChromeDriver(initChromeOptions());
+        }
+        log.info("starting selenium docker container");
+        WEB_DRIVER_CONTAINER.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("stopping selenium docker container");
+            WEB_DRIVER_CONTAINER.stop();
+        }));
+        return new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions());
     }
 
     private static void createDirForScreenshots() throws IOException {
@@ -118,7 +125,22 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        WEB_DRIVER_CONTAINER.afterTest(toTestDescription(context), context.getExecutionException());
+        if (SELENIUM_MODE == SeleniumMode.CONTAINER) {
+            WEB_DRIVER_CONTAINER.afterTest(toTestDescription(context), context.getExecutionException());
+        } else {
+            quitHostWebDriver();
+        }
+    }
+
+    private static void quitHostWebDriver() {
+        LOCK.lock();
+        try {
+            if (webDriver != null) {
+                webDriver.quit();
+            }
+        } finally {
+            LOCK.unlock();
+        }
     }
 
     @Override
