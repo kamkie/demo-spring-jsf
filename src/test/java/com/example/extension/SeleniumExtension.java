@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.DefaultRecordingFileFactory;
 import org.testcontainers.lifecycle.TestDescription;
@@ -25,10 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static java.util.Map.entry;
 import static com.example.util.LockUtils.withLock;
 import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
 import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
@@ -39,7 +36,6 @@ import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecording
         "PMD.TooManyMethods",
         "PMD.AvoidUncheckedExceptionsInSignatures",
         "PMD.AvoidUsingVolatile",
-        "PMD.ExcessiveImports",
         "PMD.NullAssignment"
 })
 public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
@@ -52,6 +48,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
     private static final ReentrantLock LOCK = new ReentrantLock();
     private static volatile RemoteWebDriver webDriver;
+    private static WindowsChromeSession windowsChromeSession;
 
     private static RemoteWebDriver getWebDriver() {
         RemoteWebDriver currentWebDriver = webDriver;
@@ -68,8 +65,13 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
 
     private static RemoteWebDriver startWebDriver() {
         if (SELENIUM_MODE == SeleniumMode.HOST) {
+            if (WindowsChromeSession.isSupported()) {
+                log.info("starting host Chrome on a dedicated Windows desktop");
+                windowsChromeSession = WindowsChromeSession.start(ChromeStartupOptions.maximized());
+                return windowsChromeSession.driver();
+            }
             log.info("starting host Chrome through Selenium Manager");
-            return new ChromeDriver(initChromeOptions());
+            return new ChromeDriver(ChromeStartupOptions.maximized());
         }
         log.info("starting selenium docker container");
         WEB_DRIVER_CONTAINER.start();
@@ -77,7 +79,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
             log.info("stopping selenium docker container");
             WEB_DRIVER_CONTAINER.stop();
         }));
-        return new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions());
+        return new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), ChromeStartupOptions.maximized());
     }
 
     private static void createDirForScreenshots() throws IOException {
@@ -92,24 +94,6 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         String timestamp = DATE_TIME_FILE_NAME_FORMATTER.format(LocalDateTime.now());
         Path target = Paths.get(SCREENSHOT_PATH, context.getDisplayName() + "-" + timestamp + ".png");
         Files.copy(screenshotAs.toPath(), target);
-    }
-
-    private static ChromeOptions initChromeOptions() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments(
-                "--guest",
-                "--disable-infobars",
-                "--lang=pl",
-                "--start-maximized");
-        Map<String, String> props = Map.ofEntries(
-                entry("intl.accept_languages", "pl"),
-                entry("credentials_enable_service", "false"),
-                entry("profile.password_manager_enabled", "false"),
-                entry("profile.password_manager_leak_detection", "false")
-        );
-        chromeOptions.setExperimentalOption("prefs", props);
-
-        return chromeOptions;
     }
 
     @Override
@@ -140,9 +124,14 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         withLock(LOCK, () -> {
             if (webDriver != null) {
                 try {
-                    webDriver.quit();
+                    if (windowsChromeSession == null) {
+                        webDriver.quit();
+                    } else {
+                        windowsChromeSession.close();
+                    }
                 } finally {
                     webDriver = null;
+                    windowsChromeSession = null;
                 }
             }
         });
