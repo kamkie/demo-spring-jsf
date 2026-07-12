@@ -32,7 +32,6 @@ plugins {
     id("com.github.spotbugs") version "6.5.8"
     id("org.springframework.boot") version "4.1.0"
     id("org.liquibase.gradle") version "3.1.0"
-    id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.node-gradle.node") version "7.1.0"
     id("com.adarshr.test-logger") version "4.0.0"
 }
@@ -80,10 +79,10 @@ repositories {
     maven { url = uri("https://repository.primefaces.org") }
 }
 
-val asciidoctor: Configuration = configurations.create("asciidoctor")
+val asciidoctorRuntime: Configuration = configurations.create("asciidoctorRuntime")
 
 dependencies {
-    asciidoctor(platform(SpringBootPlugin.BOM_COORDINATES))
+    asciidoctorRuntime(platform(SpringBootPlugin.BOM_COORDINATES))
     developmentOnly(platform(SpringBootPlugin.BOM_COORDINATES))
     implementation(platform(SpringBootPlugin.BOM_COORDINATES))
     annotationProcessor(platform(SpringBootPlugin.BOM_COORDINATES))
@@ -95,7 +94,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework:spring-context-indexer")
 
-    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    asciidoctorRuntime("org.asciidoctor:asciidoctorj:$asciiDoctorJVersion")
+    asciidoctorRuntime("org.asciidoctor:asciidoctorj-cli:$asciiDoctorJVersion")
+    asciidoctorRuntime("org.springframework.restdocs:spring-restdocs-asciidoctor")
 
     liquibaseRuntime("org.postgresql:postgresql:$postgresqlVersion")
     liquibaseRuntime("org.liquibase:liquibase-core")
@@ -245,7 +246,7 @@ spotless {
     format("misc") {
         target(fileTree(".") {
             include(".gitignore", "**/.gitignore", "*.kts", "*.md", "src/**/*.md", "infrastructure/**/*.sh", "src/**/*.sh")
-            exclude("node_modules/**", "out/**", "build/**")
+            exclude(".gradle/**", "node_modules/**", "out/**", "build/**")
         })
         leadingTabsToSpaces()
         trimTrailingWhitespace()
@@ -275,7 +276,37 @@ tasks.bootRun {
     }
 }
 
-val asciidoctorTask = tasks.asciidoctor
+val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
+    group = "documentation"
+    description = "Generates the Spring REST Docs reference documentation."
+    mustRunAfter(tasks.test)
+
+    val sourceDirectory = layout.projectDirectory.dir("src/docs/asciidoc")
+    val outputDirectory = layout.buildDirectory.dir("asciidoc/static/docs")
+    inputs.dir(sourceDirectory)
+    inputs.dir(generatedSnippetsDir)
+    outputs.dir(outputDirectory)
+    outputs.cacheIf("Asciidoctor output is fully declared") { true }
+
+    classpath = asciidoctorRuntime
+    mainClass.set("org.asciidoctor.cli.jruby.AsciidoctorInvoker")
+    jvmArgs = listOf(
+            "--sun-misc-unsafe-memory-access=allow",
+            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--enable-native-access=ALL-UNNAMED"
+    )
+    args(
+            "--backend", "html5",
+            "--destination-dir", outputDirectory.get().asFile.absolutePath,
+            "--attribute", "lang=",
+            "--attribute", "revnumber=unspecified",
+            "--attribute", "snippets=${generatedSnippetsDir.get().asFile.absolutePath}",
+            "--attribute", "springbootversion=${VersionExtractor.forClass(SpringBootPlugin::class.java)}",
+            "--attribute", "projectdir=$projectDir",
+            sourceDirectory.file("index.adoc").asFile.absolutePath
+    )
+}
 
 tasks.bootJar {
     archiveClassifier.set("boot")
@@ -296,36 +327,6 @@ tasks.jacocoTestReport {
         xml.required.set(true)
         html.required.set(true)
     }
-}
-
-asciidoctorj {
-    setVersion(asciiDoctorJVersion)
-}
-
-tasks.asciidoctor {
-    // asciidoctor-gradle holds live Project/Configuration/TaskContainer references and is not
-    // configuration-cache safe — currently the only CC blocker in this build. Marking it
-    // incompatible lets CC degrade gracefully (a `build` that runs docs skips CC instead of
-    // failing) while the inner-loop tasks (test/testClasses/compileJava/spotbugsMain) still use it.
-    // TODO: remove this once the asciidoctor plugin supports the configuration cache.
-    notCompatibleWithConfigurationCache("asciidoctor-gradle plugin is not configuration-cache safe")
-    mustRunAfter(tasks.test)
-    configurations("asciidoctor")
-    sourceDir("src/docs/asciidoc")
-    inputs.dir(generatedSnippetsDir)
-    setOutputDir(layout.buildDirectory.dir("asciidoc/static/docs"))
-    jvm {
-        jvmArgs = listOf(
-                "--sun-misc-unsafe-memory-access=allow",
-                "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
-                "--add-opens=java.base/java.io=ALL-UNNAMED",
-                "--enable-native-access=ALL-UNNAMED"
-        )
-    }
-    attributes(mapOf(
-            "springbootversion" to VersionExtractor.forClass(SpringBootPlugin::class.java),
-            "projectdir" to "$projectDir"
-    ))
 }
 
 tasks.withType<Test> {
@@ -408,7 +409,7 @@ tasks {
     }
     compileJava.get().dependsOn(processResources)
     jar {
-        dependsOn(asciidoctor, test)
+        dependsOn(asciidoctorTask, test)
         from(asciidoctorTask) {
             into("static/docs")
         }
