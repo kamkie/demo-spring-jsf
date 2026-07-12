@@ -3,6 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import com.palantir.gradle.gitversion.CommonGitOperations
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
@@ -32,7 +33,6 @@ plugins {
     id("com.github.spotbugs") version "6.5.8"
     id("org.springframework.boot") version "4.1.0"
     id("org.liquibase.gradle") version "3.1.0"
-    id("org.asciidoctor.jvm.convert") version "4.0.5"
     id("com.github.node-gradle.node") version "7.1.0"
     id("com.adarshr.test-logger") version "4.0.0"
 }
@@ -51,7 +51,9 @@ version = getProjectVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_25
-val nodeVersion = "24.18.0"
+val nodeVersion = file(".node-version").readText().trim()
+// CI provisioners opt out explicitly; local builds keep the managed Node fallback by default.
+val downloadNode = providers.gradleProperty("nodeDownload").map(String::toBoolean).orElse(true)
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
@@ -69,6 +71,7 @@ val caffeineVersion = "3.2.4"
 val postgresqlVersion = "42.7.13"
 val gradleWrapperVersion = "9.6.1"
 val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
+val generatedFrontendResourcesDir = layout.buildDirectory.dir("generated-resources/webpack")
 
 
 repositories {
@@ -76,10 +79,10 @@ repositories {
     maven { url = uri("https://repository.primefaces.org") }
 }
 
-val asciidoctor: Configuration = configurations.create("asciidoctor")
+val asciidoctorRuntime: Configuration = configurations.create("asciidoctorRuntime")
 
 dependencies {
-    asciidoctor(platform(SpringBootPlugin.BOM_COORDINATES))
+    asciidoctorRuntime(platform(SpringBootPlugin.BOM_COORDINATES))
     developmentOnly(platform(SpringBootPlugin.BOM_COORDINATES))
     implementation(platform(SpringBootPlugin.BOM_COORDINATES))
     annotationProcessor(platform(SpringBootPlugin.BOM_COORDINATES))
@@ -91,7 +94,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework:spring-context-indexer")
 
-    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    asciidoctorRuntime("org.asciidoctor:asciidoctorj:$asciiDoctorJVersion")
+    asciidoctorRuntime("org.asciidoctor:asciidoctorj-cli:$asciiDoctorJVersion")
+    asciidoctorRuntime("org.springframework.restdocs:spring-restdocs-asciidoctor")
 
     liquibaseRuntime("org.postgresql:postgresql:$postgresqlVersion")
     liquibaseRuntime("org.liquibase:liquibase-core")
@@ -150,7 +155,7 @@ java {
 
 node {
     version.set(nodeVersion)
-    download.set(true)
+    download.set(downloadNode)
 }
 
 idea {
@@ -241,7 +246,7 @@ spotless {
     format("misc") {
         target(fileTree(".") {
             include(".gitignore", "**/.gitignore", "*.kts", "*.md", "src/**/*.md", "infrastructure/**/*.sh", "src/**/*.sh")
-            exclude("node_modules/**", "out/**", "build/**")
+            exclude(".gradle/**", "node_modules/**", "out/**", "build/**")
         })
         leadingTabsToSpaces()
         trimTrailingWhitespace()
@@ -271,8 +276,43 @@ tasks.bootRun {
     }
 }
 
+val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
+    group = "documentation"
+    description = "Generates the Spring REST Docs reference documentation."
+    mustRunAfter(tasks.test)
+
+    val sourceDirectory = layout.projectDirectory.dir("src/docs/asciidoc")
+    val outputDirectory = layout.buildDirectory.dir("asciidoc/static/docs")
+    inputs.dir(sourceDirectory)
+    inputs.dir(generatedSnippetsDir)
+    outputs.dir(outputDirectory)
+    outputs.cacheIf("Asciidoctor output is fully declared") { true }
+
+    classpath = asciidoctorRuntime
+    mainClass.set("org.asciidoctor.cli.jruby.AsciidoctorInvoker")
+    jvmArgs = listOf(
+            "--sun-misc-unsafe-memory-access=allow",
+            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--enable-native-access=ALL-UNNAMED"
+    )
+    args(
+            "--backend", "html5",
+            "--destination-dir", outputDirectory.get().asFile.absolutePath,
+            "--attribute", "lang=",
+            "--attribute", "revnumber=unspecified",
+            "--attribute", "snippets=${generatedSnippetsDir.get().asFile.absolutePath}",
+            "--attribute", "springbootversion=${VersionExtractor.forClass(SpringBootPlugin::class.java)}",
+            "--attribute", "projectdir=$projectDir",
+            sourceDirectory.file("index.adoc").asFile.absolutePath
+    )
+}
+
 tasks.bootJar {
     archiveClassifier.set("boot")
+    from(asciidoctorTask) {
+        into("BOOT-INF/classes/static/docs")
+    }
     layered {
         enabled.set(true)
     }
@@ -289,44 +329,7 @@ tasks.jacocoTestReport {
     }
 }
 
-asciidoctorj {
-    setVersion(asciiDoctorJVersion)
-}
-
-tasks.asciidoctor {
-    // asciidoctor-gradle holds live Project/Configuration/TaskContainer references and is not
-    // configuration-cache safe — currently the only CC blocker in this build. Marking it
-    // incompatible lets CC degrade gracefully (a `build` that runs docs skips CC instead of
-    // failing) while the inner-loop tasks (test/testClasses/compileJava/spotbugsMain) still use it.
-    // TODO: remove this once the asciidoctor plugin supports the configuration cache.
-    notCompatibleWithConfigurationCache("asciidoctor-gradle plugin is not configuration-cache safe")
-    mustRunAfter(tasks.test)
-    configurations("asciidoctor")
-    sourceDir("src/docs/asciidoc")
-    inputs.dir(generatedSnippetsDir)
-    setOutputDir(layout.buildDirectory.dir("asciidoc/static/docs"))
-    jvm {
-        jvmArgs = listOf(
-                "--sun-misc-unsafe-memory-access=allow",
-                "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
-                "--add-opens=java.base/java.io=ALL-UNNAMED",
-                "--enable-native-access=ALL-UNNAMED"
-        )
-    }
-    attributes(mapOf(
-            "springbootversion" to VersionExtractor.forClass(SpringBootPlugin::class.java),
-            "projectdir" to "$projectDir"
-    ))
-    doLast {
-        copy {
-            from(layout.buildDirectory.dir("asciidoc"))
-            into(layout.buildDirectory.dir("resources/main"))
-        }
-    }
-}
-
 tasks.withType<Test> {
-    outputs.dir(generatedSnippetsDir)
     useJUnitPlatform()
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",
@@ -344,6 +347,19 @@ tasks.withType<Test> {
         exceptionFormat = TestExceptionFormat.FULL
         showCauses = true
         showStackTraces = true
+    }
+}
+
+val unitTest = tasks.register<Test>("unitTest") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Runs unit tests without integration or Selenium tests."
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform {
+        excludeTags("integration", "selenium")
+    }
+    extensions.configure<JacocoTaskExtension> {
+        isEnabled = false
     }
 }
 
@@ -369,8 +385,9 @@ val webpack = tasks.register<NodeTask>("webpack") {
     inputs.files(fileTree("src/main/resources/static") {
         include("javascript/**", "css/**")
     })
-    outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
+    outputs.dir(generatedFrontendResourcesDir)
     script.set(File("$projectDir/scripts/build.mjs"))
+    environment.put("FRONTEND_RESOURCES_DIR", "build/generated-resources/webpack")
     environment.put("NODE_ENV", "production")
 }
 
@@ -384,22 +401,36 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
     inputs.files(fileTree("src/main/resources/static") {
         include("javascript/**", "css/**")
     })
-    outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
+    // bootRun serves this runtime resource directory, so watch rebuilds are visible immediately.
+    outputs.dir(layout.buildDirectory.dir("resources/main/static/javascript"))
     script.set(File("$projectDir/scripts/build.mjs"))
     args.set(listOf("--watch"))
+    environment.put("FRONTEND_RESOURCES_DIR", "build/resources/main")
     environment.put("NODE_ENV", "development")
 }
 
 tasks.wrapper {
     gradleVersion = gradleWrapperVersion
-    distributionType = Wrapper.DistributionType.ALL
+    distributionType = Wrapper.DistributionType.BIN
+    distributionSha256Sum = "9c0f7faeeb306cb14e4279a3e084ca6b596894089a0638e68a07c945a32c9e14"
 }
 
 tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
-    processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
+    processResources {
+        dependsOn(generateGitProperties, getByName("bootBuildInfo"))
+        from(webpack)
+    }
     compileJava.get().dependsOn(processResources)
-    jar.get().dependsOn(asciidoctor, test)
+    jar {
+        dependsOn(asciidoctorTask, test)
+        from(asciidoctorTask) {
+            into("static/docs")
+        }
+    }
     bootJar.get().dependsOn(jar, resolveMainClassName)
-    test.get().finalizedBy(jacocoTestReport)
+    test {
+        outputs.dir(generatedSnippetsDir)
+    }
+    check.get().dependsOn(jacocoTestReport)
 }

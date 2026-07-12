@@ -41,7 +41,7 @@ explicitly requested.
 $env:JAVA_HOME = "$env:USERPROFILE\.jdks\azul-25.0.2"
 ```
 
-- The Gradle Node plugin downloads Node `24.14.1` for Gradle-driven frontend builds.
+- The Gradle Node plugin uses `.node-version` as the single source of truth for Gradle-driven frontend builds.
 - Docker is required for PostgreSQL-dependent development flows, Selenium, and Testcontainers tests.
 
 PostgreSQL for local application runs:
