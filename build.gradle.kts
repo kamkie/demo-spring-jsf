@@ -429,5 +429,5 @@ tasks {
     test {
         outputs.dir(generatedSnippetsDir)
     }
-    test.get().finalizedBy(jacocoTestReport)
+    check.get().dependsOn(jacocoTestReport)
 }
