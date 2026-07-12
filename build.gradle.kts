@@ -398,7 +398,8 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
 
 tasks.wrapper {
     gradleVersion = gradleWrapperVersion
-    distributionType = Wrapper.DistributionType.ALL
+    distributionType = Wrapper.DistributionType.BIN
+    distributionSha256Sum = "9c0f7faeeb306cb14e4279a3e084ca6b596894089a0638e68a07c945a32c9e14"
 }
 
 tasks {
