@@ -19,7 +19,7 @@ public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
             Testcontainers.exposeHostPorts(localServerPort);
         }
         String hostForSelenium = useHostChrome
-                ? "127.0.0.1"
+                ? "localhost"
                 : System.getenv("HOST_FOR_SELENIUM") == null
                         ? "host.testcontainers.internal"
                         : System.getenv("HOST_FOR_SELENIUM");

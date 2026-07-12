@@ -37,7 +37,11 @@ import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecording
 @SuppressWarnings({
         "PMD.DoNotUseThreads",
         "PMD.TooManyMethods",
-        "PMD.AvoidUncheckedExceptionsInSignatures"
+        "PMD.AvoidUncheckedExceptionsInSignatures",
+        "PMD.ExcessiveImports",
+        "PMD.NonThreadSafeSingleton",
+        "PMD.AvoidDeeplyNestedIfStmts",
+        "PMD.GuardLogStatement"
 })
 public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
 
@@ -96,12 +100,13 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     private static ChromeOptions initChromeOptions(boolean headless) {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
-                "--guest",
                 "--disable-infobars",
                 "--lang=pl",
                 "--start-maximized");
         if (headless) {
             chromeOptions.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080");
+        } else {
+            chromeOptions.addArguments("--guest");
         }
         Map<String, String> props = Map.ofEntries(
                 entry("intl.accept_languages", "pl"),
@@ -134,7 +139,6 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         if (USE_HOST_CHROME) {
             if (webDriver != null) {
                 webDriver.quit();
-                webDriver = null;
             }
         } else {
             WEB_DRIVER_CONTAINER.afterTest(toTestDescription(context), context.getExecutionException());
