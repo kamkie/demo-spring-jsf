@@ -51,7 +51,9 @@ version = getProjectVersion()
 group = "demo"
 
 val javaVersion = JavaVersion.VERSION_25
-val nodeVersion = "24.18.0"
+val nodeVersion = file(".node-version").readText().trim()
+// CI provisioners opt out explicitly; local builds keep the managed Node fallback by default.
+val downloadNode = providers.gradleProperty("nodeDownload").map(String::toBoolean).orElse(true)
 val spotbugsToolVersion = "4.9.8"
 val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
@@ -152,7 +154,7 @@ java {
 
 node {
     version.set(nodeVersion)
-    download.set(true)
+    download.set(downloadNode)
 }
 
 idea {
