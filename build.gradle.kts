@@ -71,7 +71,6 @@ val postgresqlVersion = "42.7.13"
 val gradleWrapperVersion = "9.6.1"
 val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
 val generatedFrontendResourcesDir = layout.buildDirectory.dir("generated-resources/webpack")
-val generatedFrontendWatchResourcesDir = layout.buildDirectory.dir("generated-resources/webpack-watch")
 
 
 repositories {
@@ -389,10 +388,11 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
     inputs.files(fileTree("src/main/resources/static") {
         include("javascript/**", "css/**")
     })
-    outputs.dir(generatedFrontendWatchResourcesDir)
+    // bootRun serves this runtime resource directory, so watch rebuilds are visible immediately.
+    outputs.dir(layout.buildDirectory.dir("resources/main/static/javascript"))
     script.set(File("$projectDir/scripts/build.mjs"))
     args.set(listOf("--watch"))
-    environment.put("FRONTEND_RESOURCES_DIR", "build/generated-resources/webpack-watch")
+    environment.put("FRONTEND_RESOURCES_DIR", "build/resources/main")
     environment.put("NODE_ENV", "development")
 }
 
