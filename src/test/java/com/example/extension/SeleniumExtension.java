@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.util.Map.entry;
+import static com.example.util.LockUtils.withLock;
 import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
 import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
 
@@ -37,7 +38,9 @@ import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecording
         "PMD.DoNotUseThreads",
         "PMD.TooManyMethods",
         "PMD.AvoidUncheckedExceptionsInSignatures",
-        "PMD.NonThreadSafeSingleton"
+        "PMD.AvoidUsingVolatile",
+        "PMD.ExcessiveImports",
+        "PMD.NullAssignment"
 })
 public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
 
@@ -48,18 +51,19 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
             .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
     private static final ReentrantLock LOCK = new ReentrantLock();
-    private static RemoteWebDriver webDriver;
+    private static volatile RemoteWebDriver webDriver;
 
     private static RemoteWebDriver getWebDriver() {
-        LOCK.lock();
-        try {
-            if (webDriver == null) {
-                webDriver = startWebDriver();
-            }
-            return webDriver;
-        } finally {
-            LOCK.unlock();
+        RemoteWebDriver currentWebDriver = webDriver;
+        if (currentWebDriver == null) {
+            currentWebDriver = withLock(LOCK, () -> {
+                if (webDriver == null) {
+                    webDriver = startWebDriver();
+                }
+                return webDriver;
+            });
         }
+        return currentWebDriver;
     }
 
     private static RemoteWebDriver startWebDriver() {
@@ -133,14 +137,15 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     }
 
     private static void quitHostWebDriver() {
-        LOCK.lock();
-        try {
+        withLock(LOCK, () -> {
             if (webDriver != null) {
-                webDriver.quit();
+                try {
+                    webDriver.quit();
+                } finally {
+                    webDriver = null;
+                }
             }
-        } finally {
-            LOCK.unlock();
-        }
+        });
     }
 
     @Override
