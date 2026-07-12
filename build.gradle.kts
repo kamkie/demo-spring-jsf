@@ -3,7 +3,6 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import com.palantir.gradle.gitversion.CommonGitOperations
-import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
@@ -59,8 +58,8 @@ val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
 val primefacesVersion = "15.0.17"
 val gsonVersion = "2.14.0"
-val seleniumVersion = "4.45.0"
-val asciiDoctorJVersion = "3.0.0"
+val seleniumVersion = "4.46.0"
+val asciiDoctorJVersion = "3.0.1"
 val picocliVersion = "4.7.7"
 val spotbugsAnnotationsVersion = "4.10.2"
 val logstashLogbackEncoderVersion = "9.0"
