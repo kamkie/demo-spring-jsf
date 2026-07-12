@@ -14,10 +14,15 @@ public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
 
     public BaseSeleniumIntegrationTest(int localServerPort, ObjectMapper objectMapper) {
         super(objectMapper);
-        Testcontainers.exposeHostPorts(localServerPort);
-        String hostForSelenium = System.getenv("HOST_FOR_SELENIUM") == null
-                ? "host.testcontainers.internal"
-                : System.getenv("HOST_FOR_SELENIUM");
+        boolean useHostChrome = "host".equalsIgnoreCase(System.getenv("SELENIUM_EXECUTION"));
+        if (!useHostChrome) {
+            Testcontainers.exposeHostPorts(localServerPort);
+        }
+        String hostForSelenium = useHostChrome
+                ? "127.0.0.1"
+                : System.getenv("HOST_FOR_SELENIUM") == null
+                        ? "host.testcontainers.internal"
+                        : System.getenv("HOST_FOR_SELENIUM");
         // noinspection HttpUrlsUsage local url for tests
         this.seleniumBaseUrl = "http://" + hostForSelenium + ":" + localServerPort;
     }

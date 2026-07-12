@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.DefaultRecordingFileFactory;
@@ -42,6 +43,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
 
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
+    private static final boolean USE_HOST_CHROME = "host".equalsIgnoreCase(System.getenv("SELENIUM_EXECUTION"));
     private static final BrowserWebDriverContainer WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer(DockerImageName.parse("selenium/standalone-chrome:4.45.0"))
             .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
             .withRecordingFileFactory(new DefaultRecordingFileFactory());
@@ -50,17 +52,25 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     private static RemoteWebDriver webDriver;
 
     private static RemoteWebDriver getWebDriver() {
-        if (!WEB_DRIVER_CONTAINER.isRunning()) {
+        if (webDriver == null) {
             LOCK.lock();
             try {
-                if (!WEB_DRIVER_CONTAINER.isRunning()) {
-                    log.info("starting selenium docker container");
-                    WEB_DRIVER_CONTAINER.start();
-                    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                        log.info("stopping selenium docker container");
-                        WEB_DRIVER_CONTAINER.stop();
-                    }));
-                    webDriver = new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions());
+                if (webDriver == null) {
+                    long start = System.nanoTime();
+                    if (USE_HOST_CHROME) {
+                        log.info("starting host Chrome WebDriver");
+                        webDriver = new ChromeDriver(initChromeOptions(true));
+                    } else {
+                        log.info("starting selenium docker container");
+                        WEB_DRIVER_CONTAINER.start();
+                        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                            log.info("stopping selenium docker container");
+                            WEB_DRIVER_CONTAINER.stop();
+                        }));
+                        webDriver = new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), initChromeOptions(false));
+                    }
+                    log.info("selenium session ready in {} ms using {}", (System.nanoTime() - start) / 1_000_000,
+                            USE_HOST_CHROME ? "host Chrome" : "container Chrome");
                 }
             } finally {
                 LOCK.unlock();
@@ -83,13 +93,16 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         Files.copy(screenshotAs.toPath(), target);
     }
 
-    private static ChromeOptions initChromeOptions() {
+    private static ChromeOptions initChromeOptions(boolean headless) {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
                 "--guest",
                 "--disable-infobars",
                 "--lang=pl",
                 "--start-maximized");
+        if (headless) {
+            chromeOptions.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080");
+        }
         Map<String, String> props = Map.ofEntries(
                 entry("intl.accept_languages", "pl"),
                 entry("credentials_enable_service", "false"),
@@ -118,7 +131,14 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        WEB_DRIVER_CONTAINER.afterTest(toTestDescription(context), context.getExecutionException());
+        if (USE_HOST_CHROME) {
+            if (webDriver != null) {
+                webDriver.quit();
+                webDriver = null;
+            }
+        } else {
+            WEB_DRIVER_CONTAINER.afterTest(toTestDescription(context), context.getExecutionException());
+        }
     }
 
     @Override
