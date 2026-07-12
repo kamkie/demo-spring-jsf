@@ -69,6 +69,8 @@ val caffeineVersion = "3.2.4"
 val postgresqlVersion = "42.7.13"
 val gradleWrapperVersion = "9.6.1"
 val generatedSnippetsDir = layout.buildDirectory.dir("generated-snippets")
+val generatedFrontendResourcesDir = layout.buildDirectory.dir("generated-resources/webpack")
+val generatedFrontendWatchResourcesDir = layout.buildDirectory.dir("generated-resources/webpack-watch")
 
 
 repositories {
@@ -368,8 +370,9 @@ val webpack = tasks.register<NodeTask>("webpack") {
     inputs.files(fileTree("src/main/resources/static") {
         include("javascript/**", "css/**")
     })
-    outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
+    outputs.dir(generatedFrontendResourcesDir)
     script.set(File("$projectDir/scripts/build.mjs"))
+    environment.put("FRONTEND_RESOURCES_DIR", "build/generated-resources/webpack")
     environment.put("NODE_ENV", "production")
 }
 
@@ -383,9 +386,10 @@ val webpackWatch = tasks.register<NodeTask>("webpackWatch") {
     inputs.files(fileTree("src/main/resources/static") {
         include("javascript/**", "css/**")
     })
-    outputs.dir("${layout.buildDirectory.get().asFile}/resources/main/static/javascript")
+    outputs.dir(generatedFrontendWatchResourcesDir)
     script.set(File("$projectDir/scripts/build.mjs"))
     args.set(listOf("--watch"))
+    environment.put("FRONTEND_RESOURCES_DIR", "build/generated-resources/webpack-watch")
     environment.put("NODE_ENV", "development")
 }
 
@@ -396,7 +400,10 @@ tasks.wrapper {
 
 tasks {
     getByName("spotlessMisc").dependsOn(npmSetup)
-    processResources.get().dependsOn(webpack, generateGitProperties, getByName("bootBuildInfo"))
+    processResources {
+        dependsOn(generateGitProperties, getByName("bootBuildInfo"))
+        from(webpack)
+    }
     compileJava.get().dependsOn(processResources)
     jar {
         dependsOn(asciidoctor, test)
