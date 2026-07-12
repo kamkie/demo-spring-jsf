@@ -331,6 +331,11 @@ tasks.jacocoTestReport {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    providers.gradleProperty("selenium.mode")
+        .orElse(providers.systemProperty("selenium.mode"))
+        .orElse(providers.environmentVariable("SELENIUM_MODE"))
+        .orNull
+        ?.let { systemProperty("selenium.mode", it) }
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
