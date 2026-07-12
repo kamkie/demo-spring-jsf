@@ -58,6 +58,7 @@ val jacocoToolVersion = "0.8.14"
 val pmdToolVersion = "7.23.0"
 val primefacesVersion = "15.0.17"
 val gsonVersion = "2.14.0"
+val jnaVersion = "5.19.1"
 val seleniumVersion = "4.46.0"
 val asciiDoctorJVersion = "3.0.1"
 val picocliVersion = "4.7.7"
@@ -144,6 +145,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("org.testcontainers:testcontainers-selenium")
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumVersion")
+    testImplementation("net.java.dev.jna:jna-platform:$jnaVersion")
     testImplementation("io.github.artsok:rerunner-jupiter:$rerunnerJupiterVersion")
 }
 
@@ -337,6 +339,7 @@ tasks.withType<Test> {
         ?.let { systemProperty("selenium.mode", it) }
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",
+            "--enable-native-access=ALL-UNNAMED",
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--add-opens=java.base/java.math=ALL-UNNAMED",
             "--add-opens=java.base/java.util=ALL-UNNAMED",

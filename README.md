@@ -40,6 +40,9 @@ For IntelliJ/JUnit, add `-Dselenium.mode=host` or `-Dselenium.mode=container` to
 set `SELENIUM_MODE`. Host mode creates screenshots but no MP4 recording. Container mode keeps Testcontainers, screenshots,
 and VNC MP4 recording. When `host.testcontainers.internal` is unavailable in container mode, set `HOST_FOR_SELENIUM`.
 
+On Windows, host mode keeps Chrome headed on a dedicated Windows desktop so a local Selenium run cannot activate over the
+current application. Non-Windows host runs and container mode keep their existing headed browser behavior.
+
 ### Docker
 Install Docker.
 Run the Docker image, by executing the
