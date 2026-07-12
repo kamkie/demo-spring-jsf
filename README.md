@@ -12,6 +12,23 @@ Spring Boot Aplication with Docker
 ```
 The Gradle build runs the frontend bundle step automatically.
 
+### Runtime profiles
+
+Runtime intent is explicit and does not use profile groups:
+
+- `./gradlew bootRun` activates `local-development`: Hibernate statistics, DEBUG web/SQL/timing logs, and the four
+  request context filters are enabled; JSF uses development stage.
+- Integration tests retain `@ActiveProfiles("test")`: statistics, JMX, verbose logging, and custom request filters are
+  disabled; JSF uses production stage.
+- The Docker image activates `deployed`: the same lean runtime defaults are explicit for deployed containers.
+- `--spring.profiles.active=profiling` opts into Hibernate statistics, JMX, Mojarra TRACE, verbose web/SQL logging, and
+  all four custom request filters.
+- Starting the executable JAR without a profile uses the lean defaults and is equivalent to the diagnostic settings of
+  `deployed`; select `deployed` explicitly for deployment automation outside the checked-in Docker image.
+
+All modes instantiate and expose only the required read-only Actuator endpoints: health, info, metrics, and Prometheus.
+Existing security rules remain responsible for HTTP authorization.
+
 Run the fast unit-only test loop without integration or Selenium tests:
 
 ```

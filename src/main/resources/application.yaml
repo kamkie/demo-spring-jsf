@@ -10,7 +10,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        generate_statistics: true
+        generate_statistics: false
     open-in-view: false
 
   datasource:
@@ -22,7 +22,7 @@ spring:
     enabled: true
   #    drop-first: true
   jmx:
-    enabled: true
+    enabled: false
 
   cache:
     cache-names:
@@ -48,7 +48,7 @@ joinfaces:
   primefaces:
     theme: bootstrap
   faces:
-    project-stage: development
+    project-stage: production
     serialize-server-state: true
 
 server:
@@ -68,11 +68,20 @@ management:
       mode: full
   endpoint:
     health:
+      access: read-only
       show-details: when_authorized
+    info:
+      access: read-only
+    metrics:
+      access: read-only
+    prometheus:
+      access: read-only
   endpoints:
+    access:
+      default: none
     web:
       exposure:
-        include: '*'
+        include: health,info,metrics,prometheus
   metrics:
     web:
       server:
@@ -90,17 +99,17 @@ logging:
     console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} [rid=%X{rid} sid=%X{sid} \
 user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
   level:
-    web: DEBUG
+    web: INFO
     org:
       apache.tomcat.util.scan.StandardJarScanner: error
       springframework.web:
-        filter: debug
+        filter: info
       #        servlet.DispatcherServlet: debug
       hibernate:
         engine: warn #info to show session times
         type: info #trace to show binding parameters
-        SQL: debug #debug to show generated sql
-        stat: debug #debug to show hql query times
+        SQL: info #debug to show generated sql
+        stat: info #debug to show hql query times
     com:
       sun:
         faces: info
@@ -113,13 +122,13 @@ user=%X{userName}] %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39
       faces: info
   custom:
     time:
-      enable: true
+      enable: false
     user:
-      enable: true
+      enable: false
     session:
-      enable: true
+      enable: false
     request:
-      enable: true
+      enable: false
 
 #logbook:
 #    exclude:

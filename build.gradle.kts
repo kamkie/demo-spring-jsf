@@ -258,6 +258,7 @@ tasks.withType<JavaCompile> {
 
 tasks.bootRun {
     systemProperty("spring.output.ansi.enabled", "always")
+    systemProperty("spring.profiles.active", providers.systemProperty("spring.profiles.active").getOrElse("local-development"))
     jvmArgs = listOf(
             "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--add-opens=java.base/java.math=ALL-UNNAMED",

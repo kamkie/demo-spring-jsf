@@ -2,13 +2,22 @@ package com.example.tests;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import com.example.component.RequestIdFilter;
+import com.example.component.SessionIdFilter;
+import com.example.component.TimeLoggingFilter;
+import com.example.component.UserNameFilter;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +27,8 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -32,9 +43,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @Tag("integration")
 @SuppressWarnings({
+        "PMD.ExcessiveImports",
         "PMD.TooManyStaticImports"
 })
 class RestIntegrationTest extends BaseRestIntegrationTest {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private EntityManagerFactory entityManagerFactory;
+
+    @Autowired
+    private WebEndpointsSupplier webEndpointsSupplier;
 
     @Autowired
     RestIntegrationTest(
@@ -120,5 +144,30 @@ class RestIntegrationTest extends BaseRestIntegrationTest {
         assertThat(payload)
                 .containsKey("git")
                 .containsKey("build");
+    }
+
+    @Test
+    void testProfileUsesLeanRuntimeSemantics() {
+        Set<String> webEndpointIds = webEndpointsSupplier.getEndpoints().stream()
+                .map(endpoint -> endpoint.getEndpointId().toString())
+                .collect(Collectors.toSet());
+
+        assertAll(
+                () -> assertThat(environment.getActiveProfiles()).containsExactly("test"),
+                () -> assertThat(environment.getProperty("spring.jmx.enabled", Boolean.class)).isFalse(),
+                () -> assertThat(environment.getProperty(
+                        "spring.jpa.properties.hibernate.generate_statistics", Boolean.class)).isFalse(),
+                () -> assertThat(environment.getProperty("joinfaces.faces.project-stage")).isEqualTo("production"),
+                () -> assertThat(entityManagerFactory.unwrap(SessionFactory.class).getStatistics().isStatisticsEnabled())
+                        .isFalse(),
+                () -> assertThat(webEndpointIds).containsExactlyInAnyOrder("health", "info", "metrics", "prometheus"),
+                () -> assertThat(applicationContext.containsBean("beansEndpoint")).isFalse(),
+                () -> assertThat(applicationContext.containsBean("envEndpoint")).isFalse(),
+                () -> assertThat(applicationContext.containsBean("mbeanExporter")).isFalse(),
+                () -> assertThat(applicationContext.getBeansOfType(RequestIdFilter.class)).isEmpty(),
+                () -> assertThat(applicationContext.getBeansOfType(SessionIdFilter.class)).isEmpty(),
+                () -> assertThat(applicationContext.getBeansOfType(UserNameFilter.class)).isEmpty(),
+                () -> assertThat(applicationContext.getBeansOfType(TimeLoggingFilter.class)).isEmpty()
+        );
     }
 }
