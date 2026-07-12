@@ -8,6 +8,7 @@ import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @ExtendWith(SeleniumExtension.class)
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
 
     protected final String seleniumBaseUrl;
@@ -19,7 +20,7 @@ public abstract class BaseSeleniumIntegrationTest extends BaseIntegrationTest {
             Testcontainers.exposeHostPorts(localServerPort);
         }
         String hostForSelenium = useHostChrome
-                ? "localhost"
+                ? "127.0.0.1"
                 : System.getenv("HOST_FOR_SELENIUM") == null
                         ? "host.testcontainers.internal"
                         : System.getenv("HOST_FOR_SELENIUM");
