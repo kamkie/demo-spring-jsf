@@ -57,6 +57,7 @@ jobs:
         run: ./gradlew build -PnodeDownload=false
         env:
           HOST_FOR_SELENIUM: "172.17.0.1"
+          SELENIUM_MODE: container
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2

@@ -25,7 +25,20 @@ npm run watch
 ```
 
 ### selenium tests
-to run selenium test where `host.docker.internal` is not set env variable `HOST_FOR_SELENIUM` can be used
+Selenium tests default to locally installed Chrome (resolved by Selenium Manager), which is convenient for Gradle and
+IDE runs. Select the browser explicitly with `selenium.mode=host|container`; a JVM/Gradle property takes precedence over
+the `SELENIUM_MODE` environment variable. CI sets `SELENIUM_MODE=container` explicitly.
+
+Gradle examples:
+
+```
+./gradlew test -Pselenium.mode=host
+./gradlew test -Pselenium.mode=container
+```
+
+For IntelliJ/JUnit, add `-Dselenium.mode=host` or `-Dselenium.mode=container` to the run configuration's VM options, or
+set `SELENIUM_MODE`. Host mode creates screenshots but no MP4 recording. Container mode keeps Testcontainers, screenshots,
+and VNC MP4 recording. When `host.testcontainers.internal` is unavailable in container mode, set `HOST_FOR_SELENIUM`.
 
 ### Docker
 Install Docker.
