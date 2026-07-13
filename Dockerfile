@@ -15,7 +15,7 @@ RUN apk add --no-cache postgresql18=18.4-r0
 COPY --from=builder /app/extracted/spring-boot-loader/ ./
 COPY --from=builder /app/extracted/dependencies/ ./
 COPY --from=builder /app/extracted/application/ ./
-COPY scripts/aot-train.sh /usr/local/bin/aot-train
+COPY --chmod=0755 scripts/aot-train.sh /usr/local/bin/aot-train
 
 ENV SPRING_PROFILES_ACTIVE=deployed
 
