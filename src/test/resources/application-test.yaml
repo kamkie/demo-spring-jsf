@@ -1,10 +1,22 @@
 spring:
   devtools.restart.enabled: false
+  jmx.enabled: false
+  jpa.properties.hibernate.generate_statistics: false
+
+joinfaces:
+  faces:
+    project-stage: production
 
 logging:
   level:
+    web: INFO
     com:
       sun:
-        faces: trace
+        faces: info
     javax:
-      faces: trace
+      faces: info
+  custom:
+    time.enable: false
+    user.enable: false
+    session.enable: false
+    request.enable: false
