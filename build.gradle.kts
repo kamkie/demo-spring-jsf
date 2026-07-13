@@ -3,10 +3,24 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import com.palantir.gradle.gitversion.CommonGitOperations
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileSystemOperations
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.api.tasks.Sync
 import org.gradle.jvm.tasks.Jar
+import org.gradle.work.DisableCachingByDefault
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import org.springframework.boot.gradle.tasks.aot.ProcessAot
 import org.springframework.boot.gradle.tasks.bundling.BootJar
@@ -15,6 +29,130 @@ import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 import java.util.zip.ZipFile
+import javax.inject.Inject
+
+@CacheableTask
+abstract class PrepareJoinFacesMetadata : DefaultTask() {
+
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val sourceDirectory: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val destinationDirectory: DirectoryProperty
+
+    @get:Inject
+    abstract val fileSystemOperations: FileSystemOperations
+
+    @TaskAction
+    fun prepare() {
+        val source = sourceDirectory.get().asFile
+        val destination = destinationDirectory.get().asFile
+        fileSystemOperations.delete { delete(destination) }
+        fileSystemOperations.copy {
+            from(source)
+            into(destination)
+        }
+        destination.listFiles()?.filter { it.isFile }?.forEach { file ->
+            val sortedLines = file.readLines(StandardCharsets.UTF_8).sorted()
+            file.writeText(
+                    if (sortedLines.isEmpty()) "" else sortedLines.joinToString("\n", postfix = "\n"),
+                    StandardCharsets.UTF_8,
+            )
+        }
+    }
+}
+
+@DisableCachingByDefault(because = "Verification task has no outputs")
+abstract class VerifyJoinFacesMetadata : DefaultTask() {
+
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val metadataDirectory: DirectoryProperty
+
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val plainArchive: RegularFileProperty
+
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val bootArchive: RegularFileProperty
+
+    @get:Input
+    abstract val profile: Property<String>
+
+    @get:Input
+    abstract val expectedFiles: ListProperty<String>
+
+    @get:Input
+    abstract val plainPrefix: Property<String>
+
+    @get:Input
+    abstract val bootPrefix: Property<String>
+
+    @TaskAction
+    fun verify() {
+        check(profile.get() == "deployed") {
+            "JoinFaces runtime metadata must be generated with the deployed profile"
+        }
+        val expected = expectedFiles.get()
+        val metadata = metadataDirectory.get().asFile
+        val actualFiles = metadata.walkTopDown()
+            .filter { it.isFile }
+            .map { it.relativeTo(metadata).invariantSeparatorsPath }
+            .toList()
+        check(actualFiles.sorted() == expected.sorted()) {
+            "Expected exactly $expected but found $actualFiles"
+        }
+        val archives = listOf(
+                plainArchive.get().asFile to plainPrefix.get(),
+                bootArchive.get().asFile to bootPrefix.get(),
+        )
+        archives.forEach { (archive, prefix) ->
+            ZipFile(archive).use { zip ->
+                val packagedFiles = zip.entries().asSequence()
+                    .filter { !it.isDirectory && it.name.startsWith(prefix) }
+                    .map { it.name.removePrefix(prefix) }
+                    .toList()
+                check(packagedFiles.sorted() == expected.sorted()) {
+                    "Expected exactly $expected under $prefix in ${archive.name}, found $packagedFiles"
+                }
+            }
+        }
+
+        expected.forEach { fileName ->
+            val generatedFile = metadata.resolve(fileName)
+            val lines = generatedFile.readLines(StandardCharsets.UTF_8)
+            when (fileName) {
+                "com.sun.faces.config.FacesInitializer.classes" -> {
+                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
+                    check(lines == lines.sorted().distinct()) { "$fileName must be sorted and contain no duplicates" }
+                }
+                "com.sun.faces.config.FacesInitializer2.classes" ->
+                    check(lines.isEmpty()) { "$fileName is expected to be an empty prepared result" }
+                "com.sun.faces.spi.AnnotationProvider.classes" -> {
+                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
+                    val keys = lines.map { it.substringBefore('=', missingDelimiterValue = "") }
+                    check(keys.none(String::isBlank) && keys.distinct().size == keys.size) {
+                        "$fileName must contain unique annotation keys"
+                    }
+                }
+            }
+
+            archives.forEach { (archive, prefix) ->
+                val entryName = "$prefix$fileName"
+                ZipFile(archive).use { zip ->
+                    val entries = zip.entries().asSequence().filter { it.name == entryName }.toList()
+                    check(entries.size == 1) { "Expected one $entryName in ${archive.name}, found ${entries.size}" }
+                    val packagedBytes = zip.getInputStream(entries.single()).use { it.readAllBytes() }
+                    check(packagedBytes.contentEquals(generatedFile.readBytes())) {
+                        "$entryName in ${archive.name} is stale or incomplete"
+                    }
+                }
+            }
+        }
+    }
+}
 
 buildscript {
     repositories {
@@ -298,17 +436,12 @@ val generatedJoinFacesMetadata = generateJoinFacesMetadata
     .flatMap(ProcessAot::getResourcesOutput)
     .map { it.dir("META-INF/joinfaces") }
 val preparedJoinFacesMetadata = layout.buildDirectory.dir("generated/joinFacesMetadata")
-val prepareJoinFacesMetadata = tasks.register<Sync>("prepareJoinFacesMetadata") {
+val prepareJoinFacesMetadata = tasks.register<PrepareJoinFacesMetadata>("prepareJoinFacesMetadata") {
+    group = "build"
+    description = "Prepares deterministic JoinFaces scan metadata for packaging."
     dependsOn(generateJoinFacesMetadata)
-    from(generatedJoinFacesMetadata)
-    into(preparedJoinFacesMetadata)
-    outputs.cacheIf("Prepared metadata is fully declared and normalized") { true }
-    doLast {
-        preparedJoinFacesMetadata.get().asFile.listFiles()?.filter { it.isFile }?.forEach { file ->
-            val sortedLines = file.readLines(StandardCharsets.UTF_8).sorted()
-            file.writeText(if (sortedLines.isEmpty()) "" else sortedLines.joinToString("\n", postfix = "\n"), StandardCharsets.UTF_8)
-        }
-    }
+    sourceDirectory.set(generatedJoinFacesMetadata)
+    destinationDirectory.set(preparedJoinFacesMetadata)
 }
 
 val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
@@ -364,81 +497,23 @@ tasks.jar {
     }
 }
 
-val verifyJoinFacesMetadata = tasks.register("verifyJoinFacesMetadata") {
+val verifyJoinFacesMetadata = tasks.register<VerifyJoinFacesMetadata>("verifyJoinFacesMetadata") {
     group = "verification"
     description = "Verifies generated and packaged JoinFaces scan metadata."
-    val expectedFiles = listOf(
+    expectedFiles.set(listOf(
             "com.sun.faces.config.FacesInitializer.classes",
             "com.sun.faces.config.FacesInitializer2.classes",
             "com.sun.faces.spi.AnnotationProvider.classes",
-    )
-    val plainJar = tasks.named<Jar>("jar").flatMap(Jar::getArchiveFile)
-    val bootJar = tasks.named<BootJar>("bootJar").flatMap(BootJar::getArchiveFile)
-    dependsOn(prepareJoinFacesMetadata, plainJar, bootJar)
-    inputs.dir(preparedJoinFacesMetadata)
-    inputs.files(plainJar, bootJar)
-    inputs.property("profile", joinFacesMetadataProfile)
-
-    doLast {
-        check(joinFacesMetadataProfile == "deployed") {
-            "JoinFaces runtime metadata must be generated with the deployed profile"
-        }
-        val metadataDirectory = preparedJoinFacesMetadata.get().asFile
-        val actualFiles = metadataDirectory.walkTopDown()
-            .filter { it.isFile }
-            .map { it.relativeTo(metadataDirectory).invariantSeparatorsPath }
-            .toList()
-        check(actualFiles.sorted() == expectedFiles.sorted()) {
-            "Expected exactly $expectedFiles but found $actualFiles"
-        }
-        val archives = listOf(
-                plainJar.get().asFile to "META-INF/joinfaces/",
-                bootJar.get().asFile to "BOOT-INF/classes/META-INF/joinfaces/",
-        )
-        archives.forEach { (archive, prefix) ->
-            ZipFile(archive).use { zip ->
-                val packagedFiles = zip.entries().asSequence()
-                    .filter { !it.isDirectory && it.name.startsWith(prefix) }
-                    .map { it.name.removePrefix(prefix) }
-                    .toList()
-                check(packagedFiles.sorted() == expectedFiles.sorted()) {
-                    "Expected exactly $expectedFiles under $prefix in ${archive.name}, found $packagedFiles"
-                }
-            }
-        }
-
-        expectedFiles.forEach { fileName ->
-            val generatedFile = metadataDirectory.resolve(fileName)
-            val lines = generatedFile.readLines(StandardCharsets.UTF_8)
-            when (fileName) {
-                "com.sun.faces.config.FacesInitializer.classes" -> {
-                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
-                    check(lines == lines.sorted().distinct()) { "$fileName must be sorted and contain no duplicates" }
-                }
-                "com.sun.faces.config.FacesInitializer2.classes" ->
-                    check(lines.isEmpty()) { "$fileName is expected to be an empty prepared result" }
-                "com.sun.faces.spi.AnnotationProvider.classes" -> {
-                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
-                    val keys = lines.map { it.substringBefore('=', missingDelimiterValue = "") }
-                    check(keys.none(String::isBlank) && keys.distinct().size == keys.size) {
-                        "$fileName must contain unique annotation keys"
-                    }
-                }
-            }
-
-            archives.forEach { (archive, prefix) ->
-                val entryName = "$prefix$fileName"
-                ZipFile(archive).use { zip ->
-                    val entries = zip.entries().asSequence().filter { it.name == entryName }.toList()
-                    check(entries.size == 1) { "Expected one $entryName in ${archive.name}, found ${entries.size}" }
-                    val packagedBytes = zip.getInputStream(entries.single()).use { it.readAllBytes() }
-                    check(packagedBytes.contentEquals(generatedFile.readBytes())) {
-                        "$entryName in ${archive.name} is stale or incomplete"
-                    }
-                }
-            }
-        }
-    }
+    ))
+    val plainJarTask = tasks.named<Jar>("jar")
+    val bootJarTask = tasks.named<BootJar>("bootJar")
+    dependsOn(prepareJoinFacesMetadata, plainJarTask, bootJarTask)
+    metadataDirectory.set(preparedJoinFacesMetadata)
+    plainArchive.set(plainJarTask.flatMap(Jar::getArchiveFile))
+    bootArchive.set(bootJarTask.flatMap(BootJar::getArchiveFile))
+    profile.set(joinFacesMetadataProfile)
+    plainPrefix.set("META-INF/joinfaces/")
+    bootPrefix.set("BOOT-INF/classes/META-INF/joinfaces/")
 }
 
 tasks.check {
