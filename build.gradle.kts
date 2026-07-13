@@ -538,6 +538,13 @@ tasks.withType<Test> {
         .orElse(providers.environmentVariable("SELENIUM_MODE"))
         .orNull
         ?.let { systemProperty("selenium.mode", it) }
+    val ciEnvironment = listOf("CI", "GITHUB_ACTIONS", "JENKINS_URL", "BUILD_NUMBER")
+        .any { providers.environmentVariable(it).isPresent }
+    val reuseRequested = providers.gradleProperty("testcontainers.reuse")
+        .orElse(providers.systemProperty("testcontainers.reuse"))
+        .map(String::toBoolean)
+        .getOrElse(false)
+    systemProperty("testcontainers.reuse", reuseRequested && !ciEnvironment)
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",
             "--add-opens=java.base/java.lang=ALL-UNNAMED",

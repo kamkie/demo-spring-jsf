@@ -60,6 +60,40 @@ For IntelliJ/JUnit, add `-Dselenium.mode=host` or `-Dselenium.mode=container` to
 set `SELENIUM_MODE`. Host mode creates screenshots but no MP4 recording. Container mode keeps Testcontainers, screenshots,
 and VNC MP4 recording. When `host.testcontainers.internal` is unavailable in container mode, set `HOST_FOR_SELENIUM`.
 
+### Reusing the test database locally
+
+Repeated local test invocations can retain the project Testcontainers PostgreSQL instance. This is an experimental,
+developer-only opt-in and is always disabled when a CI environment variable is present. Enable both required flags in
+PowerShell:
+
+```powershell
+$env:TESTCONTAINERS_REUSE_ENABLE = 'true'
+.\gradlew.bat test -Ptestcontainers.reuse=true
+```
+
+On POSIX shells:
+
+```sh
+export TESTCONTAINERS_REUSE_ENABLE=true
+./gradlew test -Ptestcontainers.reuse=true
+```
+
+Each invocation takes an advisory lock for its full test JVM lifetime, removes and recreates the `public` schema, and
+then lets Liquibase rebuild schema and seed data. Do not use the retained database for application data. Disable reuse
+with `Remove-Item Env:TESTCONTAINERS_REUSE_ENABLE` (PowerShell) or `unset TESTCONTAINERS_REUSE_ENABLE` (POSIX), and omit
+the Gradle property. Remove only this project's retained containers with:
+
+```powershell
+docker ps -aq --filter "label=com.example.demo-spring-jsf.reusable-postgres=true" |
+    ForEach-Object { docker rm -f $_ }
+```
+
+```sh
+for container in $(docker ps -aq --filter "label=com.example.demo-spring-jsf.reusable-postgres=true"); do
+    docker rm -f "$container"
+done
+```
+
 ### Docker
 Install Docker.
 Run the Docker image, by executing the
