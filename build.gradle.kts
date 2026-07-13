@@ -5,11 +5,16 @@ import com.github.spotbugs.snom.SpotBugsTask
 import com.palantir.gradle.gitversion.CommonGitOperations
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.api.tasks.Sync
+import org.gradle.jvm.tasks.Jar
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import org.springframework.boot.gradle.tasks.aot.ProcessAot
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.util.VersionExtractor
 import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
+import java.util.zip.ZipFile
 
 buildscript {
     repositories {
@@ -274,6 +279,38 @@ tasks.bootRun {
     }
 }
 
+val joinFacesMetadataProfile = "deployed"
+val generateJoinFacesMetadata = tasks.register<ProcessAot>("generateJoinFacesMetadata") {
+    group = "build"
+    description = "Generates JoinFaces scan metadata from Spring AOT processors."
+    dependsOn(tasks.named("classes"))
+    applicationMainClass.set("com.example.DemoApplication")
+    sourcesOutput.set(layout.buildDirectory.dir("generated/joinFacesAot/sources"))
+    resourcesOutput.set(layout.buildDirectory.dir("generated/joinFacesAot/resources"))
+    classesOutput.set(layout.buildDirectory.dir("generated/joinFacesAot/classes"))
+    groupId.set(project.group.toString())
+    artifactId.set(project.name)
+    classpath = files(sourceSets.main.get().output, configurations.named("productionRuntimeClasspath"))
+    args("--spring.profiles.active=$joinFacesMetadataProfile")
+}
+
+val generatedJoinFacesMetadata = generateJoinFacesMetadata
+    .flatMap(ProcessAot::getResourcesOutput)
+    .map { it.dir("META-INF/joinfaces") }
+val preparedJoinFacesMetadata = layout.buildDirectory.dir("generated/joinFacesMetadata")
+val prepareJoinFacesMetadata = tasks.register<Sync>("prepareJoinFacesMetadata") {
+    dependsOn(generateJoinFacesMetadata)
+    from(generatedJoinFacesMetadata)
+    into(preparedJoinFacesMetadata)
+    outputs.cacheIf("Prepared metadata is fully declared and normalized") { true }
+    doLast {
+        preparedJoinFacesMetadata.get().asFile.listFiles()?.filter { it.isFile }?.forEach { file ->
+            val sortedLines = file.readLines(StandardCharsets.UTF_8).sorted()
+            file.writeText(if (sortedLines.isEmpty()) "" else sortedLines.joinToString("\n", postfix = "\n"), StandardCharsets.UTF_8)
+        }
+    }
+}
+
 val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
     group = "documentation"
     description = "Generates the Spring REST Docs reference documentation."
@@ -308,12 +345,104 @@ val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
 
 tasks.bootJar {
     archiveClassifier.set("boot")
+    dependsOn(prepareJoinFacesMetadata)
+    from(preparedJoinFacesMetadata) {
+        into("BOOT-INF/classes/META-INF/joinfaces")
+    }
     from(asciidoctorTask) {
         into("BOOT-INF/classes/static/docs")
     }
     layered {
         enabled.set(true)
     }
+}
+
+tasks.jar {
+    dependsOn(prepareJoinFacesMetadata)
+    from(preparedJoinFacesMetadata) {
+        into("META-INF/joinfaces")
+    }
+}
+
+val verifyJoinFacesMetadata = tasks.register("verifyJoinFacesMetadata") {
+    group = "verification"
+    description = "Verifies generated and packaged JoinFaces scan metadata."
+    val expectedFiles = listOf(
+            "com.sun.faces.config.FacesInitializer.classes",
+            "com.sun.faces.config.FacesInitializer2.classes",
+            "com.sun.faces.spi.AnnotationProvider.classes",
+    )
+    val plainJar = tasks.named<Jar>("jar").flatMap(Jar::getArchiveFile)
+    val bootJar = tasks.named<BootJar>("bootJar").flatMap(BootJar::getArchiveFile)
+    dependsOn(prepareJoinFacesMetadata, plainJar, bootJar)
+    inputs.dir(preparedJoinFacesMetadata)
+    inputs.files(plainJar, bootJar)
+    inputs.property("profile", joinFacesMetadataProfile)
+
+    doLast {
+        check(joinFacesMetadataProfile == "deployed") {
+            "JoinFaces runtime metadata must be generated with the deployed profile"
+        }
+        val metadataDirectory = preparedJoinFacesMetadata.get().asFile
+        val actualFiles = metadataDirectory.walkTopDown()
+            .filter { it.isFile }
+            .map { it.relativeTo(metadataDirectory).invariantSeparatorsPath }
+            .toList()
+        check(actualFiles.sorted() == expectedFiles.sorted()) {
+            "Expected exactly $expectedFiles but found $actualFiles"
+        }
+        val archives = listOf(
+                plainJar.get().asFile to "META-INF/joinfaces/",
+                bootJar.get().asFile to "BOOT-INF/classes/META-INF/joinfaces/",
+        )
+        archives.forEach { (archive, prefix) ->
+            ZipFile(archive).use { zip ->
+                val packagedFiles = zip.entries().asSequence()
+                    .filter { !it.isDirectory && it.name.startsWith(prefix) }
+                    .map { it.name.removePrefix(prefix) }
+                    .toList()
+                check(packagedFiles.sorted() == expectedFiles.sorted()) {
+                    "Expected exactly $expectedFiles under $prefix in ${archive.name}, found $packagedFiles"
+                }
+            }
+        }
+
+        expectedFiles.forEach { fileName ->
+            val generatedFile = metadataDirectory.resolve(fileName)
+            val lines = generatedFile.readLines(StandardCharsets.UTF_8)
+            when (fileName) {
+                "com.sun.faces.config.FacesInitializer.classes" -> {
+                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
+                    check(lines == lines.sorted().distinct()) { "$fileName must be sorted and contain no duplicates" }
+                }
+                "com.sun.faces.config.FacesInitializer2.classes" ->
+                    check(lines.isEmpty()) { "$fileName is expected to be an empty prepared result" }
+                "com.sun.faces.spi.AnnotationProvider.classes" -> {
+                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
+                    val keys = lines.map { it.substringBefore('=', missingDelimiterValue = "") }
+                    check(keys.none(String::isBlank) && keys.distinct().size == keys.size) {
+                        "$fileName must contain unique annotation keys"
+                    }
+                }
+            }
+
+            archives.forEach { (archive, prefix) ->
+                val entryName = "$prefix$fileName"
+                ZipFile(archive).use { zip ->
+                    val entries = zip.entries().asSequence().filter { it.name == entryName }.toList()
+                    check(entries.size == 1) { "Expected one $entryName in ${archive.name}, found ${entries.size}" }
+                    val packagedBytes = zip.getInputStream(entries.single()).use { it.readAllBytes() }
+                    check(packagedBytes.contentEquals(generatedFile.readBytes())) {
+                        "$entryName in ${archive.name} is stale or incomplete"
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(verifyJoinFacesMetadata)
 }
 
 tasks.jacocoTestReport {
