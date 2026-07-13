@@ -1,5 +1,6 @@
 package com.example.extension;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -12,10 +13,9 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testcontainers.containers.DefaultRecordingFileFactory;
 import org.testcontainers.lifecycle.TestDescription;
-import org.testcontainers.selenium.BrowserWebDriverContainer;
-import org.testcontainers.utility.DockerImageName;
+import software.xdev.testcontainers.selenium.containers.browser.BrowserWebDriverContainer;
+import software.xdev.testcontainers.selenium.containers.browser.CapabilitiesBrowserWebDriverContainer;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.example.util.LockUtils.withLock;
-import static org.testcontainers.containers.VncRecordingContainer.VncRecordingFormat.MP4;
-import static org.testcontainers.selenium.BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL;
+import static software.xdev.testcontainers.selenium.containers.browser.BrowserWebDriverContainer.RecordingMode.RECORD_ALL;
 
 @Slf4j
 @SuppressWarnings({
@@ -43,9 +42,10 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
     public static final DateTimeFormatter DATE_TIME_FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH.mm.ss");
     private static final String SCREENSHOT_PATH = "./build/screenshot/";
     private static final SeleniumMode SELENIUM_MODE = SeleniumMode.current();
-    private static final BrowserWebDriverContainer WEB_DRIVER_CONTAINER = new BrowserWebDriverContainer(DockerImageName.parse("selenium/standalone-chrome:4.45.0"))
-            .withRecordingMode(RECORD_ALL, new File(SCREENSHOT_PATH), MP4)
-            .withRecordingFileFactory(new DefaultRecordingFileFactory());
+    private static final BrowserWebDriverContainer<?> WEB_DRIVER_CONTAINER = new CapabilitiesBrowserWebDriverContainer<>(ChromeStartupOptions.maximized())
+            .withRecordingMode(RECORD_ALL)
+            .withAccessToHost(true)
+            .withRecordingDirectory(Path.of(SCREENSHOT_PATH));
     private static final ReentrantLock LOCK = new ReentrantLock();
     private static volatile RemoteWebDriver webDriver;
     private static WindowsChromeSession windowsChromeSession;
@@ -63,6 +63,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
         return currentWebDriver;
     }
 
+    @SneakyThrows
     private static RemoteWebDriver startWebDriver() {
         if (SELENIUM_MODE == SeleniumMode.HOST) {
             if (WindowsChromeSession.isSupported()) {
@@ -79,7 +80,7 @@ public class SeleniumExtension implements BeforeAllCallback, BeforeEachCallback,
             log.info("stopping selenium docker container");
             WEB_DRIVER_CONTAINER.stop();
         }));
-        return new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddress(), ChromeStartupOptions.maximized());
+        return new RemoteWebDriver(WEB_DRIVER_CONTAINER.getSeleniumAddressURI().toURL(), ChromeStartupOptions.maximized());
     }
 
     private static void createDirForScreenshots() throws IOException {

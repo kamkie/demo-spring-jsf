@@ -37,8 +37,9 @@ Gradle examples:
 ```
 
 For IntelliJ/JUnit, add `-Dselenium.mode=host` or `-Dselenium.mode=container` to the run configuration's VM options, or
-set `SELENIUM_MODE`. Host mode creates screenshots but no MP4 recording. Container mode keeps Testcontainers, screenshots,
-and VNC MP4 recording. When `host.testcontainers.internal` is unavailable in container mode, set `HOST_FOR_SELENIUM`.
+set `SELENIUM_MODE`. Host mode creates screenshots but no video recording. Container mode keeps Testcontainers,
+screenshots, and Selenium video recording in MKV format. When `host.testcontainers.internal` is unavailable in container
+mode, set `HOST_FOR_SELENIUM`.
 
 On Windows, host mode keeps Chrome headed on a dedicated Windows desktop so a local Selenium run cannot activate over the
 current application. Non-Windows host runs and container mode keep their existing headed browser behavior.
