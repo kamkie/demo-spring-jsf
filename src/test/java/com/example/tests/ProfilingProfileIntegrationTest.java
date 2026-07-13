@@ -10,6 +10,8 @@ import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.restclient.RestTemplateBuilder;
@@ -64,6 +66,7 @@ class ProfilingProfileIntegrationTest extends BaseRestIntegrationTest {
     }
 
     @Test
+    @ResourceLock(value = "logback:com.example", mode = ResourceAccessMode.READ_WRITE)
     void profilingProfileExecutesRetainedFilters() {
         Logger appLoggers = (Logger) LoggerFactory.getLogger("com.example");
         Level originalLevel = appLoggers.getLevel();
