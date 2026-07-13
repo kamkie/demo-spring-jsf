@@ -1,0 +1,28 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: true
+
+joinfaces:
+  faces:
+    project-stage: development
+
+logging:
+  level:
+    web: DEBUG
+    org:
+      springframework.web:
+        filter: debug
+      hibernate:
+        SQL: debug
+        stat: debug
+  custom:
+    time:
+      enable: true
+    user:
+      enable: true
+    session:
+      enable: true
+    request:
+      enable: true

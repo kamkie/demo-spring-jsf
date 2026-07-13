@@ -1,0 +1,22 @@
+spring:
+  jmx:
+    enabled: false
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: false
+
+joinfaces:
+  faces:
+    project-stage: production
+
+logging:
+  custom:
+    time:
+      enable: false
+    user:
+      enable: false
+    session:
+      enable: false
+    request:
+      enable: false
