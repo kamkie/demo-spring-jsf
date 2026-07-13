@@ -26,6 +26,9 @@ Runtime intent is explicit and does not use profile groups:
 - Starting the executable JAR without a profile uses the lean defaults and is equivalent to the diagnostic settings of
   `deployed`; select `deployed` explicitly for deployment automation outside the checked-in Docker image.
 
+Boot and plain archives precompute JoinFaces scan metadata with the fixed `deployed` profile. Tests do not consume this
+metadata; their `test` profile and test runtime classpath continue to be scanned independently.
+
 All modes instantiate and expose only the required read-only Actuator endpoints: health, info, metrics, and Prometheus.
 Existing security rules remain responsible for HTTP authorization.
 
