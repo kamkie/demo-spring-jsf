@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
@@ -78,6 +80,7 @@ class RestIntegrationTest extends BaseRestIntegrationTest {
     }
 
     @Test
+    @ResourceLock(value = "logback:com.example", mode = ResourceAccessMode.READ_WRITE)
     void homeLogging() {
         Logger appLoggers = (Logger) LoggerFactory.getLogger("com.example");
         appLoggers.setLevel(Level.OFF);
