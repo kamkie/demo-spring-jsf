@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.resttestclient.TestRestTemplate;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,7 +18,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 @Slf4j
 @ExtendWith(RestDocumentationExtension.class)
-@AutoConfigureTestRestTemplate
 public abstract class BaseRestIntegrationTest extends BaseIntegrationTest {
 
     protected final TestRestTemplate restAnonymousTemplate;
