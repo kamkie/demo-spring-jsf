@@ -1,2 +1,3 @@
 **
 !build/libs
+!scripts/aot-train.sh
