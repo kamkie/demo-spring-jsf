@@ -21,7 +21,7 @@
   "homepage": "https://github.com/kamkie/demo-spring-jsf#readme",
   "dependencies": {
     "react" : "^19.2.8",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "esbuild" : "^0.28.1"
