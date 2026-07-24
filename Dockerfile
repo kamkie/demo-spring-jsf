@@ -15,6 +15,8 @@ COPY --from=builder /app/extracted/dependencies/ ./
 COPY --from=builder /app/extracted/application/ ./
 USER spring:spring
 
+ENV SPRING_PROFILES_ACTIVE=deployed
+
 RUN ls -lha
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

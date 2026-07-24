@@ -1,0 +1,35 @@
+spring:
+  jmx:
+    enabled: true
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: true
+
+joinfaces:
+  faces:
+    project-stage: development
+
+logging:
+  level:
+    web: DEBUG
+    org:
+      springframework.web:
+        filter: debug
+      hibernate:
+        SQL: debug
+        stat: debug
+    com:
+      sun:
+        faces: trace
+    javax:
+      faces: trace
+  custom:
+    time:
+      enable: true
+    user:
+      enable: true
+    session:
+      enable: true
+    request:
+      enable: true
