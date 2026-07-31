@@ -48,7 +48,7 @@ jobs:
           ip a
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
+        uses: github/codeql-action/init@v4.37.3
         with:
           languages: java, javascript
           build-mode: none
@@ -138,10 +138,10 @@ jobs:
           EOF
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@v4.37.3
         if: github.actor != 'dependabot[bot]'
         with:
           sarif_file: 'trivy-results.sarif'
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
+        uses: github/codeql-action/analyze@v4.37.3
