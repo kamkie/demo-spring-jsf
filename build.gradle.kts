@@ -28,7 +28,7 @@ plugins {
     id("com.palantir.git-version") version "5.0.0"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
     id("com.diffplug.spotless") version "8.9.0"
-    id("com.github.ben-manes.versions") version "0.58.0"
+    id("com.github.ben-manes.versions") version "0.59.0"
     id("com.github.spotbugs") version "6.5.9"
     id("org.springframework.boot") version "4.1.0"
     id("org.liquibase.gradle") version "3.1.0"
