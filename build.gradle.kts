@@ -3,13 +3,156 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.task.NodeTask
 import com.github.spotbugs.snom.SpotBugsTask
 import com.palantir.gradle.gitversion.CommonGitOperations
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileSystemOperations
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.jvm.tasks.Jar
+import org.gradle.work.DisableCachingByDefault
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import org.springframework.boot.gradle.tasks.aot.ProcessAot
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.util.VersionExtractor
 import java.io.Serializable
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
+import java.util.zip.ZipFile
+import javax.inject.Inject
+
+@CacheableTask
+abstract class PrepareJoinFacesMetadata : DefaultTask() {
+
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val sourceDirectory: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val destinationDirectory: DirectoryProperty
+
+    @get:Inject
+    abstract val fileSystemOperations: FileSystemOperations
+
+    @TaskAction
+    fun prepare() {
+        val source = sourceDirectory.get().asFile
+        val destination = destinationDirectory.get().asFile
+        fileSystemOperations.delete { delete(destination) }
+        fileSystemOperations.copy {
+            from(source)
+            into(destination)
+        }
+        destination.listFiles()?.filter { it.isFile }?.forEach { file ->
+            val sortedLines = file.readLines(StandardCharsets.UTF_8).sorted()
+            file.writeText(
+                    if (sortedLines.isEmpty()) "" else sortedLines.joinToString("\n", postfix = "\n"),
+                    StandardCharsets.UTF_8,
+            )
+        }
+    }
+}
+
+@DisableCachingByDefault(because = "Verification task has no outputs")
+abstract class VerifyJoinFacesMetadata : DefaultTask() {
+
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val metadataDirectory: DirectoryProperty
+
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val plainArchive: RegularFileProperty
+
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val bootArchive: RegularFileProperty
+
+    @get:Input
+    abstract val profile: Property<String>
+
+    @get:Input
+    abstract val expectedFiles: ListProperty<String>
+
+    @get:Input
+    abstract val plainPrefix: Property<String>
+
+    @get:Input
+    abstract val bootPrefix: Property<String>
+
+    @TaskAction
+    fun verify() {
+        check(profile.get() == "deployed") {
+            "JoinFaces runtime metadata must be generated with the deployed profile"
+        }
+        val expected = expectedFiles.get()
+        val metadata = metadataDirectory.get().asFile
+        val actualFiles = metadata.walkTopDown()
+            .filter { it.isFile }
+            .map { it.relativeTo(metadata).invariantSeparatorsPath }
+            .toList()
+        check(actualFiles.sorted() == expected.sorted()) {
+            "Expected exactly $expected but found $actualFiles"
+        }
+        val archives = listOf(
+                plainArchive.get().asFile to plainPrefix.get(),
+                bootArchive.get().asFile to bootPrefix.get(),
+        )
+        archives.forEach { (archive, prefix) ->
+            ZipFile(archive).use { zip ->
+                val packagedFiles = zip.entries().asSequence()
+                    .filter { !it.isDirectory && it.name.startsWith(prefix) }
+                    .map { it.name.removePrefix(prefix) }
+                    .toList()
+                check(packagedFiles.sorted() == expected.sorted()) {
+                    "Expected exactly $expected under $prefix in ${archive.name}, found $packagedFiles"
+                }
+            }
+        }
+
+        expected.forEach { fileName ->
+            val generatedFile = metadata.resolve(fileName)
+            val lines = generatedFile.readLines(StandardCharsets.UTF_8)
+            when (fileName) {
+                "com.sun.faces.config.FacesInitializer.classes" -> {
+                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
+                    check(lines == lines.sorted().distinct()) { "$fileName must be sorted and contain no duplicates" }
+                }
+                "com.sun.faces.config.FacesInitializer2.classes" ->
+                    check(lines.isEmpty()) { "$fileName is expected to be an empty prepared result" }
+                "com.sun.faces.spi.AnnotationProvider.classes" -> {
+                    check(lines.isNotEmpty()) { "$fileName must not be empty" }
+                    val keys = lines.map { it.substringBefore('=', missingDelimiterValue = "") }
+                    check(keys.none(String::isBlank) && keys.distinct().size == keys.size) {
+                        "$fileName must contain unique annotation keys"
+                    }
+                }
+            }
+
+            archives.forEach { (archive, prefix) ->
+                val entryName = "$prefix$fileName"
+                ZipFile(archive).use { zip ->
+                    val entries = zip.entries().asSequence().filter { it.name == entryName }.toList()
+                    check(entries.size == 1) { "Expected one $entryName in ${archive.name}, found ${entries.size}" }
+                    val packagedBytes = zip.getInputStream(entries.single()).use { it.readAllBytes() }
+                    check(packagedBytes.contentEquals(generatedFile.readBytes())) {
+                        "$entryName in ${archive.name} is stale or incomplete"
+                    }
+                }
+            }
+        }
+    }
+}
 
 buildscript {
     repositories {
@@ -62,7 +205,6 @@ val jnaVersion = "5.19.1"
 val seleniumVersion = "4.46.0"
 val asciiDoctorJVersion = "3.0.1"
 val picocliVersion = "4.7.7"
-val spotbugsAnnotationsVersion = "4.10.3"
 val logstashLogbackEncoderVersion = "9.0"
 val joinfacesVersion = "6.1.0"
 val primefacesThemesVersion = "1.1.0"
@@ -94,6 +236,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework:spring-context-indexer")
 
+    compileOnly("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+
     asciidoctorRuntime("org.asciidoctor:asciidoctorj:$asciiDoctorJVersion")
     asciidoctorRuntime("org.asciidoctor:asciidoctorj-cli:$asciiDoctorJVersion")
     asciidoctorRuntime("org.springframework.restdocs:spring-restdocs-asciidoctor")
@@ -104,10 +249,6 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation("com.github.spotbugs:spotbugs-annotations:$spotbugsAnnotationsVersion")
-    implementation("org.projectlombok:lombok")
-
-    implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -115,7 +256,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-restclient")
     implementation("org.springframework.boot:spring-boot-session")
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -134,6 +274,7 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-restclient")
     testImplementation("org.springframework.boot:spring-boot-resttestclient")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-session-jdbc-test")
@@ -278,6 +419,33 @@ tasks.bootRun {
     }
 }
 
+val joinFacesMetadataProfile = "deployed"
+val generateJoinFacesMetadata = tasks.register<ProcessAot>("generateJoinFacesMetadata") {
+    group = "build"
+    description = "Generates JoinFaces scan metadata from Spring AOT processors."
+    dependsOn(tasks.named("classes"))
+    applicationMainClass.set("com.example.DemoApplication")
+    sourcesOutput.set(layout.buildDirectory.dir("generated/joinFacesAot/sources"))
+    resourcesOutput.set(layout.buildDirectory.dir("generated/joinFacesAot/resources"))
+    classesOutput.set(layout.buildDirectory.dir("generated/joinFacesAot/classes"))
+    groupId.set(project.group.toString())
+    artifactId.set(project.name)
+    classpath = files(sourceSets.main.get().output, configurations.named("productionRuntimeClasspath"))
+    args("--spring.profiles.active=$joinFacesMetadataProfile")
+}
+
+val generatedJoinFacesMetadata = generateJoinFacesMetadata
+    .flatMap(ProcessAot::getResourcesOutput)
+    .map { it.dir("META-INF/joinfaces") }
+val preparedJoinFacesMetadata = layout.buildDirectory.dir("generated/joinFacesMetadata")
+val prepareJoinFacesMetadata = tasks.register<PrepareJoinFacesMetadata>("prepareJoinFacesMetadata") {
+    group = "build"
+    description = "Prepares deterministic JoinFaces scan metadata for packaging."
+    dependsOn(generateJoinFacesMetadata)
+    sourceDirectory.set(generatedJoinFacesMetadata)
+    destinationDirectory.set(preparedJoinFacesMetadata)
+}
+
 val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
     group = "documentation"
     description = "Generates the Spring REST Docs reference documentation."
@@ -312,12 +480,46 @@ val asciidoctorTask = tasks.register<JavaExec>("asciidoctor") {
 
 tasks.bootJar {
     archiveClassifier.set("boot")
+    dependsOn(prepareJoinFacesMetadata)
+    from(preparedJoinFacesMetadata) {
+        into("BOOT-INF/classes/META-INF/joinfaces")
+    }
     from(asciidoctorTask) {
         into("BOOT-INF/classes/static/docs")
     }
     layered {
         enabled.set(true)
     }
+}
+
+tasks.jar {
+    dependsOn(prepareJoinFacesMetadata)
+    from(preparedJoinFacesMetadata) {
+        into("META-INF/joinfaces")
+    }
+}
+
+val verifyJoinFacesMetadata = tasks.register<VerifyJoinFacesMetadata>("verifyJoinFacesMetadata") {
+    group = "verification"
+    description = "Verifies generated and packaged JoinFaces scan metadata."
+    expectedFiles.set(listOf(
+            "com.sun.faces.config.FacesInitializer.classes",
+            "com.sun.faces.config.FacesInitializer2.classes",
+            "com.sun.faces.spi.AnnotationProvider.classes",
+    ))
+    val plainJarTask = tasks.named<Jar>("jar")
+    val bootJarTask = tasks.named<BootJar>("bootJar")
+    dependsOn(prepareJoinFacesMetadata, plainJarTask, bootJarTask)
+    metadataDirectory.set(preparedJoinFacesMetadata)
+    plainArchive.set(plainJarTask.flatMap(Jar::getArchiveFile))
+    bootArchive.set(bootJarTask.flatMap(BootJar::getArchiveFile))
+    profile.set(joinFacesMetadataProfile)
+    plainPrefix.set("META-INF/joinfaces/")
+    bootPrefix.set("BOOT-INF/classes/META-INF/joinfaces/")
+}
+
+tasks.check {
+    dependsOn(verifyJoinFacesMetadata)
 }
 
 tasks.jacocoTestReport {
@@ -338,6 +540,13 @@ tasks.withType<Test> {
         .orElse(providers.environmentVariable("SELENIUM_MODE"))
         .orNull
         ?.let { systemProperty("selenium.mode", it) }
+    val ciEnvironment = listOf("CI", "GITHUB_ACTIONS", "JENKINS_URL", "BUILD_NUMBER")
+        .any { providers.environmentVariable(it).isPresent }
+    val reuseRequested = providers.gradleProperty("testcontainers.reuse")
+        .orElse(providers.systemProperty("testcontainers.reuse"))
+        .map(String::toBoolean)
+        .getOrElse(false)
+    systemProperty("testcontainers.reuse", reuseRequested && !ciEnvironment)
     jvmArgs = listOf(
             "-XX:+EnableDynamicAgentLoading",
             "--enable-native-access=ALL-UNNAMED",

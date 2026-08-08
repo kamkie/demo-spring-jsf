@@ -26,6 +26,9 @@ Runtime intent is explicit and does not use profile groups:
 - Starting the executable JAR without a profile uses the lean defaults and is equivalent to the diagnostic settings of
   `deployed`; select `deployed` explicitly for deployment automation outside the checked-in Docker image.
 
+Boot and plain archives precompute JoinFaces scan metadata with the fixed `deployed` profile. Tests do not consume this
+metadata; their `test` profile and test runtime classpath continue to be scanned independently.
+
 All modes instantiate and expose only the required read-only Actuator endpoints: health, info, metrics, and Prometheus.
 Existing security rules remain responsible for HTTP authorization.
 
@@ -59,6 +62,40 @@ and VNC MP4 recording. When `host.testcontainers.internal` is unavailable in con
 
 On Windows, host mode keeps Chrome headed on a dedicated Windows desktop so a local Selenium run cannot activate over the
 current application. Non-Windows host runs and container mode keep their existing headed browser behavior.
+
+### Reusing the test database locally
+
+Repeated local test invocations can retain the project Testcontainers PostgreSQL instance. This is an experimental,
+developer-only opt-in and is always disabled when a CI environment variable is present. Enable both required flags in
+PowerShell:
+
+```powershell
+$env:TESTCONTAINERS_REUSE_ENABLE = 'true'
+.\gradlew.bat test -Ptestcontainers.reuse=true
+```
+
+On POSIX shells:
+
+```sh
+export TESTCONTAINERS_REUSE_ENABLE=true
+./gradlew test -Ptestcontainers.reuse=true
+```
+
+Each invocation takes an advisory lock for its full test JVM lifetime, removes and recreates the `public` schema, and
+then lets Liquibase rebuild schema and seed data. Do not use the retained database for application data. Disable reuse
+with `Remove-Item Env:TESTCONTAINERS_REUSE_ENABLE` (PowerShell) or `unset TESTCONTAINERS_REUSE_ENABLE` (POSIX), and omit
+the Gradle property. Remove only this project's retained containers with:
+
+```powershell
+docker ps -aq --filter "label=com.example.demo-spring-jsf.reusable-postgres=true" |
+    ForEach-Object { docker rm -f $_ }
+```
+
+```sh
+for container in $(docker ps -aq --filter "label=com.example.demo-spring-jsf.reusable-postgres=true"); do
+    docker rm -f "$container"
+done
+```
 
 ### Docker
 Install Docker.
