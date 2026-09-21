@@ -85,7 +85,7 @@ jobs:
           path: 'build/reports/pmd/*.xml'
 
       - name: Upload code coverage to codecov
-        uses: codecov/codecov-action@v7.1.0
+        uses: codecov/codecov-action@v7.1.1
         if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
         with:
           fail_ci_if_error: true
@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload Test Results to codecov
         if: ${{ !cancelled() && github.actor != 'dependabot[bot]' }}
-        uses: codecov/codecov-action@v7.1.0
+        uses: codecov/codecov-action@v7.1.1
         with:
           fail_ci_if_error: true
           report_type: test_results
