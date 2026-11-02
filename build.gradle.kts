@@ -31,7 +31,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.66.0"
     id("com.github.spotbugs") version "6.5.13"
     id("org.springframework.boot") version "4.1.2"
-    id("org.liquibase.gradle") version "3.1.0"
+    id("org.liquibase.gradle") version "3.1.1"
     id("com.github.node-gradle.node") version "7.1.0"
     id("com.adarshr.test-logger") version "4.0.0"
 }
