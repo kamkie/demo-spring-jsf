@@ -27,7 +27,7 @@ plugins {
     pmd
     id("com.palantir.git-version") version "5.2.0"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
-    id("com.diffplug.spotless") version "8.11.0"
+    id("com.diffplug.spotless") version "8.12.0"
     id("com.github.ben-manes.versions") version "0.67.0"
     id("com.github.spotbugs") version "6.5.13"
     id("org.springframework.boot") version "4.2.0"
